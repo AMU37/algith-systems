@@ -83,7 +83,7 @@ class Company(db.Model):
     users = db.relationship('User', backref='company', lazy=True)
     subscription = db.relationship('Subscription', backref='company', uselist=False, lazy=True)
 
-class Users(UserMixin, db.Model):
+class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=False)
     username = db.Column(db.String(80), nullable=False)
