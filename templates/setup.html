@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إنشاء حساب جديد - الغيث</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: #F5F5F5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            direction: rtl;
+        }
+
+        .top-bar {
+            background: #714B67;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .top-bar-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        .top-bar-logo img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            border-radius: 6px;
+            background: white;
+            padding: 3px;
+        }
+        .top-bar-links a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-right: 20px;
+        }
+        .top-bar-links a:hover { color: white; }
+
+        .setup-section {
+            flex: 1;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 32px 20px;
+        }
+        .setup-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 720px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 32px;
+        }
+        .setup-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+        .setup-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2C2C2C;
+            margin-bottom: 6px;
+        }
+        .setup-header p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Progress */
+        .progress-bar {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 24px;
+        }
+        .progress-step {
+            flex: 1;
+            height: 4px;
+            background: #EBEBEB;
+            border-radius: 2px;
+            transition: background 0.3s;
+        }
+        .progress-step.active { background: #714B67; }
+
+        /* Steps */
+        .step { display: none; }
+        .step.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .step-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #2C2C2C;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .step-title span {
+            width: 28px;
+            height: 28px;
+            background: #714B67;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* Business cards */
+        .business-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .business-card {
+            border: 2px solid #EBEBEB;
+            border-radius: 10px;
+            padding: 18px 14px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .business-card:hover {
+            border-color: #714B67;
+            background: #F3EEF1;
+        }
+        .business-card.selected {
+            border-color: #714B67;
+            background: #F3EEF1;
+        }
+        .business-card.selected::after {
+            content: '\f058';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            color: #714B67;
+            font-size: 1rem;
+        }
+        .business-card i {
+            font-size: 1.8rem;
+            color: #714B67;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .business-card h3 {
+            font-size: 0.88rem;
+            color: #2C2C2C;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+        .business-card p {
+            font-size: 0.75rem;
+            color: #888;
+        }
+
+        /* Forms */
+        .form-group { margin-bottom: 16px; }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #4A4A4A;
+            font-size: 0.85rem;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #D9D9D9;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            background: #FAFAFA;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #714B67;
+            box-shadow: 0 0 0 3px rgba(113,75,103,0.12);
+            background: white;
+        }
+        .form-control.error { border-color: #DC3545; }
+        .error-msg { color: #DC3545; font-size: 0.78rem; margin-top: 4px; display: none; }
+        .error-msg.show { display: block; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary { background: #714B67; color: white; }
+        .btn-primary:hover { background: #5B3A53; box-shadow: 0 2px 8px rgba(113,75,103,0.3); }
+        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+        .btn-outline { background: transparent; border: 1px solid #D9D9D9; color: #666; }
+        .btn-outline:hover { border-color: #714B67; color: #714B67; }
+        .btn-group { display: flex; gap: 10px; justify-content: space-between; margin-top: 20px; }
+
+        /* Flash */
+        .flash { padding: 10px 14px; border-radius: 6px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; font-size: 0.85rem; }
+        .flash-success { background: #E8F5E9; color: #1B5E20; border: 1px solid #A5D6A7; }
+        .flash-error { background: #FDE8EA; color: #C62828; border: 1px solid #EF9A9A; }
+
+        /* Footer */
+        .footer-text { text-align: center; margin-top: 20px; color: #888; font-size: 0.8rem; }
+        .footer-text a { color: #714B67; text-decoration: none; }
+
+        /* Spinner */
+        .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.6s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        input[type="color"] { width: 50px; height: 38px; padding: 3px; border-radius: 6px; cursor: pointer; }
+
+        @media (max-width: 600px) {
+            .setup-container { padding: 20px; }
+            .form-row { grid-template-columns: 1fr; }
+            .business-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="top-bar-logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="الغيث">
+            <span>الغيث</span>
+        </div>
+        <div class="top-bar-links">
+            <a href="{{ url_for('landing') }}">الرئيسية</a>
+            <a href="{{ url_for('login') }}">تسجيل الدخول</a>
+        </div>
+    </div>
+
+    <div class="setup-section">
+        <div class="setup-container">
+            <div class="setup-header">
+                <h1>إنشاء حساب جديد</h1>
+                <p>أنشئ شركتك وابدأ بإدارة أعمالك</p>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="flash flash-{{ category }}"><i class="fas fa-{% if category == 'success' %}check-circle{% else %}exclamation-circle{% endif %}"></i><span>{{ message }}</span></div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+            <form method="POST" id="setupForm">
+                <div class="progress-bar">
+                    <div class="progress-step active" id="prog1"></div>
+                    <div class="progress-step" id="prog2"></div>
+                    <div class="progress-step" id="prog3"></div>
+                    <div class="progress-step" id="prog4"></div>
+                </div>
+
+                <div class="step active" id="step1">
+                    <div class="step-title"><span>1</span> اختر نوع نشاط شركتك</div>
+                    <div class="business-grid">
+                        {% for key, bt in business_types.items() %}
+                        <div class="business-card" data-type="{{ key }}" onclick="selectBusiness('{{ key }}')">
+                            <i class="fas {{ bt.icon }}"></i>
+                            <h3>{{ bt.name }}</h3>
+                            <p>{{ bt.desc }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <input type="hidden" name="business_type" id="business_type" value="general">
+                    <div class="error-msg" id="err-business">يرجى اختيار نوع النشاط</div>
+                    <div class="btn-group">
+                        <div></div>
+                        <button type="button" class="btn btn-primary" onclick="nextStep(2)">التالي <i class="fas fa-arrow-left"></i></button>
+                    </div>
+                </div>
+
+                <div class="step" id="step2">
+                    <div class="step-title"><span>2</span> بيانات الشركة</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>اسم الشركة *</label>
+                            <input type="text" name="company_name" id="company_name" class="form-control" placeholder="اسم الشركة الرسمي">
+                            <div class="error-msg" id="err-company_name">اسم الشركة مطلوب</div>
+                        </div>
+                        <div class="form-group">
+                            <label>رمز الشركة</label>
+                            <input type="text" name="company_code" class="form-control" placeholder="اتركه فارغاً للتوليد التلقائي">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>النشاط</label>
+                            <input type="text" name="activity" class="form-control" placeholder="مثال: خدمات نظافة">
+                        </div>
+                        <div class="form-group">
+                            <label>الهاتف</label>
+                            <input type="text" name="phone" class="form-control" placeholder="رقم الهاتف">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>البريد الإلكتروني</label>
+                        <input type="email" name="email" class="form-control" placeholder="email@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label>العنوان</label>
+                        <input type="text" name="address" class="form-control" placeholder="العنوان">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>الرقم الضريبي</label>
+                            <input type="text" name="tax_number" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>السجل التجاري</label>
+                            <input type="text" name="commercial_reg" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>الشعار (Slogan)</label>
+                        <input type="text" name="slogan" class="form-control" placeholder="يظهر في الفواتير والتقارير">
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-outline" onclick="nextStep(1)"><i class="fas fa-arrow-right"></i> السابق</button>
+                        <button type="button" class="btn btn-primary" onclick="nextStep(3)">التالي <i class="fas fa-arrow-left"></i></button>
+                    </div>
+                </div>
+
+                <div class="step" id="step3">
+                    <div class="step-title"><span>3</span> حساب المدير</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>اسم المستخدم (مدير النظام) *</label>
+                            <input type="text" name="admin_username" id="admin_username" class="form-control" value="admin">
+                            <div class="error-msg" id="err-admin_username">اسم المستخدم مطلوب</div>
+                        </div>
+                        <div class="form-group">
+                            <label>كلمة المرور *</label>
+                            <input type="text" name="admin_password" id="admin_password" class="form-control" value="admin123">
+                            <div class="error-msg" id="err-admin_password">كلمة المرور مطلوبة</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>اللون الرئيسي</label>
+                        <input type="color" name="primary_color" class="form-control" value="#714B67">
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-outline" onclick="nextStep(2)"><i class="fas fa-arrow-right"></i> السابق</button>
+                        <button type="button" class="btn btn-primary" onclick="nextStep(4)">التالي <i class="fas fa-arrow-left"></i></button>
+                    </div>
+                </div>
+
+                <div class="step" id="step4">
+                    <div class="step-title"><span>4</span> اختر الباقة</div>
+                    <div class="business-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
+                        {% for code, plan in plans.items() %}
+                        <div class="business-card" data-plan="{{ code }}" onclick="selectPlan('{{ code }}')" style="border-color: {{ plan.color if plan.color else '#EBEBEB' }};">
+                            <h3>{{ plan.name }}</h3>
+                            <p style="font-size: 1.4rem; font-weight: 800; color: #714B67; margin: 8px 0;">{{ plan.price }} ر.ي</p>
+                            <p>{{ plan.max_users }} مستخدم</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <input type="hidden" name="plan_code" id="plan_code" value="trial">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-outline" onclick="nextStep(3)"><i class="fas fa-arrow-right"></i> السابق</button>
+                        <button type="submit" class="btn btn-primary" id="submitBtn"><i class="fas fa-rocket"></i> إنشاء الحساب</button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="footer-text">
+                <p>الإصدار: v2.0.1 | تصميم وتطوير <a href="tel:773014017">الغيث</a> | 773014017 - 711127883</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        function selectBusiness(type) {
+            document.querySelectorAll('.business-card[data-type]').forEach(c => c.classList.remove('selected'));
+            document.querySelector('.business-card[data-type="' + type + '"]').classList.add('selected');
+            document.getElementById('business_type').value = type;
+        }
+        function selectPlan(code) {
+            document.querySelectorAll('.business-card[data-plan]').forEach(c => c.classList.remove('selected'));
+            document.querySelector('.business-card[data-plan="' + code + '"]').classList.add('selected');
+            document.getElementById('plan_code').value = code;
+        }
+        function showStep(n) {
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            document.getElementById('step' + n).classList.add('active');
+            for (let i = 1; i <= 4; i++) {
+                document.getElementById('prog' + i).classList.toggle('active', i <= n);
+            }
+            currentStep = n;
+        }
+        function showError(id) {
+            var el = document.getElementById('err-' + id);
+            if (el) el.classList.add('show');
+            var input = document.getElementById(id);
+            if (input) input.classList.add('error');
+        }
+        function clearErrors() {
+            document.querySelectorAll('.error-msg').forEach(e => e.classList.remove('show'));
+            document.querySelectorAll('.form-control').forEach(e => e.classList.remove('error'));
+        }
+        function nextStep(n) {
+            clearErrors();
+            if (n === 2 && currentStep === 1) {
+                var bt = document.getElementById('business_type').value;
+                if (!bt) { showError('business'); return; }
+            }
+            if (n === 3 && currentStep === 2) {
+                var cn = document.getElementById('company_name').value.trim();
+                if (!cn) { showError('company_name'); return; }
+            }
+            showStep(n);
+        }
+        document.getElementById('setupForm').addEventListener('submit', function(e) {
+            clearErrors();
+            var un = document.getElementById('admin_username').value.trim();
+            var pw = document.getElementById('admin_password').value.trim();
+            var valid = true;
+            if (!un) { showError('admin_username'); valid = false; }
+            if (!pw) { showError('admin_password'); valid = false; }
+            if (!valid) { e.preventDefault(); return; }
+            var btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> جاري الإنشاء...';
+        });
+    </script>
+</body>
+</html>

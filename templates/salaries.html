@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block page_title %}الرواتب الشهرية{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-money-check-dollar"></i> رواتب شهر {{ month }}</h3>
+        <div style="display:flex;gap:12px;align-items:center">
+            <form action="{{ url_for('salaries') }}" method="GET" style="display:flex;gap:8px">
+                <input type="month" name="month" class="form-control" value="{{ month }}" style="width:auto">
+                <button type="submit" class="btn btn-outline">عرض</button>
+            </form>
+            <form action="{{ url_for('generate_salaries', month=month) }}" method="POST">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-calculator"></i> إنشاء الرواتب</button>
+            </form>
+        </div>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>الموظف</th>
+                    <th>الراتب الأساسي</th>
+                    <th>الإضافيات</th>
+                    <th>الخصميات</th>
+                    <th>خصم السلف</th>
+                    <th>صافي الراتب</th>
+                    <th>الحالة</th>
+                    <th>الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in salary_data %}
+                <tr>
+                    <td>{{ data.employee.name }}</td>
+                    {% if data.salary %}
+                    <td>{{ "%.0f"|format(data.salary.basic_salary) }}</td>
+                    <td>{{ "%.0f"|format(data.salary.additions_total) }}</td>
+                    <td>{{ "%.0f"|format(data.salary.deductions_total) }}</td>
+                    <td>{{ "%.0f"|format(data.salary.advances_deduction) }}</td>
+                    <td><strong>{{ "%.0f"|format(data.salary.net_salary) }}</strong></td>
+                    <td><span class="badge badge-{{ 'success' if data.salary.is_paid else 'warning' }}">{{ 'مدفوع' if data.salary.is_paid else 'غير مدفوع' }}</span></td>
+                    <td>
+                        {% if not data.salary.is_paid %}
+                        <form action="{{ url_for('pay_salary', id=data.salary.id) }}" method="POST" style="display:inline">
+                            <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-money-bill"></i> صرف</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                    {% else %}
+                    <td>{{ "%.0f"|format(data.employee.basic_salary) }}</td>
+                    <td>{{ "%.0f"|format(data.total_additions) }}</td>
+                    <td>{{ "%.0f"|format(data.total_deductions) }}</td>
+                    <td>{{ "%.0f"|format(data.advances_deduction) }}</td>
+                    <td><strong>{{ "%.0f"|format(data.net) }}</strong></td>
+                    <td><span class="badge badge-info">لم يتم إنشاؤه</span></td>
+                    <td>-</td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

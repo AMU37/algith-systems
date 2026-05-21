@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block page_title %}التقارير العامة{% endblock %}
+{% block content %}
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon green"><i class="fas fa-arrow-trend-up"></i></div>
+        <div class="stat-info">
+            <h3>{{ "%.0f"|format(total_revenue) }}</h3>
+            <p>إجمالي الإيرادات</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon red"><i class="fas fa-arrow-trend-down"></i></div>
+        <div class="stat-info">
+            <h3>{{ "%.0f"|format(total_expenses) }}</h3>
+            <p>إجمالي المصروفات</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon blue"><i class="fas fa-money-check-dollar"></i></div>
+        <div class="stat-info">
+            <h3>{{ "%.0f"|format(total_salaries) }}</h3>
+            <p>إجمالي الرواتب</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon orange"><i class="fas fa-truck-field"></i></div>
+        <div class="stat-info">
+            <h3>{{ "%.0f"|format(total_suppliers_debt) }}</h3>
+            <p>ذمم الموردين</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon purple"><i class="fas fa-handshake"></i></div>
+        <div class="stat-info">
+            <h3>{{ "%.0f"|format(total_clients_debt) }}</h3>
+            <p>ذمم العملاء</p>
+        </div>
+    </div>
+</div>
+
+<div class="grid-2">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-chart-line"></i> المبيعات الشهرية</h3>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>الشهر</th>
+                        <th>الإجمالي</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for m in monthly_sales %}
+                    <tr>
+                        <td>{{ m.month }}</td>
+                        <td>{{ "%.0f"|format(m.total) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-scale-balanced"></i> صافي الربح</h3>
+        </div>
+        <div style="text-align:center;padding:40px">
+            <div style="font-size:3rem;font-weight:800;color:{% if total_revenue - total_expenses - total_salaries >= 0 %}#34a853{% else %}#ea4335{% endif %}">
+                {{ "%.0f"|format(total_revenue - total_expenses - total_salaries) }}
+            </div>
+            <p style="color:#5f6368;margin-top:8px">صافي الربح</p>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-print"></i> تصدير التقارير</h3>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <button class="btn btn-outline" onclick="exportTable('salesTable')"><i class="fas fa-file-csv"></i> تصدير المبيعات</button>
+        <button class="btn btn-outline" onclick="exportTable('purchasesTable')"><i class="fas fa-file-csv"></i> تصدير المشتريات</button>
+        <button class="btn btn-outline" onclick="window.print()"><i class="fas fa-print"></i> طباعة</button>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block page_title %}صيانة المعدات{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header"><h3 class="card-title"><i class="fas fa-wrench"></i> صيانة المعدات</h3>
+        <button class="btn btn-primary btn-sm" onclick="openModal('addEMModal')"><i class="fas fa-plus"></i> إضافة</button></div>
+    <div class="table-container">
+        <table>
+            <thead><tr><th>المعدة</th><th>التاريخ</th><th>النوع</th><th>التكلفة</th><th>الوصف</th><th>الحالة</th></tr></thead>
+            <tbody>{% for m in maintenance %}<tr><td>{{ m.equipment.name }}</td><td>{{ m.date }}</td><td>{{ m.type or '-' }}</td><td>{{ "%.0f"|format(m.cost) }}</td><td>{{ m.description or '-' }}</td><td><span class="badge badge-{{ 'success' if m.status == 'completed' else 'warning' }}">{{ 'مكتمل' if m.status == 'completed' else 'قيد التنفيذ' }}</span></td></tr>{% endfor %}</tbody>
+        </table>
+    </div>
+</div>
+<div class="modal" id="addEMModal"><div class="modal-content"><div class="modal-header"><h3>إضافة صيانة</h3><button class="modal-close" onclick="closeModal('addEMModal')">&times;</button></div>
+    <form method="POST" action="{{ url_for('add_equipment_maintenance') }}">
+        <div class="form-group"><label>المعدة *</label><select name="equipment_id" class="form-control" required>{% for e in equipment %}<option value="{{ e.id }}">{{ e.name }}</option>{% endfor %}</select></div>
+        <div class="form-row"><div class="form-group"><label>التاريخ</label><input type="date" name="date" class="form-control" value="{{ now }}"></div><div class="form-group"><label>النوع</label><input type="text" name="type" class="form-control"></div></div>
+        <div class="form-group"><label>التكلفة</label><input type="number" name="cost" class="form-control" step="0.01" value="0"></div>
+        <div class="form-group"><label>الوصف</label><textarea name="description" class="form-control" rows="2"></textarea></div>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ</button>
+    </form></div></div>
+{% endblock %}

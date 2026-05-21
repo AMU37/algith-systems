@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block page_title %}الرحلات{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header"><h3 class="card-title"><i class="fas fa-map-location-dot"></i> الرحلات</h3>
+        <button class="btn btn-primary btn-sm" onclick="openModal('addTripModal')"><i class="fas fa-plus"></i> إضافة رحلة</button></div>
+    <div class="table-container">
+        <table>
+            <thead><tr><th>المركبة</th><th>السائق</th><th>العميل</th><th>من</th><th>إلى</th><th>التاريخ</th><th>التكلفة</th><th>الإيراد</th><th>الحالة</th></tr></thead>
+            <tbody>{% for t in trips %}<tr><td>{{ t.vehicle.plate_number if t.vehicle else '-' }}</td><td>{{ t.driver.name if t.driver else '-' }}</td><td>{{ t.client.name if t.client else '-' }}</td><td>{{ t.from_location or '-' }}</td><td>{{ t.to_location or '-' }}</td><td>{{ t.date }}</td><td>{{ "%.0f"|format(t.cost) }}</td><td>{{ "%.0f"|format(t.revenue) }}</td><td><span class="badge badge-{{ 'success' if t.status == 'completed' else 'warning' }}">{{ 'مكتمل' if t.status == 'completed' else 'قيد التنفيذ' if t.status == 'in_progress' else 'معلق' }}</span></td></tr>{% endfor %}</tbody>
+        </table>
+    </div>
+</div>
+<div class="modal" id="addTripModal"><div class="modal-content"><div class="modal-header"><h3>إضافة رحلة</h3><button class="modal-close" onclick="closeModal('addTripModal')">&times;</button></div>
+    <form method="POST" action="{{ url_for('add_trip') }}">
+        <div class="form-row"><div class="form-group"><label>المركبة</label><select name="vehicle_id" class="form-control"><option value="">بدون</option>{% for v in vehicles %}<option value="{{ v.id }}">{{ v.plate_number }}</option>{% endfor %}</select></div><div class="form-group"><label>السائق</label><select name="driver_id" class="form-control"><option value="">بدون</option>{% for d in drivers %}<option value="{{ d.id }}">{{ d.name }}</option>{% endfor %}</select></div></div>
+        <div class="form-group"><label>العميل</label><select name="client_id" class="form-control"><option value="">بدون</option>{% for c in clients %}<option value="{{ c.id }}">{{ c.name }}</option>{% endfor %}</select></div>
+        <div class="form-row"><div class="form-group"><label>من</label><input type="text" name="from_location" class="form-control"></div><div class="form-group"><label>إلى</label><input type="text" name="to_location" class="form-control"></div></div>
+        <div class="form-row"><div class="form-group"><label>التاريخ</label><input type="date" name="date" class="form-control" value="{{ now }}"></div><div class="form-group"><label>الحالة</label><select name="status" class="form-control"><option value="pending">معلق</option><option value="in_progress">قيد التنفيذ</option><option value="completed">مكتمل</option></select></div></div>
+        <div class="form-row"><div class="form-group"><label>التكلفة</label><input type="number" name="cost" class="form-control" step="0.01" value="0"></div><div class="form-group"><label>الإيراد</label><input type="number" name="revenue" class="form-control" step="0.01" value="0"></div></div>
+        <div class="form-group"><label>ملاحظات</label><textarea name="notes" class="form-control" rows="2"></textarea></div>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ</button>
+    </form></div></div>
+{% endblock %}

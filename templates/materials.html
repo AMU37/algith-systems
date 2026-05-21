@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block page_title %}شراء المواد{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-boxes-stacked"></i> شراء المواد</h3>
+        <button class="btn btn-primary btn-sm" onclick="openModal('addMatModal')"><i class="fas fa-plus"></i> إضافة</button>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead><tr><th>رقم الفاتورة</th><th>المورد</th><th>المشروع</th><th>التاريخ</th><th>الإجمالي</th><th>المدفوع</th><th>إجراءات</th></tr></thead>
+            <tbody>
+                {% for p in purchases %}
+                <tr><td>{{ p.invoice_number or '-' }}</td><td>{{ p.supplier.name if p.supplier else '-' }}</td><td>{{ p.project.name if p.project else '-' }}</td><td>{{ p.date }}</td><td>{{ "%.0f"|format(p.total) }}</td><td>{{ "%.0f"|format(p.paid) }}</td>
+                <td><form method="POST" action="{{ url_for('delete_material', id=p.id) }}" style="display:inline" onsubmit="return confirm('حذف؟')"><button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button></form></td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal" id="addMatModal">
+    <div class="modal-content">
+        <div class="modal-header"><h3>شراء مواد</h3><button class="modal-close" onclick="closeModal('addMatModal')">&times;</button></div>
+        <form method="POST" action="{{ url_for('add_material') }}">
+            <div class="form-row">
+                <div class="form-group"><label>المورد</label><select name="supplier_id" class="form-control"><option value="">بدون مورد</option>{% for s in suppliers %}<option value="{{ s.id }}">{{ s.name }}</option>{% endfor %}</select></div>
+                <div class="form-group"><label>المشروع</label><select name="project_id" class="form-control"><option value="">بدون مشروع</option>{% for p in projects %}<option value="{{ p.id }}">{{ p.name }}</option>{% endfor %}</select></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>رقم الفاتورة</label><input type="text" name="invoice_number" class="form-control"></div>
+                <div class="form-group"><label>التاريخ</label><input type="date" name="date" class="form-control" value="{{ now }}"></div>
+            </div>
+            <div id="itemsContainer">
+                <div class="form-row item-row">
+                    <div class="form-group"><label>اسم المادة</label><input type="text" name="item_name_0" class="form-control"></div>
+                    <div class="form-group"><label>الكمية</label><input type="number" name="item_qty_0" class="form-control item-qty" step="0.01" value="0" onchange="calcTotal()"></div>
+                    <div class="form-group"><label>الوحدة</label><input type="text" name="item_unit_0" class="form-control"></div>
+                    <div class="form-group"><label>السعر</label><input type="number" name="item_price_0" class="form-control item-price" step="0.01" value="0" onchange="calcTotal()"></div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-outline btn-sm" onclick="addItemRow()"><i class="fas fa-plus"></i> إضافة صنف</button>
+            <div class="form-row" style="margin-top:12px">
+                <div class="form-group"><label>الإجمالي</label><input type="number" name="total" id="totalAmount" class="form-control" step="0.01" value="0"></div>
+                <div class="form-group"><label>المدفوع</label><input type="number" name="paid" class="form-control" step="0.01" value="0"></div>
+            </div>
+            <div class="form-group"><label>ملاحظات</label><textarea name="notes" class="form-control" rows="2"></textarea></div>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ</button>
+        </form>
+    </div>
+</div>
+<script>
+let itemCount = 1;
+function addItemRow() {
+    const c = document.getElementById('itemsContainer');
+    c.innerHTML += `<div class="form-row item-row"><div class="form-group"><label>اسم المادة</label><input type="text" name="item_name_${itemCount}" class="form-control"></div><div class="form-group"><label>الكمية</label><input type="number" name="item_qty_${itemCount}" class="form-control item-qty" step="0.01" value="0" onchange="calcTotal()"></div><div class="form-group"><label>الوحدة</label><input type="text" name="item_unit_${itemCount}" class="form-control"></div><div class="form-group"><label>السعر</label><input type="number" name="item_price_${itemCount}" class="form-control item-price" step="0.01" value="0" onchange="calcTotal()"></div></div>`;
+    itemCount++;
+}
+function calcTotal() {
+    let total = 0;
+    document.querySelectorAll('.item-qty').forEach((q, i) => {
+        const p = document.querySelectorAll('.item-price')[i];
+        total += (parseFloat(q.value) || 0) * (parseFloat(p.value) || 0);
+    });
+    document.getElementById('totalAmount').value = total.toFixed(2);
+}
+</script>
+{% endblock %}

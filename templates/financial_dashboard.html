@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="stats-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:24px;">
+    <div class="stat-card" style="background:white; padding:24px; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+        <div style="background:#e6f4ea; color:#137333; width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center; margin-bottom:12px;"><i class="fas fa-wallet"></i></div>
+        <h3 style="font-size:1.8rem;">{{ "%.2f"|format(total_cash) }}</h3><p>رصيد الصندوق</p>
+    </div>
+    <div class="stat-card" style="background:white; padding:24px; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+        <div style="background:#e8f0fe; color:#1a73e8; width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center; margin-bottom:12px;"><i class="fas fa-university"></i></div>
+        <h3 style="font-size:1.8rem;">{{ "%.2f"|format(total_bank) }}</h3><p>رصيد البنك</p>
+    </div>
+    <div class="stat-card" style="background:white; padding:24px; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+        <div style="background:#fce8e6; color:#c5221f; width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center; margin-bottom:12px;"><i class="fas fa-hand-holding-usd"></i></div>
+        <h3 style="font-size:1.8rem;">{{ "%.2f"|format(total_receivables) }}</h3><p>ذمم العملاء</p>
+    </div>
+    <div class="stat-card" style="background:white; padding:24px; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+        <div style="background:#f3e8fd; color:#9334e6; width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center; margin-bottom:12px;"><i class="fas fa-file-invoice-dollar"></i></div>
+        <h3 style="font-size:1.8rem;">{{ "%.2f"|format(total_payables) }}</h3><p>ذمم الموردين</p>
+    </div>
+</div>
+
+<div class="card" style="background:white; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+    <div class="card-header" style="padding:16px; border-bottom:1px solid #e8eaed;">
+        <h3 class="card-title"><i class="fas fa-book"></i> دليل الحسابات</h3>
+        <a href="{{ url_for('accounts') }}" class="btn btn-primary btn-sm"><i class="fas fa-cog"></i> إدارة الحسابات</a>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead><tr><th>الرمز</th><th>اسم الحساب</th><th>النوع</th><th>الرصيد</th></tr></thead>
+            <tbody>
+                {% for acc in accounts %}
+                <tr>
+                    <td>{{ acc.code }}</td>
+                    <td>{{ acc.name }}</td>
+                    <td>
+                        {% if acc.type == 'cash' %}<span class="badge badge-success">نقدية</span>
+                        {% elif acc.type == 'bank' %}<span class="badge badge-info">بنك</span>
+                        {% elif acc.type == 'receivables' %}<span class="badge badge-warning">ذمم مدينة</span>
+                        {% elif acc.type == 'payables' %}<span class="badge badge-danger">ذمم دائنة</span>
+                        {% elif acc.type == 'expenses' %}<span class="badge badge-secondary">مصروفات</span>
+                        {% elif acc.type == 'revenue' %}<span class="badge badge-primary">إيرادات</span>
+                        {% else %}{{ acc.type }}{% endif %}
+                    </td>
+                    <td>{{ "%.2f"|format(acc.balance) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block page_title %}عقود الموردين{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-file-contract"></i> عقود الموردين</h3>
+        <button class="btn btn-primary" onclick="openModal('addContractModal')">
+            <i class="fas fa-plus"></i> إضافة عقد
+        </button>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>رقم العقد</th>
+                    <th>المورد</th>
+                    <th>النوع</th>
+                    <th>تاريخ البداية</th>
+                    <th>تاريخ النهاية</th>
+                    <th>المبلغ</th>
+                    <th>الحالة</th>
+                    <th>الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in contracts %}
+                <tr>
+                    <td>{{ c.contract_number or '-' }}</td>
+                    <td>{{ c.supplier.name }}</td>
+                    <td><span class="badge badge-info">{{ 'سنوي' if c.type == 'yearly' else 'شهري' if c.type == 'monthly' else 'بدون' }}</span></td>
+                    <td>{{ c.start_date }}</td>
+                    <td>{{ c.end_date or '-' }}</td>
+                    <td>{{ "%.0f"|format(c.amount) }}</td>
+                    <td><span class="badge badge-{{ 'success' if c.status == 'active' else 'danger' }}">{{ 'نشط' if c.status == 'active' else 'منتهي' }}</span></td>
+                    <td class="actions-cell">
+                        <form id="deleteSC{{ c.id }}" action="{{ url_for('delete_supplier_contract', id=c.id) }}" method="POST" style="display:inline">
+                            <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete('هل أنت متأكد؟', 'deleteSC{{ c.id }}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal" id="addContractModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>إضافة عقد مورد</h3>
+            <button class="modal-close" onclick="closeModal('addContractModal')"><i class="fas fa-times"></i></button>
+        </div>
+        <form action="{{ url_for('add_supplier_contract') }}" method="POST">
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>المورد *</label>
+                        <select name="supplier_id" class="form-control" required>
+                            <option value="">اختر المورد...</option>
+                            {% for sup in suppliers %}
+                            <option value="{{ sup.id }}">{{ sup.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>رقم العقد</label>
+                        <input type="text" name="contract_number" class="form-control">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>نوع العقد</label>
+                        <select name="type" class="form-control">
+                            <option value="monthly">شهري</option>
+                            <option value="yearly">سنوي</option>
+                            <option value="one-time">بدون (مرة واحدة)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>المبلغ</label>
+                        <input type="number" name="amount" class="form-control" step="0.01" value="0">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>تاريخ البداية</label>
+                        <input type="date" name="start_date" class="form-control" value="{{ now }}">
+                    </div>
+                    <div class="form-group">
+                        <label>تاريخ النهاية</label>
+                        <input type="date" name="end_date" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>الشروط والبنود</label>
+                    <textarea name="terms" class="form-control" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeModal('addContractModal')">إلغاء</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

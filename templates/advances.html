@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block page_title %}السلف{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-hand-holding-dollar"></i> قائمة السلف</h3>
+        <button class="btn btn-warning" onclick="openModal('addAdvanceModal')">
+            <i class="fas fa-plus"></i> إضافة سلفة
+        </button>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>الموظف</th>
+                    <th>المبلغ</th>
+                    <th>المتبقي</th>
+                    <th>الخصم الشهري</th>
+                    <th>التاريخ</th>
+                    <th>الحالة</th>
+                    <th>ملاحظات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for adv in advances %}
+                <tr>
+                    <td>{{ adv.employee.name }}</td>
+                    <td>{{ "%.0f"|format(adv.amount) }}</td>
+                    <td>{{ "%.0f"|format(adv.remaining) }}</td>
+                    <td>{{ "%.0f"|format(adv.monthly_deduction) }}</td>
+                    <td>{{ adv.date }}</td>
+                    <td><span class="badge badge-{{ 'success' if adv.status == 'completed' else 'warning' }}">{{ 'مكتملة' if adv.status == 'completed' else 'نشطة' }}</span></td>
+                    <td>{{ adv.notes or '-' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal" id="addAdvanceModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>إضافة سلفة</h3>
+            <button class="modal-close" onclick="closeModal('addAdvanceModal')"><i class="fas fa-times"></i></button>
+        </div>
+        <form action="{{ url_for('add_advance') }}" method="POST">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>الموظف *</label>
+                    <select name="employee_id" class="form-control" required>
+                        <option value="">اختر الموظف...</option>
+                        {% for emp in employees %}
+                        <option value="{{ emp.id }}">{{ emp.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>مبلغ السلفة *</label>
+                        <input type="number" name="amount" class="form-control" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>الخصم الشهري</label>
+                        <input type="number" name="monthly_deduction" class="form-control" step="0.01" value="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>التاريخ</label>
+                    <input type="date" name="date" class="form-control" value="{{ now }}">
+                </div>
+                <div class="form-group">
+                    <label>ملاحظات</label>
+                    <textarea name="notes" class="form-control" rows="2"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeModal('addAdvanceModal')">إلغاء</button>
+                <button type="submit" class="btn btn-warning"><i class="fas fa-save"></i> حفظ</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% block page_title %}إدارة الموظفين{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-user-tie"></i> قائمة الموظفين</h3>
+        <button class="btn btn-primary" onclick="openModal('addEmployeeModal')"><i class="fas fa-plus"></i> إضافة موظف</button>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead><tr><th>الكود</th><th>الاسم</th><th>رقم البطاقة</th><th>الوظيفة</th><th>المنطقة</th><th>الراتب الشامل</th><th>تاريخ الالتحاق</th><th>الحالة</th><th>الإجراءات</th></tr></thead>
+            <tbody>
+                {% for emp in employees %}
+                <tr>
+                    <td>{{ emp.code or '-' }}</td><td>{{ emp.name }}</td><td>{{ emp.card_number or '-' }}</td>
+                    <td>{{ emp.position or '-' }}</td><td>{{ emp.area or '-' }}</td>
+                    <td>{{ "%.0f"|format(emp.comprehensive_salary) }}</td><td>{{ emp.join_date }}</td>
+                    <td><span class="badge badge-{{ 'success' if emp.status == 'active' else 'danger' }}">{{ 'نشط' if emp.status == 'active' else 'غير نشط' }}</span></td>
+                    <td class="actions-cell">
+                        <button class="btn btn-outline btn-sm" onclick="openEditEmployee({{ emp.id }})"><i class="fas fa-edit"></i></button>
+                        <form id="deleteEmp{{ emp.id }}" action="{{ url_for('delete_employee', id=emp.id) }}" method="POST" style="display:inline">
+                            <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete('هل أنت متأكد؟', 'deleteEmp{{ emp.id }}')"><i class="fas fa-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal" id="addEmployeeModal">
+    <div class="modal-content">
+        <div class="modal-header"><h3>إضافة موظف جديد</h3><button class="modal-close" onclick="closeModal('addEmployeeModal')"><i class="fas fa-times"></i></button></div>
+        <form action="{{ url_for('add_employee') }}" method="POST">
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group"><label>الاسم الكامل *</label><input type="text" name="name" class="form-control" required></div>
+                    <div class="form-group"><label>رقم البطاقة</label><input type="text" name="card_number" class="form-control"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>نوع الأجر *</label>
+                        <select name="wage_type" id="wage_type" class="form-control" onchange="toggleWageFields()">
+                            <option value="monthly">شهري</option>
+                            <option value="daily">يومي</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>المنطقة</label>
+                        <select name="area" class="form-control">
+                            <option value="غير محدد">غير محدد</option>
+                            {% for area in areas %}<option value="{{ area.name }}">{{ area.name }}</option>{% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row" id="monthly_fields">
+                    <div class="form-group"><label>الراتب الأساسي</label><input type="number" name="basic_salary" class="form-control" value="0" step="0.01"></div>
+                    <div class="form-group"><label>الراتب الشامل</label><input type="number" name="comprehensive_salary" class="form-control" value="0" step="0.01"></div>
+                </div>
+                <div class="form-row" id="daily_fields" style="display:none">
+                    <div class="form-group"><label>الأجر اليومي</label><input type="number" name="daily_wage" class="form-control" value="0" step="0.01"></div>
+                    <div class="form-group"><label>الراتب الشامل (تقديري)</label><input type="number" name="comprehensive_salary" class="form-control" value="0" step="0.01" readonly></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>تاريخ الميلاد</label><input type="date" name="birth_date" class="form-control"></div>
+                    <div class="form-group"><label>مكان الميلاد</label><input type="text" name="birth_place" class="form-control"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>تاريخ الالتحاق</label><input type="date" name="join_date" class="form-control" value="{{ now }}"></div>
+                    <div class="form-group">
+                        <label>المنطقة</label>
+                        <select name="area" class="form-control">
+                            <option value="غير محدد">غير محدد</option>
+                            {% for area in areas %}<option value="{{ area.name }}">{{ area.name }}</option>{% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>الراتب الأساسي</label><input type="number" name="basic_salary" class="form-control" value="0" step="0.01"></div>
+                    <div class="form-group"><label>الراتب الشامل</label><input type="number" name="comprehensive_salary" class="form-control" value="0" step="0.01"></div>
+                </div>
+                <div class="form-group"><label>ملاحظات</label><textarea name="notes" class="form-control" rows="2"></textarea></div>
+                <hr style="margin:16px 0;border-color:#e8eaed">
+                <div class="checkbox-group" style="margin-bottom:12px">
+                    <input type="checkbox" name="create_user" id="create_user" onchange="document.getElementById('userFields').style.display=this.checked?'block':'none'">
+                    <label for="create_user" style="font-weight:700;color:#1a73e8">إنشاء حساب مستخدم لهذا الموظف</label>
+                </div>
+                <div id="userFields" style="display:none;background:#f8f9fa;padding:16px;border-radius:10px;margin-bottom:12px">
+                    <div class="form-row">
+                        <div class="form-group"><label>اسم المستخدم</label><input type="text" name="user_username" class="form-control" placeholder="اتركه فارغاً لاستخدام الكود"></div>
+                        <div class="form-group"><label>كلمة المرور</label><input type="text" name="user_password" class="form-control" value="123456"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeModal('addEmployeeModal')">إلغاء</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="editEmployeeModal">
+    <div class="modal-content">
+        <div class="modal-header"><h3>تعديل بيانات الموظف</h3><button class="modal-close" onclick="closeModal('editEmployeeModal')"><i class="fas fa-times"></i></button></div>
+        <form id="editEmployeeForm" method="POST">
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group"><label>الاسم الكامل *</label><input type="text" name="name" id="edit_name" class="form-control" required></div>
+                    <div class="form-group"><label>رقم البطاقة</label><input type="text" name="card_number" id="edit_card_number" class="form-control"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>الكود</label><input type="text" name="code" id="edit_code" class="form-control"></div>
+                    <div class="form-group"><label>الوظيفة</label><input type="text" name="position" id="edit_position" class="form-control"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>تاريخ الميلاد</label><input type="date" name="birth_date" id="edit_birth_date" class="form-control"></div>
+                    <div class="form-group"><label>مكان الميلاد</label><input type="text" name="birth_place" id="edit_birth_place" class="form-control"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>تاريخ الالتحاق</label><input type="date" name="join_date" id="edit_join_date" class="form-control"></div>
+                    <div class="form-group">
+                        <label>المنطقة</label>
+                        <select name="area" id="edit_area" class="form-control">
+                            <option value="غير محدد">غير محدد</option>
+                            {% for area in areas %}<option value="{{ area.name }}">{{ area.name }}</option>{% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>الراتب الأساسي</label><input type="number" name="basic_salary" id="edit_basic_salary" class="form-control" step="0.01"></div>
+                    <div class="form-group"><label>الراتب الشامل</label><input type="number" name="comprehensive_salary" id="edit_comprehensive_salary" class="form-control" step="0.01"></div>
+                </div>
+                <div class="form-group">
+                    <label>الحالة</label>
+                    <select name="status" id="edit_status" class="form-control">
+                        <option value="active">نشط</option><option value="inactive">غير نشط</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>ملاحظات</label><textarea name="notes" id="edit_notes" class="form-control" rows="2"></textarea></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeModal('editEmployeeModal')">إلغاء</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ التعديلات</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function toggleWageFields() {
+    var wt = document.getElementById('wage_type').value;
+    document.getElementById('monthly_fields').style.display = wt === 'monthly' ? 'flex' : 'none';
+    document.getElementById('daily_fields').style.display = wt === 'daily' ? 'flex' : 'none';
+}
+function openEditEmployee(id) {
+    fetch('/api/employee/' + id).then(r => r.json()).then(data => {
+        document.getElementById('edit_name').value = data.name;
+        document.getElementById('edit_card_number').value = data.card_number || '';
+        document.getElementById('edit_code').value = data.code || '';
+        document.getElementById('edit_position').value = data.position || '';
+        document.getElementById('edit_birth_date').value = data.birth_date || '';
+        document.getElementById('edit_birth_place').value = data.birth_place || '';
+        document.getElementById('edit_join_date').value = data.join_date || '';
+        document.getElementById('edit_area').value = data.area || 'غير محدد';
+        document.getElementById('edit_basic_salary').value = data.basic_salary;
+        document.getElementById('edit_comprehensive_salary').value = data.comprehensive_salary;
+        document.getElementById('edit_status').value = data.status;
+        document.getElementById('edit_notes').value = '';
+        document.getElementById('editEmployeeForm').action = '/employee/edit/' + id;
+        openModal('editEmployeeModal');
+    });
+}
+</script>
+{% endblock %}

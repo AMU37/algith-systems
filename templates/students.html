@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block page_title %}الطلاب{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header"><h3 class="card-title"><i class="fas fa-user-graduate"></i> الطلاب</h3>
+        <button class="btn btn-primary btn-sm" onclick="openModal('addStModal')"><i class="fas fa-plus"></i> إضافة طالب</button></div>
+    <div class="table-container">
+        <table>
+            <thead><tr><th>الاسم</th><th>الرقم الأكاديمي</th><th>الصف</th><th>الفصل</th><th>ولي الأمر</th><th>الهاتف</th><th>الحالة</th></tr></thead>
+            <tbody>{% for s in students %}<tr><td>{{ s.name }}</td><td>{{ s.student_id or '-' }}</td><td>{{ s.grade or '-' }}</td><td>{{ s.class_name or '-' }}</td><td>{{ s.parent_name or '-' }}</td><td>{{ s.parent_phone or '-' }}</td><td><span class="badge badge-{{ 'success' if s.status == 'active' else 'warning' }}">{{ 'نشط' if s.status == 'active' else 'منسحب' }}</span></td></tr>{% endfor %}</tbody>
+        </table>
+    </div>
+</div>
+<div class="modal" id="addStModal"><div class="modal-content"><div class="modal-header"><h3>إضافة طالب</h3><button class="modal-close" onclick="closeModal('addStModal')">&times;</button></div>
+    <form method="POST" action="{{ url_for('add_student') }}">
+        <div class="form-group"><label>الاسم *</label><input type="text" name="name" class="form-control" required></div>
+        <div class="form-row"><div class="form-group"><label>الرقم الأكاديمي</label><input type="text" name="student_id" class="form-control"></div><div class="form-group"><label>الصف</label><input type="text" name="grade" class="form-control"></div></div>
+        <div class="form-row"><div class="form-group"><label>الفصل</label><input type="text" name="class_name" class="form-control"></div><div class="form-group"><label>الهاتف</label><input type="text" name="phone" class="form-control"></div></div>
+        <div class="form-row"><div class="form-group"><label>ولي الأمر</label><input type="text" name="parent_name" class="form-control"></div><div class="form-group"><label>هاتف ولي الأمر</label><input type="text" name="parent_phone" class="form-control"></div></div>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ</button>
+    </form></div></div>
+{% endblock %}

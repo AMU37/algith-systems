@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% block page_title %}لوحة التحكم{% endblock %}
+{% block content %}
+
+{# ==================== CONTRACTING DASHBOARD ==================== #}
+{% if business_type == 'contracting' %}
+<div class="stats-grid">
+    <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-project-diagram"></i></div><div class="stat-info"><h3>{{ projects_count }}</h3><p>المشاريع النشطة</p></div></div>
+    <div class="stat-card"><div class="stat-icon green"><i class="fas fa-file-invoice-dollar"></i></div><div class="stat-info"><h3>{{ "%.0f"|format(total_claims) }}</h3><p>إجمالي المستخلصات</p></div></div>
+    <div class="stat-card"><div class="stat-icon orange"><i class="fas fa-money-bill-wave"></i></div><div class="stat-info"><h3>{{ "%.0f"|format(total_paid_claims) }}</h3><p>المستخلصات المدفوعة</p></div></div>
+    <div class="stat-card"><div class="stat-icon purple"><i class="fas fa-clipboard-check"></i></div><div class="stat-info"><h3>{{ today_attendance }}</h3><p>حضور اليوم</p></div></div>
+    <div class="stat-card"><div class="stat-icon red"><i class="fas fa-users"></i></div><div class="stat-info"><h3>{{ employees_count }}</h3><p>العمالة</p></div></div>
+    <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-building"></i></div><div class="stat-info"><h3>{{ suppliers_count }}</h3><p>الموردين</p></div></div>
+</div>
+<div class="grid-2">
+    <div class="card"><div class="card-header"><h3 class="card-title"><i class="fas fa-clock"></i> آخر المستخلصات</h3></div>
+        <div class="table-container"><table><thead><tr><th>الرقم</th><th>المشروع</th><th>المبلغ</th><th>الحالة</th></tr></thead><tbody>{% for c in recent_claims %}<tr><td>{{ c.claim_number or '-' }}</td><td>{{ c.project.name }}</td><td>{{ "%.0f"|format(c.amount) }}</td><td><span class="badge badge-{{ 'success' if c.status == 'paid' else 'warning' }}">{{ 'مدفوع' if c.status == 'paid' else 'معلق' }}</span></td></tr>{% else %}<tr><td colspan="4" style="text-align:center;color:#999;padding:20px;">لا توجد مستخلصات</td></tr>{% endfor %}</tbody></table></div>
+    </div>
+    <div class="card"><div class="card-header"><h3 class="card-title"><i class="fas fa-clock"></i> آخر المشاريع</h3></div>
+        <div class="table-container"><table><thead><tr><th>الاسم</th><th>العميل</th><th>القيمة</th><th>الحالة</th></tr></thead><tbody>{% for p in recent_projects %}<tr><td>{{ p.name }}</td><td>{{ p.client.name if p.client else '-' }}</td><td>{{ "%.0f"|format(p.contract_value) }}</td><td><span class="badge badge-{{ 'success' if p.status == 'active' else 'warning' }}">{{ 'نشط' if p.status == 'active' else 'متوقف' }}</span></td></tr>{% else %}<tr><td colspan="4" style="text-align:center;color:#999;padding:20px;">لا توجد مشاريع</td></tr>{% endfor %}</tbody></table></div>
+    </div>
+</div>
+
+{# ==================== RESTAURANT DASHBOARD ==================== #}
+{% elif business_type == 'restaurant' %}
+<div class="stats-grid">
+    <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-utensils"></i></div><div class="stat-info"><h3>{{ menu_count }}</h3><p>أصناف القائمة</p></div></div>
+    <div class="stat-card"><div class="stat-icon green"><i class="fas fa-receipt"></i></div><div class="stat-info"><h3>{{ today_orders }}</h3><p>طلبات اليوم</p></div></div>
+    <div class="stat-card"><div class="stat-icon orange"><i class="fas fa-coins"></i></div><div class="stat-info"><h3>{{ "%.0f"|format(today_revenue) }}</h3><p>إيرادات اليوم</p></div></div>
+    <div class="stat-card"><div class="stat-icon purple"><i class="fas fa-hourglass-half"></i></div><div class="stat-info"><h3>{{ pending_orders }}</h3><p>طلبات معلقة</p></div></div>
+</div>
+<div class="card"><div class="card-header"><h3 class="card-title"><i class="fas fa-clock"></i> آخر الطلبات</h3></div>
+    <div class="table-container"><table><thead><tr><th>الطاولة</th><th>التاريخ</th><th>الإجمالي</th><th>الحالة</th></tr></thead><tbody>{% for o in recent_orders %}<tr><td>{{ o.table_number or '-' }}</td><td>{{ o.date }}</td><td>{{ "%.0f"|format(o.total) }}</td><td><span class="badge badge-{{ 'success' if o.status == 'paid' else 'warning' }}">{{ 'مدفوع' if o.status == 'paid' else 'معلق' }}</span></td></tr>{% else %}<tr><td colspan="4" style="text-align:center;color:#999;padding:20px;">لا توجد طلبات</td></tr>{% endfor %}</tbody></table></div>
+</div>
+
+{# ==================== HOSPITAL DASHBOARD ==================== #}
+{% elif business_type == 'hospital' %}
+<div class="stats-grid">
+    <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-user-injured"></i></div><div class="stat-info"><h3>{{ patients_count }}</h3><p>المرضى</p></div></div>
+    <div class="stat-card"><div class="stat-icon green"><i class="fas fa-user-doctor"></i></div><div class="stat-info"><h3>{{ doctors_count }}</h3><p>الأطباء</p></div></div>
+    <div class="stat-card"><div class="stat-icon orange"><i class="fas fa-calendar-check"></i></div><div class="stat-info"><h3>{{ today_appointments }}</h3><p>مواعيد اليوم</p></div></div>
+    <div class="stat-card"><div class="stat-icon purple"><i class="fas fa-clock"></i></div><div class="stat-info"><h3>{{ pending_appointments }}</h3><p>مواعيد معلقة</p></div></div>
+</div>
+<div class="card"><div class="card-header"><h3 class="card-title"><i class="fas fa-clock"></i> آخر المواعيد</h3></div>
+    <div class="table-container"><table><thead><tr><th>المريض</th><th>الطبيب</th><th>التاريخ</th><th>الحالة</th></tr></thead><tbody>{% for a in recent_appointments %}<tr><td>{{ a.patient.name if a.patient else '-' }}</td><td>{{ a.doctor.name if a.doctor else '-' }}</td><td>{{ a.date }}</td><td><span class="badge badge-{{ 'success' if a.status == 'completed' else 'warning' }}">{{ 'مكتمل' if a.status == 'completed' else 'مجدول' }}</span></td></tr>{% else %}<tr><td colspan="4" style="text-align:center;color:#999;padding:20px;">لا توجد مواعيد</td></tr>{% endfor %}</tbody></table></div>
+</div>
+
+{# ==================== SCHOOL DASHBOARD ==================== #}
+{% elif business_type == 'school' %}
+<div class="stats-grid">
+    <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-user-graduate"></i></div><div class="stat-info"><h3>{{ students_count }}</h3><p>الطلاب</p></div></div>
+    <div class="stat-card"><div class="stat-icon green"><i class="fas fa-book-open"></i></div><div class="stat-info"><h3>{{ subjects_count }}</h3><p>المواد</p></div></div>
+    <div class="stat-card"><div class="stat-icon orange"><i class="fas fa-money-bill"></i></div><div class="stat-info"><h3>{{ "%.0f"|format(total_fees) }}</h3><p>إجمالي الرسوم</p></div></div>
+    <div class="stat-card"><div class="stat-icon purple"><i class="fas fa-exclamation-circle"></i></div><div class="stat-info"><h3>{{ pending_fees }}</h3><p>رسوم معلقة</p></div></div>
+</div>
+<div class="card"><div class="card-header"><h3 class="card-title"><i class="fas fa-clock"></i> آخر الامتحانات</h3></div>
+    <div class="table-container"><table><thead><tr><th>المادة</th><th>الطالب</th><th>الدرجة</th><th>من</th></tr></thead><tbody>{% for e in recent_exams %}<tr><td>{{ e.subject.name if e.subject else '-' }}</td><td>{{ e.student.name if e.student else '-' }}</td><td>{{ e.score }}</td><td>{{ e.max_score }}</td></tr>{% else %}<tr><td colspan="4" style="text-align:center;color:#999;padding:20px;">لا توجد امتحانات</td></tr>{% endfor %}</tbody></table></div>
+</div>
+
+{# ==================== TRANSPORT DASHBOARD ==================== #}
+{% elif business_type == 'transport' %}
+<div class="stats-grid">
+    <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-car"></i></div><div class="stat-info"><h3>{{ vehicles_count }}</h3><p>المركبات</p></div></div>
+    <div class="stat-card"><div class="stat-icon green"><i class="fas fa-route"></i></div><div class="stat-info"><h3>{{ today_trips }}</h3><p>رحلات اليوم</p></div></div>
+    <div class="stat-card"><div class="stat-icon orange"><i class="fas fa-coins"></i></div><div class="stat-info"><h3>{{ "%.0f"|format(total_revenue) }}</h3><p>إجمالي الإيرادات</p></div></div>
+    <div class="stat-card"><div class="stat-icon purple"><i class="fas fa-hourglass-half"></i></div><div class="stat-info"><h3>{{ pending_trips }}</h3><p>رحلات معلقة</p></div></div>
+</div>
+<div class="card"><div class="card-header"><h3 class="card-title"><i class="fas fa-clock"></i> آخر الرحلات</h3></div>
+    <div class="table-container"><table><thead><tr><th>المركبة</th><th>من</th><th>إلى</th><th>الإيراد</th><th>الحالة</th></tr></thead><tbody>{% for t in recent_trips %}<tr><td>{{ t.vehicle.plate_number if t.vehicle else '-' }}</td><td>{{ t.from_location or '-' }}</td><td>{{ t.to_location or '-' }}</td><td>{{ "%.0f"|format(t.revenue) }}</td><td><span class="badge badge-{{ 'success' if t.status == 'completed' else 'warning' }}">{{ 'مكتمل' if t.status == 'completed' else 'معلق' }}</span></td></tr>{% else %}<tr><td colspan="5" style="text-align:center;color:#999;padding:20px;">لا توجد رحلات</td></tr>{% endfor %}</tbody></table></div>
+</div>
+
+{# ==================== FACTORY DASHBOARD ==================== #}
+{% elif business_type == 'factory' %}
+<div class="stats-grid">
+    <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-clipboard-list"></i></div><div class="stat-info"><h3>{{ production_orders }}</h3><p>أوامر الإنتاج</p></div></div>
+    <div class="stat-card"><div class="stat-icon green"><i class="fas fa-gear"></i></div><div class="stat-info"><h3>{{ machines_count }}</h3><p>الآلات</p></div></div>
+    <div class="stat-card"><div class="stat-icon orange"><i class="fas fa-check-double"></i></div><div class="stat-info"><h3>{{ quality_checks }}</h3><p>فحوصات الجودة</p></div></div>
+    <div class="stat-card"><div class="stat-icon purple"><i class="fas fa-users"></i></div><div class="stat-info"><h3>{{ employees_count }}</h3><p>الموظفين</p></div></div>
+</div>
+<div class="card"><div class="card-header"><h3 class="card-title"><i class="fas fa-clock"></i> آخر أوامر الإنتاج</h3></div>
+    <div class="table-container"><table><thead><tr><th>المنتج</th><th>الكمية</th><th>البداية</th><th>الحالة</th></tr></thead><tbody>{% for o in recent_orders %}<tr><td>{{ o.product_name }}</td><td>{{ o.quantity }}</td><td>{{ o.start_date or '-' }}</td><td><span class="badge badge-{{ 'success' if o.status == 'completed' else 'warning' }}">{{ 'مكتمل' if o.status == 'completed' else 'قيد التنفيذ' }}</span></td></tr>{% else %}<tr><td colspan="4" style="text-align:center;color:#999;padding:20px;">لا توجد أوامر إنتاج</td></tr>{% endfor %}</tbody></table></div>
+</div>
+
+{# ==================== RETAIL DASHBOARD ==================== #}
+{% elif business_type == 'retail' %}
+<div class="stats-grid">
+    <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-cube"></i></div><div class="stat-info"><h3>{{ products_count }}</h3><p>المنتجات</p></div></div>
+    <div class="stat-card"><div class="stat-icon green"><i class="fas fa-receipt"></i></div><div class="stat-info"><h3>{{ today_sales }}</h3><p>مبيعات اليوم</p></div></div>
+    <div class="stat-card"><div class="stat-icon orange"><i class="fas fa-coins"></i></div><div class="stat-info"><h3>{{ "%.0f"|format(today_revenue) }}</h3><p>إيرادات اليوم</p></div></div>
+    <div class="stat-card"><div class="stat-icon purple"><i class="fas fa-exclamation-triangle"></i></div><div class="stat-info"><h3>{{ low_stock }}</h3><p>منتجات منخفضة</p></div></div>
+</div>
+<div class="grid-2">
+    <div class="card"><div class="card-header"><h3 class="card-title"><i class="fas fa-clock"></i> آخر المبيعات</h3></div>
+        <div class="table-container"><table><thead><tr><th>رقم الفاتورة</th><th>العميل</th><th>المبلغ</th><th>الحالة</th></tr></thead><tbody>{% for sale in recent_sales[:5] %}<tr><td>{{ sale.invoice_number or '-' }}</td><td>{{ sale.client.name if sale.client else 'نقدي' }}</td><td>{{ "%.0f"|format(sale.total) }}</td><td><span class="badge badge-{{ 'success' if sale.status == 'paid' else 'warning' }}">{{ 'مدفوع' if sale.status == 'paid' else 'معلق' }}</span></td></tr>{% else %}<tr><td colspan="4" style="text-align:center;color:#999;padding:20px;">لا توجد مبيعات</td></tr>{% endfor %}</tbody></table></div>
+    </div>
+    <div class="card"><div class="card-header"><h3 class="card-title"><i class="fas fa-clock"></i> آخر المشتريات</h3></div>
+        <div class="table-container"><table><thead><tr><th>رقم الفاتورة</th><th>المورد</th><th>المبلغ</th><th>التاريخ</th></tr></thead><tbody>{% for purchase in recent_purchases[:5] %}<tr><td>{{ purchase.invoice_number or '-' }}</td><td>{{ purchase.supplier.name if purchase.supplier else '-' }}</td><td>{{ "%.0f"|format(purchase.total) }}</td><td>{{ purchase.date }}</td></tr>{% else %}<tr><td colspan="4" style="text-align:center;color:#999;padding:20px;">لا توجد مشتريات</td></tr>{% endfor %}</tbody></table></div>
+    </div>
+</div>
+
+{# ==================== CLEANING DASHBOARD ==================== #}
+{% elif business_type == 'cleaning' %}
+<div class="stats-grid">
+    <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-handshake"></i></div><div class="stat-info"><h3>{{ clients_count }}</h3><p>العملاء</p></div></div>
+    <div class="stat-card"><div class="stat-icon green"><i class="fas fa-people-group"></i></div><div class="stat-info"><h3>{{ teams_count }}</h3><p>الفرق</p></div></div>
+    <div class="stat-card"><div class="stat-icon orange"><i class="fas fa-file-contract"></i></div><div class="stat-info"><h3>{{ active_contracts }}</h3><p>العقود النشطة</p></div></div>
+    <div class="stat-card"><div class="stat-icon purple"><i class="fas fa-walking"></i></div><div class="stat-info"><h3>{{ today_visits }}</h3><p>زيارات اليوم</p></div></div>
+</div>
+<div class="card"><div class="card-header"><h3 class="card-title"><i class="fas fa-clock"></i> آخر الزيارات</h3></div>
+    <div class="table-container"><table><thead><tr><th>الموقع</th><th>التاريخ</th><th>التقييم</th></tr></thead><tbody>{% for v in recent_visits %}<tr><td>{{ v.site.name if v.site else '-' }}</td><td>{{ v.date }}</td><td>{{ v.rating or '-' }}</td></tr>{% else %}<tr><td colspan="3" style="text-align:center;color:#999;padding:20px;">لا توجد زيارات</td></tr>{% endfor %}</tbody></table></div>
+</div>
+
+{# ==================== TRADING DASHBOARD ==================== #}
+{% elif business_type == 'trading' %}
+<div class="stats-grid">
+    <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-cart-shopping"></i></div><div class="stat-info"><h3>{{ "%.0f"|format(total_purchases) }}</h3><p>إجمالي المشتريات</p></div></div>
+    <div class="stat-card"><div class="stat-icon green"><i class="fas fa-cash-register"></i></div><div class="stat-info"><h3>{{ "%.0f"|format(total_sales) }}</h3><p>إجمالي المبيعات</p></div></div>
+    <div class="stat-card"><div class="stat-icon orange"><i class="fas fa-building"></i></div><div class="stat-info"><h3>{{ suppliers_count }}</h3><p>الموردين</p></div></div>
+    <div class="stat-card"><div class="stat-icon purple"><i class="fas fa-user-group"></i></div><div class="stat-info"><h3>{{ clients_count }}</h3><p>العملاء</p></div></div>
+</div>
+<div class="grid-2">
+    <div class="card"><div class="card-header"><h3 class="card-title"><i class="fas fa-clock"></i> آخر المبيعات</h3></div>
+        <div class="table-container"><table><thead><tr><th>رقم الفاتورة</th><th>العميل</th><th>المبلغ</th><th>الحالة</th></tr></thead><tbody>{% for sale in recent_sales[:5] %}<tr><td>{{ sale.invoice_number or '-' }}</td><td>{{ sale.client.name if sale.client else 'نقدي' }}</td><td>{{ "%.0f"|format(sale.total) }}</td><td><span class="badge badge-{{ 'success' if sale.status == 'paid' else 'warning' }}">{{ 'مدفوع' if sale.status == 'paid' else 'معلق' }}</span></td></tr>{% else %}<tr><td colspan="4" style="text-align:center;color:#999;padding:20px;">لا توجد مبيعات</td></tr>{% endfor %}</tbody></table></div>
+    </div>
+    <div class="card"><div class="card-header"><h3 class="card-title"><i class="fas fa-clock"></i> آخر المشتريات</h3></div>
+        <div class="table-container"><table><thead><tr><th>رقم الفاتورة</th><th>المورد</th><th>المبلغ</th><th>التاريخ</th></tr></thead><tbody>{% for purchase in recent_purchases[:5] %}<tr><td>{{ purchase.invoice_number or '-' }}</td><td>{{ purchase.supplier.name if purchase.supplier else '-' }}</td><td>{{ "%.0f"|format(purchase.total) }}</td><td>{{ purchase.date }}</td></tr>{% else %}<tr><td colspan="4" style="text-align:center;color:#999;padding:20px;">لا توجد مشتريات</td></tr>{% endfor %}</tbody></table></div>
+    </div>
+</div>
+
+{# ==================== SERVICE DASHBOARD ==================== #}
+{% elif business_type == 'service' %}
+<div class="stats-grid">
+    <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-concierge-bell"></i></div><div class="stat-info"><h3>{{ services_count }}</h3><p>الخدمات</p></div></div>
+    <div class="stat-card"><div class="stat-icon green"><i class="fas fa-file-contract"></i></div><div class="stat-info"><h3>{{ active_contracts }}</h3><p>العقود النشطة</p></div></div>
+    <div class="stat-card"><div class="stat-icon orange"><i class="fas fa-coins"></i></div><div class="stat-info"><h3>{{ "%.0f"|format(total_revenue) }}</h3><p>إجمالي الإيرادات</p></div></div>
+    <div class="stat-card"><div class="stat-icon purple"><i class="fas fa-hourglass-half"></i></div><div class="stat-info"><h3>{{ pending_orders }}</h3><p>طلبات معلقة</p></div></div>
+</div>
+<div class="card"><div class="card-header"><h3 class="card-title"><i class="fas fa-clock"></i> آخر الطلبات</h3></div>
+    <div class="table-container"><table><thead><tr><th>العميل</th><th>الخدمة</th><th>المبلغ</th><th>الحالة</th></tr></thead><tbody>{% for o in recent_orders %}<tr><td>{{ o.client.name if o.client else '-' }}</td><td>{{ o.service.name if o.service else '-' }}</td><td>{{ "%.0f"|format(o.amount) }}</td><td><span class="badge badge-{{ 'success' if o.status == 'completed' else 'warning' }}">{{ 'مكتمل' if o.status == 'completed' else 'معلق' }}</span></td></tr>{% else %}<tr><td colspan="4" style="text-align:center;color:#999;padding:20px;">لا توجد طلبات</td></tr>{% endfor %}</tbody></table></div>
+</div>
+
+{# ==================== GENERAL DASHBOARD ==================== #}
+{% else %}
+<div class="stats-grid">
+    <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-users"></i></div><div class="stat-info"><h3>{{ employees_count }}</h3><p>الموظفين النشطين</p></div></div>
+    <div class="stat-card"><div class="stat-icon green"><i class="fas fa-money-check-dollar"></i></div><div class="stat-info"><h3>{{ "%.0f"|format(total_salaries) }}</h3><p>رواتب الشهر</p></div></div>
+    <div class="stat-card"><div class="stat-icon orange"><i class="fas fa-truck-field"></i></div><div class="stat-info"><h3>{{ suppliers_count }}</h3><p>الموردين</p></div></div>
+    <div class="stat-card"><div class="stat-icon purple"><i class="fas fa-handshake"></i></div><div class="stat-info"><h3>{{ clients_count }}</h3><p>العملاء</p></div></div>
+    <div class="stat-card"><div class="stat-icon red"><i class="fas fa-boxes-stacked"></i></div><div class="stat-info"><h3>{{ products_count }}</h3><p>المنتجات/الخدمات</p></div></div>
+    <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-chart-line"></i></div><div class="stat-info"><h3>{{ "%.0f"|format(total_sales) }}</h3><p>إجمالي المبيعات</p></div></div>
+</div>
+<div class="grid-2">
+    <div class="card"><div class="card-header"><h3 class="card-title"><i class="fas fa-clock"></i> آخر المبيعات</h3></div>
+        <div class="table-container"><table><thead><tr><th>رقم الفاتورة</th><th>العميل</th><th>المبلغ</th><th>الحالة</th></tr></thead><tbody>{% for sale in recent_sales[:5] %}<tr><td>{{ sale.invoice_number or '-' }}</td><td>{{ sale.client.name if sale.client else 'نقدي' }}</td><td>{{ "%.0f"|format(sale.total) }}</td><td><span class="badge badge-{{ 'success' if sale.status == 'paid' else 'warning' }}">{{ 'مدفوع' if sale.status == 'paid' else 'معلق' }}</span></td></tr>{% else %}<tr><td colspan="4" style="text-align:center;color:#999;padding:20px;">لا توجد مبيعات</td></tr>{% endfor %}</tbody></table></div>
+    </div>
+    <div class="card"><div class="card-header"><h3 class="card-title"><i class="fas fa-clock"></i> آخر المشتريات</h3></div>
+        <div class="table-container"><table><thead><tr><th>رقم الفاتورة</th><th>المورد</th><th>المبلغ</th><th>التاريخ</th></tr></thead><tbody>{% for purchase in recent_purchases[:5] %}<tr><td>{{ purchase.invoice_number or '-' }}</td><td>{{ purchase.supplier.name if purchase.supplier else '-' }}</td><td>{{ "%.0f"|format(purchase.total) }}</td><td>{{ purchase.date }}</td></tr>{% else %}<tr><td colspan="4" style="text-align:center;color:#999;padding:20px;">لا توجد مشتريات</td></tr>{% endfor %}</tbody></table></div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

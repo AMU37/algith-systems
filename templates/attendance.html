@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block page_title %}التحضير اليومي{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-clipboard-check"></i> التحضير اليومي</h3>
+        <div style="display:flex;gap:8px;align-items:center">
+            <input type="date" id="attDate" class="form-control" value="{{ today }}" onchange="location.href='{{ url_for('attendance') }}?date='+this.value" style="width:auto">
+            <button class="btn btn-primary btn-sm" onclick="openModal('addAttModal')"><i class="fas fa-plus"></i> إضافة</button>
+        </div>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead><tr><th>الموظف</th><th>المشروع</th><th>الحالة</th><th>الساعات</th><th>الأجر اليومي</th><th>ملاحظات</th></tr></thead>
+            <tbody>
+                {% for a in attendances %}
+                <tr>
+                    <td>{{ a.employee.name }}</td><td>{{ a.project.name if a.project else '-' }}</td>
+                    <td><span class="badge badge-{{ 'success' if a.status == 'present' else 'danger' }}">{{ 'حاضر' if a.status == 'present' else 'غائب' }}</span></td>
+                    <td>{{ a.hours }}</td><td>{{ "%.0f"|format(a.daily_wage) }}</td><td>{{ a.notes or '-' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal" id="addAttModal">
+    <div class="modal-content">
+        <div class="modal-header"><h3>تسجيل حضور</h3><button class="modal-close" onclick="closeModal('addAttModal')">&times;</button></div>
+        <form method="POST" action="{{ url_for('add_attendance') }}">
+            <div class="form-group"><label>الموظف *</label><select name="employee_id" class="form-control" required>{% for e in employees %}<option value="{{ e.id }}">{{ e.name }}</option>{% endfor %}</select></div>
+            <div class="form-group"><label>المشروع</label><select name="project_id" class="form-control"><option value="">بدون مشروع</option>{% for p in projects %}<option value="{{ p.id }}">{{ p.name }}</option>{% endfor %}</select></div>
+            <div class="form-row">
+                <div class="form-group"><label>التاريخ</label><input type="date" name="date" class="form-control" value="{{ today }}"></div>
+                <div class="form-group"><label>الحالة</label><select name="status" class="form-control"><option value="present">حاضر</option><option value="absent">غائب</option></select></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>الساعات</label><input type="number" name="hours" class="form-control" step="0.5" value="8"></div>
+                <div class="form-group"><label>الأجر اليومي</label><input type="number" name="daily_wage" class="form-control" step="0.01" value="0"></div>
+            </div>
+            <div class="form-group"><label>ملاحظات</label><textarea name="notes" class="form-control" rows="2"></textarea></div>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

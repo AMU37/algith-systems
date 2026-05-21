@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block page_title %}الكشف المالي{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-scale-balanced"></i> الكشف المالي - الميزانية</h3>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>الحساب</th>
+                    <th>إجمالي المدين</th>
+                    <th>إجمالي الدائن</th>
+                    <th>الرصيد</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for acc in accounts %}
+                <tr>
+                    <td>{{ acc.account }}</td>
+                    <td>{{ "%.0f"|format(acc.total_debit) }}</td>
+                    <td>{{ "%.0f"|format(acc.total_credit) }}</td>
+                    <td style="color:{% if acc.total_debit - acc.total_credit >= 0 %}#34a853{% else %}#ea4335{% endif %};font-weight:700">
+                        {{ "%.0f"|format(acc.total_debit - acc.total_credit) }}
+                    </td>
+                </tr>
+                {% endfor %}
+                <tr style="background:#f8f9fa;font-weight:800">
+                    <td>الإجمالي</td>
+                    <td>{{ "%.0f"|format(total_debit) }}</td>
+                    <td>{{ "%.0f"|format(total_credit) }}</td>
+                    <td>{{ "%.0f"|format(total_debit - total_credit) }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="grid-2">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-arrow-trend-up"></i> ملخص الإيرادات</h3>
+        </div>
+        <div style="padding:20px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:12px">
+                <span>إجمالي المبيعات</span>
+                <strong>{{ "%.0f"|format(total_debit) }}</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding-top:12px;border-top:2px solid #e8eaed">
+                <span>الإجمالي</span>
+                <strong style="color:#34a853">{{ "%.0f"|format(total_debit) }}</strong>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-arrow-trend-down"></i> ملخص المصروفات</h3>
+        </div>
+        <div style="padding:20px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:12px">
+                <span>إجمالي المصروفات</span>
+                <strong>{{ "%.0f"|format(total_credit) }}</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding-top:12px;border-top:2px solid #e8eaed">
+                <span>الإجمالي</span>
+                <strong style="color:#ea4335">{{ "%.0f"|format(total_credit) }}</strong>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

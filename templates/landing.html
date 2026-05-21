@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الغيث - نظام إدارة متكامل للأعمال</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #714B67;
+            --primary-dark: #5B3A53;
+            --primary-light: #F3EEF1;
+            --teal: #00A09D;
+            --teal-light: #E8F5F5;
+            --dark: #2C2C2C;
+            --gray-700: #666;
+            --gray-500: #999;
+            --gray-300: #D9D9D9;
+            --gray-100: #F5F5F5;
+            --white: #FFFFFF;
+        }
+        body { font-family: 'Tajawal', sans-serif; direction: rtl; color: var(--dark); background: var(--white); overflow-x: hidden; }
+        a { text-decoration: none; color: inherit; }
+        img { max-width: 100%; height: auto; }
+
+        /* Navbar */
+        .navbar {
+            position: fixed; top: 0; right: 0; left: 0; z-index: 1000;
+            background: rgba(255,255,255,0.95); backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--gray-300);
+            padding: 0 40px; height: 64px;
+            display: flex; align-items: center; justify-content: space-between;
+            transition: all 0.3s;
+        }
+        .navbar.scrolled { box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+        .nav-brand { display: flex; align-items: center; gap: 12px; }
+        .nav-brand img { width: 36px; height: 36px; border-radius: 8px; }
+        .nav-brand span { font-size: 1.3rem; font-weight: 800; color: var(--primary); }
+        .nav-links { display: flex; align-items: center; gap: 24px; }
+        .nav-links a { color: var(--gray-700); font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--primary); }
+        .nav-actions { display: flex; gap: 10px; }
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 10px 22px; border-radius: 8px; font-family: inherit;
+            font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.2s; border: none;
+        }
+        .btn-outline { background: transparent; border: 1.5px solid var(--primary); color: var(--primary); }
+        .btn-outline:hover { background: var(--primary-light); }
+        .btn-primary { background: var(--primary); color: var(--white); }
+        .btn-primary:hover { background: var(--primary-dark); box-shadow: 0 4px 12px rgba(113,75,103,0.3); transform: translateY(-1px); }
+        .btn-teal { background: var(--teal); color: var(--white); }
+        .btn-teal:hover { background: #008A87; }
+
+        /* Hero */
+        .hero {
+            padding: 140px 40px 60px;
+            background: linear-gradient(160deg, var(--primary) 0%, var(--primary-dark) 60%, #3D2538 100%);
+            color: var(--white); position: relative; overflow: hidden;
+        }
+        .hero::before {
+            content: ''; position: absolute; top: -50%; right: -20%; width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(0,160,157,0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .hero-inner {
+            max-width: 1100px; margin: 0 auto;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;
+            position: relative; z-index: 1;
+        }
+        .hero-content h1 {
+            font-size: 2.8rem; font-weight: 900; line-height: 1.2; margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+        .hero-content h1 span { color: var(--teal); }
+        .hero-content p { font-size: 1.1rem; opacity: 0.85; line-height: 1.7; margin-bottom: 32px; }
+        .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+        .hero-btns .btn { padding: 14px 28px; font-size: 1rem; }
+        .btn-white { background: var(--white); color: var(--primary); }
+        .btn-white:hover { background: var(--primary-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+        .btn-glass { background: rgba(255,255,255,0.12); color: var(--white); border: 1px solid rgba(255,255,255,0.25); backdrop-filter: blur(4px); }
+        .btn-glass:hover { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.4); }
+        .hero-image {
+            display: flex; justify-content: center; align-items: center;
+        }
+        .hero-image img {
+            max-width: 100%; border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        /* Stats bar */
+        .stats-bar {
+            background: var(--white); padding: 0 40px;
+            border-bottom: 1px solid var(--gray-300);
+        }
+        .stats-bar-inner {
+            max-width: 1000px; margin: 0 auto;
+            display: grid; grid-template-columns: repeat(4, 1fr);
+        }
+        .stat-item { padding: 24px; text-align: center; border-left: 1px solid var(--gray-300); }
+        .stat-item:last-child { border-left: none; }
+        .stat-item h3 { font-size: 2rem; font-weight: 900; color: var(--primary); }
+        .stat-item p { font-size: 0.85rem; color: var(--gray-700); margin-top: 4px; }
+
+        /* Features with images */
+        .features-img { padding: 80px 40px; }
+        .features-img-inner { max-width: 1100px; margin: 0 auto; }
+        .feature-row {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+            margin-bottom: 80px;
+        }
+        .feature-row:last-child { margin-bottom: 0; }
+        .feature-row.reverse { direction: ltr; }
+        .feature-row.reverse > * { direction: rtl; }
+        .feature-text h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 16px; color: var(--dark); }
+        .feature-text p { color: var(--gray-700); font-size: 1rem; line-height: 1.7; margin-bottom: 20px; }
+        .feature-list { list-style: none; }
+        .feature-list li {
+            padding: 8px 0; color: var(--gray-700); font-size: 0.95rem;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .feature-list li i { color: var(--teal); font-size: 0.9rem; }
+        .feature-img-box {
+            border-radius: 16px; overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+            border: 1px solid var(--gray-300);
+        }
+        .feature-img-box img { width: 100%; display: block; }
+
+        /* Announcements */
+        .announcements { padding: 60px 40px; background: var(--gray-100); }
+        .announcements-inner { max-width: 1000px; margin: 0 auto; }
+        .section-title { text-align: center; margin-bottom: 40px; }
+        .section-title h2 { font-size: 1.8rem; font-weight: 800; color: var(--dark); margin-bottom: 8px; }
+        .section-title p { color: var(--gray-700); font-size: 1rem; }
+        .announcements-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .announcement-card {
+            background: var(--white); border-radius: 12px; padding: 24px;
+            border: 1px solid var(--gray-300); transition: all 0.2s;
+        }
+        .announcement-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+        .announcement-card .icon {
+            width: 48px; height: 48px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem; margin-bottom: 16px;
+        }
+        .announcement-card .icon.purple { background: var(--primary-light); color: var(--primary); }
+        .announcement-card .icon.teal { background: var(--teal-light); color: var(--teal); }
+        .announcement-card .icon.orange { background: #FFF3E0; color: #E65100; }
+        .announcement-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; }
+        .announcement-card p { color: var(--gray-700); font-size: 0.88rem; line-height: 1.6; }
+        .announcement-card .tag {
+            display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.72rem; font-weight: 600; margin-top: 12px;
+        }
+        .tag-new { background: #E8F5E9; color: #1B5E20; }
+        .tag-update { background: var(--primary-light); color: var(--primary); }
+
+        /* App showcase */
+        .app-showcase { padding: 80px 40px; background: var(--white); }
+        .app-showcase-inner { max-width: 1100px; margin: 0 auto; text-align: center; }
+        .app-showcase h2 { font-size: 2rem; font-weight: 800; margin-bottom: 12px; }
+        .app-showcase > .app-showcase-inner > p { color: var(--gray-700); margin-bottom: 40px; font-size: 1.05rem; }
+        .app-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px;
+            max-width: 800px; margin: 0 auto;
+        }
+        .app-item {
+            background: var(--gray-100); border-radius: 12px; padding: 24px 16px; text-align: center;
+            transition: all 0.2s; border: 1px solid transparent;
+        }
+        .app-item:hover { background: var(--primary-light); border-color: var(--primary); transform: translateY(-3px); }
+        .app-item i { font-size: 1.8rem; color: var(--primary); margin-bottom: 10px; display: block; }
+        .app-item span { font-size: 0.85rem; font-weight: 600; color: var(--dark); }
+
+        /* Pricing */
+        .pricing { padding: 60px 40px; background: var(--gray-100); }
+        .pricing-inner { max-width: 1000px; margin: 0 auto; }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+        .pricing-card {
+            background: var(--white); border-radius: 14px; padding: 32px 24px; text-align: center;
+            border: 2px solid var(--gray-300); transition: all 0.2s; position: relative;
+        }
+        .pricing-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.1); }
+        .pricing-card.featured { border-color: var(--primary); }
+        .pricing-card.featured::before {
+            content: 'الأكثر شيوعاً'; position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+            background: var(--primary); color: var(--white); padding: 4px 16px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;
+        }
+        .pricing-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 12px; }
+        .pricing-card .price { font-size: 2.2rem; font-weight: 900; color: var(--primary); margin: 12px 0; }
+        .pricing-card .price span { font-size: 0.85rem; color: var(--gray-500); font-weight: 500; }
+        .pricing-card ul { list-style: none; margin: 16px 0; text-align: right; }
+        .pricing-card ul li { padding: 6px 0; color: var(--gray-700); font-size: 0.85rem; }
+        .pricing-card ul li i { color: var(--teal); margin-left: 8px; }
+        .pricing-card .btn { width: 100%; justify-content: center; margin-top: 12px; }
+
+        /* CTA */
+        .cta {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: var(--white); padding: 60px 40px; text-align: center;
+        }
+        .cta h2 { font-size: 2rem; font-weight: 800; margin-bottom: 12px; }
+        .cta p { opacity: 0.85; margin-bottom: 24px; font-size: 1.05rem; }
+
+        /* Footer */
+        .footer { background: var(--dark); color: rgba(255,255,255,0.5); padding: 32px 40px; text-align: center; font-size: 0.85rem; }
+        .footer a { color: rgba(255,255,255,0.7); }
+        .footer a:hover { color: var(--white); }
+
+        @media (max-width: 768px) {
+            .navbar { padding: 0 16px; }
+            .nav-links { display: none; }
+            .hero { padding: 120px 20px 40px; }
+            .hero-inner { grid-template-columns: 1fr; text-align: center; }
+            .hero-content h1 { font-size: 2rem; }
+            .hero-btns { justify-content: center; }
+            .hero-btns .btn { width: 100%; justify-content: center; }
+            .hero-image { order: -1; }
+            .stats-bar-inner { grid-template-columns: repeat(2, 1fr); }
+            .stat-item { border-left: none; border-bottom: 1px solid var(--gray-300); }
+            .feature-row { grid-template-columns: 1fr; gap: 30px; }
+            .feature-row.reverse { direction: rtl; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-brand">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="الغيث">
+            <span>الغيث</span>
+        </div>
+        <div class="nav-links">
+            <a href="#features">المميزات</a>
+            <a href="#apps">التطبيقات</a>
+            <a href="#pricing">الأسعار</a>
+            <a href="#announcements">الأخبار</a>
+        </div>
+        <div class="nav-actions">
+            <a href="{{ url_for('login') }}" class="btn btn-outline"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</a>
+            <a href="{{ url_for('setup') }}" class="btn btn-primary"><i class="fas fa-rocket"></i> حساب جديد</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-inner">
+            <div class="hero-content">
+                <h1>أدِر عملك بذكاء مع <span>الغيث</span></h1>
+                <p>منصة سحابية واحدة لإدارة شركتك بالكامل - الموظفين، الرواتب، المشتريات، المبيعات، والمحاسبة. مصمم خصيصاً للشركات العربية.</p>
+                <div class="hero-btns">
+                    <a href="{{ url_for('setup') }}" class="btn btn-white"><i class="fas fa-rocket"></i> ابدأ مجاناً الآن</a>
+                    <a href="{{ url_for('login') }}" class="btn btn-glass"><i class="fas fa-sign-in-alt"></i> لدي حساب</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="{{ url_for('static', filename='images/hero-dashboard.svg') }}" alt="لوحة تحكم الغيث">
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+        <div class="stats-bar-inner">
+            <div class="stat-item"><h3>10+</h3><p>أنشطة تجارية</p></div>
+            <div class="stat-item"><h3>50+</h3><p>وحدة وظيفية</p></div>
+            <div class="stat-item"><h3>24/7</h3><p>دعم فني</p></div>
+            <div class="stat-item"><h3>100%</h3><p>سحابي وآمن</p></div>
+        </div>
+    </div>
+
+    <!-- Features with Images -->
+    <section class="features-img" id="features">
+        <div class="features-img-inner">
+            <div class="section-title">
+                <h2>كل ما تحتاجه في منصة واحدة</h2>
+                <p>وحدات متكاملة مصممة لتبسيط عملك</p>
+            </div>
+
+            <!-- Feature 1: Dashboard -->
+            <div class="feature-row">
+                <div class="feature-text">
+                    <h2>لوحة تحكم ذكية</h2>
+                    <p>راقب أداء شركتك من مكان واحد. إحصائيات فورية، رسوم بيانية تفاعلية، وتنبيهات ذكية تبقيك على اطلاع دائم.</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check-circle"></i> إحصائيات فورية لجميع الأقسام</li>
+                        <li><i class="fas fa-check-circle"></i> رسوم بيانية تفاعلية</li>
+                        <li><i class="fas fa-check-circle"></i> تنبيهات ذكية مخصصة</li>
+                    </ul>
+                </div>
+                <div class="feature-img-box">
+                    <img src="{{ url_for('static', filename='images/analytics.svg') }}" alt="لوحة التحكم">
+                </div>
+            </div>
+
+            <!-- Feature 2: Cloud -->
+            <div class="feature-row reverse">
+                <div class="feature-text">
+                    <h2>سحابي وآمن 100%</h2>
+                    <p>اعمل من أي مكان في العالم. بياناتك مشفرة ومحفوظة بأمان. لا حاجة لتثبيت أو صيانة.</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check-circle"></i> وصول من أي جهاز ومتصفح</li>
+                        <li><i class="fas fa-check-circle"></i> تشفير كامل للبيانات</li>
+                        <li><i class="fas fa-check-circle"></i> نسخ احتياطي تلقائي</li>
+                    </ul>
+                </div>
+                <div class="feature-img-box">
+                    <img src="{{ url_for('static', filename='images/cloud.svg') }}" alt="سحابي">
+                </div>
+            </div>
+
+            <!-- Feature 3: Team -->
+            <div class="feature-row">
+                <div class="feature-text">
+                    <h2>إدارة الموظفين والرواتب</h2>
+                    <p>نظام شامل لإدارة الموظفين مع الحضور اليومي، التقييم، السلف، وحساب الرواتب تلقائياً.</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check-circle"></i> أجور يومية وشهرية</li>
+                        <li><i class="fas fa-check-circle"></i> خصميات وإضافيات تلقائية</li>
+                        <li><i class="fas fa-check-circle"></i> قيود محاسبية فورية</li>
+                    </ul>
+                </div>
+                <div class="feature-img-box">
+                    <img src="{{ url_for('static', filename='images/team.svg') }}" alt="إدارة الفريق">
+                </div>
+            </div>
+
+            <!-- Feature 4: Invoices -->
+            <div class="feature-row reverse">
+                <div class="feature-text">
+                    <h2>فواتير ومحاسبة متكاملة</h2>
+                    <p>أنشئ فواتير احترافية، تتبع المدفوعات، وأدر حساباتك المالية بسهولة مع دليل حسابات مرن.</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check-circle"></i> فواتير شراء وبيع</li>
+                        <li><i class="fas fa-check-circle"></i> دليل حسابات مرن</li>
+                        <li><i class="fas fa-check-circle"></i> تقارير مالية شاملة</li>
+                    </ul>
+                </div>
+                <div class="feature-img-box">
+                    <img src="{{ url_for('static', filename='images/invoice.svg') }}" alt="الفواتير">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Announcements -->
+    <section class="announcements" id="announcements">
+        <div class="announcements-inner">
+            <div class="section-title">
+                <h2>آخر الأخبار والتحديثات</h2>
+                <p>تابع جديد نظام الغيث</p>
+            </div>
+            <div class="announcements-grid">
+                <div class="announcement-card">
+                    <div class="icon purple"><i class="fas fa-calculator"></i></div>
+                    <h3>نظام محاسبي متكامل</h3>
+                    <p>تم إضافة دليل حسابات مرن مع قيود محاسبية تلقائية لكل عملية مالية</p>
+                    <span class="tag tag-new">جديد</span>
+                </div>
+                <div class="announcement-card">
+                    <div class="icon teal"><i class="fas fa-hard-hat"></i></div>
+                    <h3>تحسين وحدة المقاولات</h3>
+                    <p>إضافة نظام الأجور اليومي والشهري مع ربط تلقائي بالحضور والصرف</p>
+                    <span class="tag tag-update">تحديث</span>
+                </div>
+                <div class="announcement-card">
+                    <div class="icon orange"><i class="fas fa-shield-alt"></i></div>
+                    <h3>نظام الاشتراكات السحابية</h3>
+                    <p>إدارة الشركات والاشتراكات مع لوحة تحكم Super Admin شاملة</p>
+                    <span class="tag tag-new">جديد</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- App Showcase -->
+    <section class="app-showcase" id="apps">
+        <div class="app-showcase-inner">
+            <h2>تطبيقات متكاملة لكل نشاط</h2>
+            <p>اختر نشاطك واحصل على النظام المثالي لعملك</p>
+            <div class="app-grid">
+                <div class="app-item"><i class="fas fa-helmet-safety"></i><span>المقاولات</span></div>
+                <div class="app-item"><i class="fas fa-store"></i><span>التجزئة</span></div>
+                <div class="app-item"><i class="fas fa-utensils"></i><span>المطاعم</span></div>
+                <div class="app-item"><i class="fas fa-hospital"></i><span>المستشفيات</span></div>
+                <div class="app-item"><i class="fas fa-graduation-cap"></i><span>المدارس</span></div>
+                <div class="app-item"><i class="fas fa-briefcase"></i><span>الخدمات</span></div>
+                <div class="app-item"><i class="fas fa-truck"></i><span>النقل</span></div>
+                <div class="app-item"><i class="fas fa-industry"></i><span>المصانع</span></div>
+                <div class="app-item"><i class="fas fa-building"></i><span>التجارة</span></div>
+                <div class="app-item"><i class="fas fa-broom"></i><span>النظافة</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="pricing" id="pricing">
+        <div class="pricing-inner">
+            <div class="section-title">
+                <h2>باقات مرنة تناسب الجميع</h2>
+                <p>ابدأ مجاناً وقم بالترقية عند الحاجة</p>
+            </div>
+            <div class="pricing-grid">
+                {% for code, plan in plans.items() %}
+                <div class="pricing-card {% if code == 'pro' %}featured{% endif %}">
+                    <h3>{{ plan.name }}</h3>
+                    <div class="price">{{ plan.price }} ر.ي <span>/ شهر</span></div>
+                    <ul>
+                        <li><i class="fas fa-check"></i> {{ plan.max_users }} مستخدم</li>
+                        <li><i class="fas fa-check"></i> {{ plan.days }} يوم</li>
+                        {% if code == 'pro' %}<li><i class="fas fa-check"></i> دعم فني متميز</li>{% endif %}
+                        {% if code == 'enterprise' %}<li><i class="fas fa-check"></i> تخصيص كامل</li>{% endif %}
+                    </ul>
+                    <a href="{{ url_for('setup') }}" class="btn {% if code == 'trial' %}btn-primary{% else %}btn-outline{% endif %}">
+                        {% if code == 'trial' %}ابدأ مجاناً{% else %}اختر الباقة{% endif %}
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <h2>جاهز لإدارة أعمالك بذكاء؟</h2>
+        <p>أنشئ حسابك في أقل من دقيقة وابدأ فوراً</p>
+        <a href="{{ url_for('setup') }}" class="btn btn-white"><i class="fas fa-rocket"></i> إنشاء حساب مجاني</a>
+    </section>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>تصميم وتطوير <a href="tel:773014017">الغيث</a> | 773014017 - 711127883</p>
+    </div>
+
+    <script>
+        window.addEventListener('scroll', function() {
+            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+        });
+    </script>
+</body>
+</html>

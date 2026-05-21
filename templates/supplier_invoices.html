@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block page_title %}فواتير الموردين{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-file-invoice-dollar"></i> فواتير الموردين</h3>
+        <button class="btn btn-primary" onclick="openModal('addInvModal')">
+            <i class="fas fa-plus"></i> إضافة فاتورة
+        </button>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>رقم الفاتورة</th>
+                    <th>المورد</th>
+                    <th>المبلغ</th>
+                    <th>المدفوع</th>
+                    <th>المتبقي</th>
+                    <th>التاريخ</th>
+                    <th>الحالة</th>
+                    <th>الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for inv in invoices %}
+                <tr>
+                    <td>{{ inv.invoice_number or '-' }}</td>
+                    <td>{{ inv.supplier.name }}</td>
+                    <td>{{ "%.0f"|format(inv.amount) }}</td>
+                    <td>{{ "%.0f"|format(inv.paid) }}</td>
+                    <td>{{ "%.0f"|format(inv.amount - inv.paid) }}</td>
+                    <td>{{ inv.date }}</td>
+                    <td><span class="badge badge-{{ 'success' if inv.status == 'paid' else 'warning' }}">{{ 'مدفوعة' if inv.status == 'paid' else 'معلقة' }}</span></td>
+                    <td class="actions-cell">
+                        <form id="deleteSI{{ inv.id }}" action="{{ url_for('delete_supplier_invoice', id=inv.id) }}" method="POST" style="display:inline">
+                            <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete('هل أنت متأكد؟', 'deleteSI{{ inv.id }}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal" id="addInvModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>إضافة فاتورة مورد</h3>
+            <button class="modal-close" onclick="closeModal('addInvModal')"><i class="fas fa-times"></i></button>
+        </div>
+        <form action="{{ url_for('add_supplier_invoice') }}" method="POST">
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>المورد *</label>
+                        <select name="supplier_id" class="form-control" required>
+                            <option value="">اختر المورد...</option>
+                            {% for sup in suppliers %}
+                            <option value="{{ sup.id }}">{{ sup.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>رقم الفاتورة</label>
+                        <input type="text" name="invoice_number" class="form-control">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>المبلغ *</label>
+                        <input type="number" name="amount" class="form-control" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>المدفوع</label>
+                        <input type="number" name="paid" class="form-control" step="0.01" value="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>التاريخ</label>
+                    <input type="date" name="date" class="form-control" value="{{ now }}">
+                </div>
+                <div class="form-group">
+                    <label>ملاحظات</label>
+                    <textarea name="notes" class="form-control" rows="2"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeModal('addInvModal')">إلغاء</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

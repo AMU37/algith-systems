@@ -1,0 +1,111 @@
+{% extends "super_admin/base.html" %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3><i class="fas fa-book"></i> القيود المحاسبية</h3>
+        <button class="btn btn-primary btn-sm" onclick="openModal('addJournalModal')"><i class="fas fa-plus"></i> قيد جديد</button>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>التاريخ</th>
+                    <th>الشركة</th>
+                    <th>البيان</th>
+                    <th>مدين</th>
+                    <th>دائن</th>
+                    <th>المرجع</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for j in journals %}
+                <tr>
+                    <td>{{ j.date }}</td>
+                    <td>{{ j.company.name }}</td>
+                    <td>{{ j.description }}</td>
+                    <td style="color:#28A745">{{ "%.0f"|format(j.total_debit) }}</td>
+                    <td style="color:#DC3545">{{ "%.0f"|format(j.total_credit) }}</td>
+                    <td>{{ j.reference or '-' }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="6" style="text-align:center;color:#999;padding:20px;">لا توجد قيود</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal" id="addJournalModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>قيد محاسبي جديد</h3>
+            <button class="modal-close" onclick="closeModal('addJournalModal')"><i class="fas fa-times"></i></button>
+        </div>
+        <form action="{{ url_for('super_admin_add_journal') }}" method="POST">
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>الشركة *</label>
+                        <select name="company_id" class="form-control" required>
+                            {% for c in companies %}
+                            <option value="{{ c.id }}">{{ c.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>التاريخ</label>
+                        <input type="date" name="date" class="form-control" value="{{ now }}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>البيان</label>
+                    <input type="text" name="description" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>المرجع</label>
+                    <input type="text" name="reference" class="form-control">
+                </div>
+                <h4 style="margin:16px 0 12px">بنود القيد</h4>
+                <div id="journalLines"></div>
+                <button type="button" class="btn btn-outline btn-sm" onclick="addJournalLine()" style="margin-top:8px">
+                    <i class="fas fa-plus"></i> إضافة بند
+                </button>
+                <input type="hidden" name="lines" id="journalLinesData">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeModal('addJournalModal')">إلغاء</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ القيد</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+var lineIndex = 0;
+function addJournalLine() {
+    var container = document.getElementById('journalLines');
+    var div = document.createElement('div');
+    div.className = 'form-row';
+    div.style.marginBottom = '8px';
+    div.innerHTML = '<div class="form-group"><label>رقم الحساب</label><input type="text" class="form-control line-code" placeholder="1001"></div>' +
+        '<div class="form-group"><label>اسم الحساب</label><input type="text" class="form-control line-name"></div>' +
+        '<div class="form-group"><label>مدين</label><input type="number" class="form-control line-debit" value="0" step="0.01"></div>' +
+        '<div class="form-group"><label>دائن</label><input type="number" class="form-control line-credit" value="0" step="0.01"></div>' +
+        '<div class="form-group"><label>&nbsp;</label><button type="button" class="btn btn-danger btn-sm" onclick="this.closest(\'.form-row\').remove()"><i class="fas fa-trash"></i></button></div>';
+    container.appendChild(div);
+    lineIndex++;
+}
+document.querySelector('form').addEventListener('submit', function() {
+    var lines = [];
+    document.querySelectorAll('#journalLines .form-row').forEach(function(row) {
+        lines.push({
+            account_code: row.querySelector('.line-code').value,
+            account_name: row.querySelector('.line-name').value,
+            debit: row.querySelector('.line-debit').value,
+            credit: row.querySelector('.line-credit').value
+        });
+    });
+    document.getElementById('journalLinesData').value = JSON.stringify(lines);
+});
+</script>
+{% endblock %}

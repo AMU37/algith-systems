@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block page_title %}مواقع العمل{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header"><h3 class="card-title"><i class="fas fa-location-dot"></i> مواقع العمل</h3>
+        <button class="btn btn-primary btn-sm" onclick="openModal('addWSModal')"><i class="fas fa-plus"></i> إضافة موقع</button></div>
+    <div class="table-container">
+        <table>
+            <thead><tr><th>اسم الموقع</th><th>العميل</th><th>العنوان</th><th>المشرف</th><th>عدد العمال</th><th>ساعات العمل</th><th>الحالة</th></tr></thead>
+            <tbody>{% for s in sites %}<tr><td>{{ s.name }}</td><td>{{ s.client.name if s.client else '-' }}</td><td>{{ s.address or '-' }}</td><td>{{ s.supervisor.name if s.supervisor else '-' }}</td><td>{{ s.worker_count }}</td><td>{{ s.work_hours or '-' }}</td><td><span class="badge badge-{{ 'success' if s.status == 'active' else 'warning' }}">{{ 'نشط' if s.status == 'active' else 'متوقف' }}</span></td></tr>{% endfor %}</tbody>
+        </table>
+    </div>
+</div>
+<div class="modal" id="addWSModal"><div class="modal-content"><div class="modal-header"><h3>إضافة موقع عمل</h3><button class="modal-close" onclick="closeModal('addWSModal')">&times;</button></div>
+    <form method="POST" action="{{ url_for('add_work_site') }}">
+        <div class="form-group"><label>اسم الموقع *</label><input type="text" name="name" class="form-control" required></div>
+        <div class="form-row"><div class="form-group"><label>العميل</label><select name="client_id" class="form-control"><option value="">بدون</option>{% for c in clients %}<option value="{{ c.id }}">{{ c.name }}</option>{% endfor %}</select></div><div class="form-group"><label>المشرف</label><select name="supervisor_id" class="form-control"><option value="">بدون</option>{% for s in supervisors %}<option value="{{ s.id }}">{{ s.name }}</option>{% endfor %}</select></div></div>
+        <div class="form-group"><label>العنوان</label><input type="text" name="address" class="form-control"></div>
+        <div class="form-row"><div class="form-group"><label>عدد العمال</label><input type="number" name="worker_count" class="form-control" value="0"></div><div class="form-group"><label>ساعات العمل</label><input type="text" name="work_hours" class="form-control" placeholder="مثال: 8 صباحاً - 4 مساءً"></div></div>
+        <div class="form-group"><label>ملاحظات</label><textarea name="notes" class="form-control" rows="2"></textarea></div>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ</button>
+    </form></div></div>
+{% endblock %}

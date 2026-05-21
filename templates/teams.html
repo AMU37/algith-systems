@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block page_title %}الفرق{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header"><h3 class="card-title"><i class="fas fa-people-group"></i> الفرق</h3>
+        <button class="btn btn-primary btn-sm" onclick="openModal('addTeamModal')"><i class="fas fa-plus"></i> إضافة فريق</button></div>
+    <div class="table-container">
+        <table>
+            <thead><tr><th>اسم الفريق</th><th>المشرف</th><th>الموقع</th><th>الأعضاء</th><th>الحالة</th></tr></thead>
+            <tbody>{% for t in teams %}<tr><td>{{ t.name }}</td><td>{{ t.supervisor.name if t.supervisor else '-' }}</td><td>{{ t.site.name if t.site else '-' }}</td><td>{{ t.members|length }}</td><td><span class="badge badge-{{ 'success' if t.status == 'active' else 'warning' }}">{{ 'نشط' if t.status == 'active' else 'متوقف' }}</span></td></tr>{% endfor %}</tbody>
+        </table>
+    </div>
+</div>
+<div class="modal" id="addTeamModal"><div class="modal-content"><div class="modal-header"><h3>إضافة فريق</h3><button class="modal-close" onclick="closeModal('addTeamModal')">&times;</button></div>
+    <form method="POST" action="{{ url_for('add_team') }}">
+        <div class="form-group"><label>اسم الفريق *</label><input type="text" name="name" class="form-control" required></div>
+        <div class="form-row"><div class="form-group"><label>المشرف</label><select name="supervisor_id" class="form-control"><option value="">بدون</option>{% for s in supervisors %}<option value="{{ s.id }}">{{ s.name }}</option>{% endfor %}</select></div><div class="form-group"><label>الموقع</label><select name="site_id" class="form-control"><option value="">بدون</option>{% for s in sites %}<option value="{{ s.id }}">{{ s.name }}</option>{% endfor %}</select></div></div>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ</button>
+    </form></div></div>
+{% endblock %}

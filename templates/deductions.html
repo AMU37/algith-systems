@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block page_title %}الخصميات{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-minus-circle"></i> قائمة الخصميات</h3>
+        <button class="btn btn-danger" onclick="openModal('addDeductionModal')">
+            <i class="fas fa-plus"></i> إضافة خصم
+        </button>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>الموظف</th>
+                    <th>النوع</th>
+                    <th>المبلغ</th>
+                    <th>السبب</th>
+                    <th>التاريخ</th>
+                    <th>الشهر</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ded in deductions %}
+                <tr>
+                    <td>{{ ded.employee.name }}</td>
+                    <td><span class="badge badge-danger">{{ ded.type }}</span></td>
+                    <td>{{ "%.0f"|format(ded.amount) }}</td>
+                    <td>{{ ded.reason or '-' }}</td>
+                    <td>{{ ded.date }}</td>
+                    <td>{{ ded.month }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal" id="addDeductionModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>إضافة خصم</h3>
+            <button class="modal-close" onclick="closeModal('addDeductionModal')"><i class="fas fa-times"></i></button>
+        </div>
+        <form action="{{ url_for('add_deduction') }}" method="POST">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>الموظف *</label>
+                    <select name="employee_id" class="form-control" required>
+                        <option value="">اختر الموظف...</option>
+                        {% for emp in employees %}
+                        <option value="{{ emp.id }}">{{ emp.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>نوع الخصم *</label>
+                        <select name="type" class="form-control" required>
+                            <option value="جزاء">جزاء</option>
+                            <option value="غياب">غياب</option>
+                            <option value="تأخير">تأخير</option>
+                            <option value="مطاعم">مطاعم</option>
+                            <option value="أخرى">أخرى</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>المبلغ *</label>
+                        <input type="number" name="amount" class="form-control" step="0.01" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>التاريخ</label>
+                        <input type="date" name="date" class="form-control" value="{{ now }}">
+                    </div>
+                    <div class="form-group">
+                        <label>الشهر</label>
+                        <input type="text" name="month" class="form-control" value="{{ now[:7] }}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>السبب</label>
+                    <textarea name="reason" class="form-control" rows="2"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeModal('addDeductionModal')">إلغاء</button>
+                <button type="submit" class="btn btn-danger"><i class="fas fa-save"></i> حفظ</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

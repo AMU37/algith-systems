@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs>
+    <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#714B67;stop-opacity:0.1" />
+      <stop offset="100%" style="stop-color:#714B67;stop-opacity:0.05" />
+    </linearGradient>
+  </defs>
+  <rect fill="url(#g1)" width="400" height="300" rx="16"/>
+  <!-- Phone mockup -->
+  <rect x="140" y="30" width="120" height="240" rx="16" fill="#2C2C2C"/>
+  <rect x="150" y="50" width="100" height="200" rx="8" fill="#F5F5F5"/>
+  <!-- App icons grid -->
+  <rect x="160" y="60" width="35" height="35" rx="8" fill="#714B67"/>
+  <rect x="205" y="60" width="35" height="35" rx="8" fill="#00A09D"/>
+  <rect x="160" y="105" width="35" height="35" rx="8" fill="#F0AD4E"/>
+  <rect x="205" y="105" width="35" height="35" rx="8" fill="#17A2B8"/>
+  <rect x="160" y="150" width="35" height="35" rx="8" fill="#DC3545"/>
+  <rect x="205" y="150" width="35" height="35" rx="8" fill="#28A745"/>
+  <rect x="160" y="195" width="35" height="35" rx="8" fill="#6F42C1"/>
+  <rect x="205" y="195" width="35" height="35" rx="8" fill="#E83E8C"/>
+  <!-- Notification badge -->
+  <circle cx="240" cy="55" r="8" fill="#DC3545"/>
+  <text x="240" y="58" text-anchor="middle" fill="white" font-size="8" font-weight="bold">3</text>
+</svg>

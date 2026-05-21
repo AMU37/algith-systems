@@ -1,0 +1,104 @@
+{% extends "super_admin/base.html" %}
+{% block content %}
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon blue"><i class="fas fa-building"></i></div>
+        <h3>{{ total_companies }}</h3>
+        <p>إجمالي الشركات</p>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
+        <h3>{{ active_subs }}</h3>
+        <p>اشتراكات نشطة</p>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon purple"><i class="fas fa-coins"></i></div>
+        <h3>{{ "%.0f"|format(total_revenue) }} ر.ي</h3>
+        <p>إجمالي الإيرادات</p>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3><i class="fas fa-chart-bar"></i> تقرير الشركات والإيرادات</h3>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>الشركة</th>
+                    <th>النوع</th>
+                    <th>الباقة</th>
+                    <th>العملة</th>
+                    <th>سعر الصرف</th>
+                    <th>حالة الاشتراك</th>
+                    <th>تاريخ الانتهاء</th>
+                    <th>الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in companies %}
+                <tr style="{% if c.is_blocked %}background:#fce8e6;{% endif %}">
+                    <td><strong>{{ c.name }}</strong></td>
+                    <td>{{ c.business_type }}</td>
+                    <td><span class="badge badge-success">{{ c.plan_code }}</span></td>
+                    <td>{{ c.currency or 'YER' }}</td>
+                    <td>{{ c.exchange_rate or 1.0 }}</td>
+                    <td>
+                        <span class="badge badge-{{ 'success' if c.subscription_status == 'active' else 'danger' if c.is_blocked else 'warning' }}">
+                            {{ 'نشط' if c.subscription_status == 'active' else 'موقوف' if c.is_blocked else 'تجريبي' }}
+                        </span>
+                    </td>
+                    <td>{{ c.subscription_end or '-' }}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline" onclick="openCurrencyModal({{ c.id }}, '{{ c.currency or 'YER' }}', {{ c.exchange_rate or 1.0 }})">
+                            <i class="fas fa-coins"></i> العملة
+                        </button>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="8" style="text-align:center;color:#999;padding:20px;">لا توجد شركات</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal" id="currencyModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>تعديل العملة</h3>
+            <button class="modal-close" onclick="closeModal('currencyModal')"><i class="fas fa-times"></i></button>
+        </div>
+        <form id="currencyForm" method="POST">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>العملة</label>
+                    <select name="currency" class="form-control">
+                        <option value="YER">ريال يمني (YER)</option>
+                        <option value="USD">دولار أمريكي (USD)</option>
+                        <option value="SAR">ريال سعودي (SAR)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>سعر الصرف (مقابل الريال اليمني)</label>
+                    <input type="number" name="exchange_rate" class="form-control" step="0.01" min="0.01">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeModal('currencyModal')">إلغاء</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function openCurrencyModal(id, currency, rate) {
+    document.getElementById('currencyForm').action = '/super-admin/company/' + id + '/update-currency';
+    document.querySelector('#currencyModal select[name="currency"]').value = currency;
+    document.querySelector('#currencyModal input[name="exchange_rate"]').value = rate;
+    openModal('currencyModal');
+}
+</script>
+{% endblock %}

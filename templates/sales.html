@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% block page_title %}المبيعات{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-cash-register"></i> المبيعات</h3>
+        <button class="btn btn-primary" onclick="openModal('addSaleModal')">
+            <i class="fas fa-plus"></i> إضافة فاتورة
+        </button>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>رقم الفاتورة</th>
+                    <th>العميل</th>
+                    <th>الإجمالي</th>
+                    <th>المدفوع</th>
+                    <th>المتبقي</th>
+                    <th>الحالة</th>
+                    <th>التاريخ</th>
+                    <th>الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for inv in invoices %}
+                <tr>
+                    <td>{{ inv.invoice_number or '-' }}</td>
+                    <td>{{ inv.client.name if inv.client else 'نقدي' }}</td>
+                    <td>{{ "%.0f"|format(inv.total) }}</td>
+                    <td>{{ "%.0f"|format(inv.paid) }}</td>
+                    <td>{{ "%.0f"|format(inv.total - inv.paid) }}</td>
+                    <td><span class="badge badge-{{ 'success' if inv.status == 'paid' else 'warning' }}">{{ 'مدفوعة' if inv.status == 'paid' else 'معلقة' }}</span></td>
+                    <td>{{ inv.date }}</td>
+                    <td class="actions-cell">
+                        {% if inv.status != 'paid' %}
+                        <button class="btn btn-success btn-sm" onclick="openPaySale({{ inv.id }}, {{ inv.total - inv.paid }})">
+                            <i class="fas fa-money-bill"></i> دفع
+                        </button>
+                        {% endif %}
+                        <form id="deleteSale{{ inv.id }}" action="{{ url_for('delete_sale', id=inv.id) }}" method="POST" style="display:inline">
+                            <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete('هل أنت متأكد؟', 'deleteSale{{ inv.id }}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal" id="addSaleModal">
+    <div class="modal-content" style="max-width:800px">
+        <div class="modal-header">
+            <h3>إضافة فاتورة مبيعات</h3>
+            <button class="modal-close" onclick="closeModal('addSaleModal')"><i class="fas fa-times"></i></button>
+        </div>
+        <form action="{{ url_for('add_sale') }}" method="POST" onsubmit="document.getElementById('saleItemsData').value = collectSaleItems()">
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>العميل</label>
+                        <select name="client_id" class="form-control">
+                            <option value="">نقدي</option>
+                            {% for cl in clients %}
+                            <option value="{{ cl.id }}">{{ cl.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>رقم الفاتورة</label>
+                        <input type="text" name="invoice_number" class="form-control">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>التاريخ</label>
+                        <input type="date" name="date" class="form-control" value="{{ now }}">
+                    </div>
+                    <div class="form-group">
+                        <label>طريقة الدفع</label>
+                        <select name="payment_method" class="form-control">
+                            <option value="cash">نقدي</option>
+                            <option value="credit">آجل</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h4 style="margin:16px 0 12px">المنتجات/الخدمات</h4>
+                <div id="saleItems"></div>
+                <button type="button" class="btn btn-outline btn-sm" onclick="addSaleItem()" style="margin-bottom:16px">
+                    <i class="fas fa-plus"></i> إضافة صنف
+                </button>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>الإجمالي</label>
+                        <input type="number" id="saleTotal" name="total" class="form-control" value="0" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>المدفوع</label>
+                        <input type="number" name="paid" class="form-control" step="0.01" value="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>ملاحظات</label>
+                    <textarea name="notes" class="form-control" rows="2"></textarea>
+                </div>
+                <input type="hidden" id="saleItemsData" name="items_data">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeModal('addSaleModal')">إلغاء</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="paySaleModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>تسجيل دفعة</h3>
+            <button class="modal-close" onclick="closeModal('paySaleModal')"><i class="fas fa-times"></i></button>
+        </div>
+        <form id="paySaleForm" method="POST">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>المبلغ المتبقي</label>
+                    <input type="text" id="paySaleRemaining" class="form-control" readonly>
+                </div>
+                <div class="form-group">
+                    <label>مبلغ الدفعة *</label>
+                    <input type="number" name="amount" class="form-control" step="0.01" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeModal('paySaleModal')">إلغاء</button>
+                <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> تسجيل الدفعة</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script id="productsData" type="application/json">{{ products_json|tojson }}</script>
+<script>
+function openPaySale(id, remaining) {
+    document.getElementById('paySaleRemaining').value = remaining.toFixed(2);
+    document.getElementById('paySaleForm').action = '/sale/pay/' + id;
+    openModal('paySaleModal');
+}
+</script>
+{% endblock %}

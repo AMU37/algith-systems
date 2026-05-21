@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block page_title %}المناطق{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-map-location-dot"></i> إدارة المناطق</h3>
+        <button class="btn btn-primary" onclick="openModal('addAreaModal')"><i class="fas fa-plus"></i> إضافة منطقة</button>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead><tr><th>المنطقة</th><th>الوصف</th><th>الحالة</th><th>الإجراءات</th></tr></thead>
+            <tbody>
+                {% for area in areas %}
+                <tr>
+                    <td>{{ area.name }}</td><td>{{ area.description or '-' }}</td>
+                    <td><span class="badge badge-{{ 'success' if area.status == 'active' else 'danger' }}">{{ 'نشطة' if area.status == 'active' else 'غير نشطة' }}</span></td>
+                    <td class="actions-cell">
+                        <button class="btn btn-outline btn-sm" onclick="openEditArea({{ area.id }}, '{{ area.name }}', '{{ area.description or '' }}', '{{ area.status }}')"><i class="fas fa-edit"></i></button>
+                        <form id="deleteArea{{ area.id }}" action="{{ url_for('delete_area', id=area.id) }}" method="POST" style="display:inline">
+                            <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete('هل أنت متأكد؟', 'deleteArea{{ area.id }}')"><i class="fas fa-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal" id="addAreaModal">
+    <div class="modal-content">
+        <div class="modal-header"><h3>إضافة منطقة</h3><button class="modal-close" onclick="closeModal('addAreaModal')"><i class="fas fa-times"></i></button></div>
+        <form action="{{ url_for('add_area') }}" method="POST">
+            <div class="modal-body">
+                <div class="form-group"><label>اسم المنطقة *</label><input type="text" name="name" class="form-control" required></div>
+                <div class="form-group"><label>الوصف</label><textarea name="description" class="form-control" rows="2"></textarea></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeModal('addAreaModal')">إلغاء</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="editAreaModal">
+    <div class="modal-content">
+        <div class="modal-header"><h3>تعديل منطقة</h3><button class="modal-close" onclick="closeModal('editAreaModal')"><i class="fas fa-times"></i></button></div>
+        <form id="editAreaForm" method="POST">
+            <div class="modal-body">
+                <div class="form-group"><label>اسم المنطقة *</label><input type="text" name="name" id="edit_area_name" class="form-control" required></div>
+                <div class="form-group"><label>الوصف</label><textarea name="description" id="edit_area_desc" class="form-control" rows="2"></textarea></div>
+                <div class="form-group">
+                    <label>الحالة</label>
+                    <select name="status" id="edit_area_status" class="form-control">
+                        <option value="active">نشطة</option><option value="inactive">غير نشطة</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeModal('editAreaModal')">إلغاء</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function openEditArea(id, name, desc, status) {
+    document.getElementById('edit_area_name').value = name;
+    document.getElementById('edit_area_desc').value = desc;
+    document.getElementById('edit_area_status').value = status;
+    document.getElementById('editAreaForm').action = '/area/edit/' + id;
+    openModal('editAreaModal');
+}
+</script>
+{% endblock %}

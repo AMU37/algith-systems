@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+{% block page_title %}إدارة المستخدمين{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-user-shield"></i> المستخدمين والصلاحيات</h3>
+        <button class="btn btn-primary" onclick="openModal('addUserModal')">
+            <i class="fas fa-plus"></i> إضافة مستخدم
+        </button>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>اسم المستخدم</th>
+                    <th>الاسم الكامل</th>
+                    <th>البريد</th>
+                    <th>الهاتف</th>
+                    <th>الدور</th>
+                    <th>الحالة</th>
+                    <th>الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in users %}
+                <tr>
+                    <td>{{ u.username }}</td>
+                    <td>{{ u.full_name or '-' }}</td>
+                    <td>{{ u.email or '-' }}</td>
+                    <td>{{ u.phone or '-' }}</td>
+                    <td><span class="badge badge-{{ 'danger' if u.role == 'admin' else 'info' }}">{{ u.role }}</span></td>
+                    <td><span class="badge badge-{{ 'success' if u.is_active else 'danger' }}">{{ 'نشط' if u.is_active else 'معطل' }}</span></td>
+                    <td class="actions-cell">
+                        <button class="btn btn-outline btn-sm" onclick="openEditUser({{ u.id }}, '{{ u.username }}', '{{ u.full_name or '' }}', '{{ u.email or '' }}', '{{ u.phone or '' }}', '{{ u.role }}', {{ u.is_active|lower }}, {{ u.permissions }})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        {% if u.id != current_user.id %}
+                        <form id="deleteUser{{ u.id }}" action="{{ url_for('delete_user', id=u.id) }}" method="POST" style="display:inline">
+                            <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete('هل أنت متأكد؟', 'deleteUser{{ u.id }}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal" id="addUserModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>إضافة مستخدم</h3>
+            <button class="modal-close" onclick="closeModal('addUserModal')"><i class="fas fa-times"></i></button>
+        </div>
+        <form action="{{ url_for('add_user') }}" method="POST">
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>اسم المستخدم *</label>
+                        <input type="text" name="username" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>كلمة المرور *</label>
+                        <input type="password" name="password" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>الاسم الكامل</label>
+                        <input type="text" name="full_name" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>البريد الإلكتروني</label>
+                        <input type="email" name="email" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>الهاتف</label>
+                    <input type="text" name="phone" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>الدور</label>
+                    <select name="role" class="form-control">
+                        <option value="user">مستخدم عادي</option>
+                        <option value="admin">مدير</option>
+                    </select>
+                </div>
+                <h4 style="margin:16px 0 12px">الصلاحيات</h4>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                    <div class="checkbox-group"><input type="checkbox" name="employees" id="perm_employees"><label for="perm_employees">الموظفين</label></div>
+                    <div class="checkbox-group"><input type="checkbox" name="salaries" id="perm_salaries"><label for="perm_salaries">الرواتب</label></div>
+                    <div class="checkbox-group"><input type="checkbox" name="suppliers" id="perm_suppliers"><label for="perm_suppliers">الموردين</label></div>
+                    <div class="checkbox-group"><input type="checkbox" name="clients" id="perm_clients"><label for="perm_clients">العملاء</label></div>
+                    <div class="checkbox-group"><input type="checkbox" name="products" id="perm_products"><label for="perm_products">المنتجات</label></div>
+                    <div class="checkbox-group"><input type="checkbox" name="purchases" id="perm_purchases"><label for="perm_purchases">المشتريات</label></div>
+                    <div class="checkbox-group"><input type="checkbox" name="sales" id="perm_sales"><label for="perm_sales">المبيعات</label></div>
+                    <div class="checkbox-group"><input type="checkbox" name="accounting" id="perm_accounting"><label for="perm_accounting">المحاسبة</label></div>
+                    <div class="checkbox-group"><input type="checkbox" name="reports" id="perm_reports"><label for="perm_reports">التقارير</label></div>
+                    <div class="checkbox-group"><input type="checkbox" name="areas" id="perm_areas"><label for="perm_areas">المناطق</label></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeModal('addUserModal')">إلغاء</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="editUserModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>تعديل مستخدم</h3>
+            <button class="modal-close" onclick="closeModal('editUserModal')"><i class="fas fa-times"></i></button>
+        </div>
+        <form id="editUserForm" method="POST">
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>اسم المستخدم</label>
+                        <input type="text" id="edit_username" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>كلمة المرور الجديدة</label>
+                        <input type="password" name="password" class="form-control" placeholder="اتركه فارغاً إذا لم ترد التغيير">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>الاسم الكامل</label>
+                        <input type="text" name="full_name" id="edit_full_name" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>البريد الإلكتروني</label>
+                        <input type="email" name="email" id="edit_email" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>الهاتف</label>
+                    <input type="text" name="phone" id="edit_phone" class="form-control">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>الدور</label>
+                        <select name="role" id="edit_role" class="form-control">
+                            <option value="user">مستخدم عادي</option>
+                            <option value="admin">مدير</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>نشط</label>
+                        <input type="checkbox" name="is_active" id="edit_is_active" checked>
+                    </div>
+                </div>
+                <h4 style="margin:16px 0 12px">الصلاحيات</h4>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                    <div class="checkbox-group"><input type="checkbox" name="employees" id="edit_perm_employees"><label for="edit_perm_employees">الموظفين</label></div>
+                    <div class="checkbox-group"><input type="checkbox" name="salaries" id="edit_perm_salaries"><label for="edit_perm_salaries">الرواتب</label></div>
+                    <div class="checkbox-group"><input type="checkbox" name="suppliers" id="edit_perm_suppliers"><label for="edit_perm_suppliers">الموردين</label></div>
+                    <div class="checkbox-group"><input type="checkbox" name="clients" id="edit_perm_clients"><label for="edit_perm_clients">العملاء</label></div>
+                    <div class="checkbox-group"><input type="checkbox" name="products" id="edit_perm_products"><label for="edit_perm_products">المنتجات</label></div>
+                    <div class="checkbox-group"><input type="checkbox" name="purchases" id="edit_perm_purchases"><label for="edit_perm_purchases">المشتريات</label></div>
+                    <div class="checkbox-group"><input type="checkbox" name="sales" id="edit_perm_sales"><label for="edit_perm_sales">المبيعات</label></div>
+                    <div class="checkbox-group"><input type="checkbox" name="accounting" id="edit_perm_accounting"><label for="edit_perm_accounting">المحاسبة</label></div>
+                    <div class="checkbox-group"><input type="checkbox" name="reports" id="edit_perm_reports"><label for="edit_perm_reports">التقارير</label></div>
+                    <div class="checkbox-group"><input type="checkbox" name="areas" id="edit_perm_areas"><label for="edit_perm_areas">المناطق</label></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeModal('editUserModal')">إلغاء</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function openEditUser(id, username, fullName, email, phone, role, isActive, permissions) {
+    document.getElementById('edit_username').value = username;
+    document.getElementById('edit_full_name').value = fullName;
+    document.getElementById('edit_email').value = email;
+    document.getElementById('edit_phone').value = phone;
+    document.getElementById('edit_role').value = role;
+    document.getElementById('edit_is_active').checked = isActive;
+    var perms = typeof permissions === 'string' ? JSON.parse(permissions) : permissions;
+    ['employees','salaries','suppliers','clients','products','purchases','sales','accounting','reports','areas'].forEach(function(p) {
+        document.getElementById('edit_perm_' + p).checked = perms[p] || false;
+    });
+    document.getElementById('editUserForm').action = '/user/edit/' + id;
+    openModal('editUserModal');
+}
+</script>
+{% endblock %}

@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% block page_title %}معايير التقييم{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-list-check"></i> معايير تقييم الموظفين</h3>
+        <button class="btn btn-primary" onclick="openModal('addCriteriaModal')">
+            <i class="fas fa-plus"></i> إضافة معيار
+        </button>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>الترتيب</th>
+                    <th>المعيار</th>
+                    <th>الحد الأقصى</th>
+                    <th>الوزن</th>
+                    <th>الوصف</th>
+                    <th>الحالة</th>
+                    <th>الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in criteria %}
+                <tr>
+                    <td>{{ c.order }}</td>
+                    <td><strong>{{ c.name }}</strong></td>
+                    <td>{{ c.max_score }}</td>
+                    <td>{{ c.weight }}</td>
+                    <td>{{ c.description or '-' }}</td>
+                    <td><span class="badge badge-{{ 'success' if c.status == 'active' else 'danger' }}">{{ 'نشط' if c.status == 'active' else 'غير نشط' }}</span></td>
+                    <td class="actions-cell">
+                        <button class="btn btn-outline btn-sm" onclick="openEditCriteria({{ c.id }}, '{{ c.name }}', {{ c.max_score }}, {{ c.weight }}, '{{ c.description or '' }}', {{ c.order }}, '{{ c.status }}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <form id="deleteEC{{ c.id }}" action="{{ url_for('delete_evaluation_criteria', id=c.id) }}" method="POST" style="display:inline">
+                            <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete('هل أنت متأكد؟', 'deleteEC{{ c.id }}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal" id="addCriteriaModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>إضافة معيار تقييم</h3>
+            <button class="modal-close" onclick="closeModal('addCriteriaModal')"><i class="fas fa-times"></i></button>
+        </div>
+        <form action="{{ url_for('add_evaluation_criteria') }}" method="POST">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>اسم المعيار *</label>
+                    <input type="text" name="name" class="form-control" required placeholder="مثال: الالتزام بالحضور، جودة العمل">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>الحد الأقصى للدرجة</label>
+                        <input type="number" name="max_score" class="form-control" value="5" min="1" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label>الوزن</label>
+                        <input type="number" name="weight" class="form-control" value="1.0" step="0.1" min="0.1">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>الترتيب</label>
+                    <input type="number" name="order" class="form-control" value="0">
+                </div>
+                <div class="form-group">
+                    <label>الوصف</label>
+                    <textarea name="description" class="form-control" rows="2" placeholder="وصف المعيار وكيفية التقييم"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeModal('addCriteriaModal')">إلغاء</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="editCriteriaModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>تعديل معيار تقييم</h3>
+            <button class="modal-close" onclick="closeModal('editCriteriaModal')"><i class="fas fa-times"></i></button>
+        </div>
+        <form id="editCriteriaForm" method="POST">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>اسم المعيار *</label>
+                    <input type="text" name="name" id="edit_ec_name" class="form-control" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>الحد الأقصى للدرجة</label>
+                        <input type="number" name="max_score" id="edit_ec_max" class="form-control" min="1" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label>الوزن</label>
+                        <input type="number" name="weight" id="edit_ec_weight" class="form-control" step="0.1" min="0.1">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>الترتيب</label>
+                    <input type="number" name="order" id="edit_ec_order" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>الحالة</label>
+                    <select name="status" id="edit_ec_status" class="form-control">
+                        <option value="active">نشط</option>
+                        <option value="inactive">غير نشط</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>الوصف</label>
+                    <textarea name="description" id="edit_ec_desc" class="form-control" rows="2"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeModal('editCriteriaModal')">إلغاء</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function openEditCriteria(id, name, maxScore, weight, desc, order, status) {
+    document.getElementById('edit_ec_name').value = name;
+    document.getElementById('edit_ec_max').value = maxScore;
+    document.getElementById('edit_ec_weight').value = weight;
+    document.getElementById('edit_ec_order').value = order;
+    document.getElementById('edit_ec_desc').value = desc;
+    document.getElementById('edit_ec_status').value = status;
+    document.getElementById('editCriteriaForm').action = '/evaluation-criteria/edit/' + id;
+    openModal('editCriteriaModal');
+}
+</script>
+{% endblock %}

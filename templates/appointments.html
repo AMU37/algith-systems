@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block page_title %}المواعيد{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header"><h3 class="card-title"><i class="fas fa-calendar-check"></i> المواعيد</h3>
+        <button class="btn btn-primary btn-sm" onclick="openModal('addApptModal')"><i class="fas fa-plus"></i> إضافة موعد</button></div>
+    <div class="table-container">
+        <table>
+            <thead><tr><th>المريض</th><th>الطبيب</th><th>التاريخ</th><th>الوقت</th><th>الحالة</th></tr></thead>
+            <tbody>{% for a in appointments %}<tr><td>{{ a.patient.name if a.patient else '-' }}</td><td>{{ a.doctor.name if a.doctor else '-' }}</td><td>{{ a.date }}</td><td>{{ a.time or '-' }}</td><td><span class="badge badge-{{ 'success' if a.status == 'completed' else 'warning' if a.status == 'scheduled' else 'danger' }}">{{ 'مكتمل' if a.status == 'completed' else 'مجدول' if a.status == 'scheduled' else 'ملغي' }}</span></td></tr>{% endfor %}</tbody>
+        </table>
+    </div>
+</div>
+<div class="modal" id="addApptModal"><div class="modal-content"><div class="modal-header"><h3>إضافة موعد</h3><button class="modal-close" onclick="closeModal('addApptModal')">&times;</button></div>
+    <form method="POST" action="{{ url_for('add_appointment') }}">
+        <div class="form-row"><div class="form-group"><label>المريض</label><select name="patient_id" class="form-control"><option value="">بدون</option>{% for p in patients %}<option value="{{ p.id }}">{{ p.name }}</option>{% endfor %}</select></div><div class="form-group"><label>الطبيب</label><select name="doctor_id" class="form-control"><option value="">بدون</option>{% for d in doctors %}<option value="{{ d.id }}">{{ d.name }} - {{ d.specialty }}</option>{% endfor %}</select></div></div>
+        <div class="form-row"><div class="form-group"><label>التاريخ</label><input type="date" name="date" class="form-control" value="{{ now }}"></div><div class="form-group"><label>الوقت</label><input type="time" name="time" class="form-control"></div></div>
+        <div class="form-group"><label>ملاحظات</label><textarea name="notes" class="form-control" rows="2"></textarea></div>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ</button>
+    </form></div></div>
+{% endblock %}

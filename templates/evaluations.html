@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block page_title %}التقييم اليومي{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-star"></i> التقييم اليومي - {{ today }}</h3>
+        <button class="btn btn-primary" onclick="openModal('addEvalModal')">
+            <i class="fas fa-plus"></i> إضافة تقييم
+        </button>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>الموظف</th>
+                    <th>المنطقة</th>
+                    <th>التقييم العام</th>
+                    <th>التفاصيل</th>
+                    <th>ملاحظات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ev in evaluations %}
+                <tr>
+                    <td>{{ ev.employee.name }}</td>
+                    <td>{{ ev.employee.area or '-' }}</td>
+                    <td>
+                        {% set total = ev.scores|map(attribute='score')|sum %}
+                        {% set max_total = ev.scores|map(attribute='criteria')|map(attribute='max_score')|sum %}
+                        <strong>{{ "%.1f"|format(total) }} / {{ max_total }}</strong>
+                        <div class="progress-bar" style="width:120px;margin-top:4px">
+                            <div class="progress-fill {% if total/max_total >= 0.8 %}green{% elif total/max_total >= 0.5 %}orange{% else %}red{% endif %}" style="width:{{ (total/max_total*100)|int }}%"></div>
+                        </div>
+                    </td>
+                    <td>
+                        {% for s in ev.scores %}
+                        <div style="font-size:0.8rem;margin-bottom:2px">
+                            {{ s.criteria.name }}: <strong>{{ s.score }}/{{ s.criteria.max_score }}</strong>
+                        </div>
+                        {% endfor %}
+                    </td>
+                    <td>{{ ev.notes or '-' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal" id="addEvalModal">
+    <div class="modal-content" style="max-width:700px">
+        <div class="modal-header">
+            <h3>إضافة تقييم</h3>
+            <button class="modal-close" onclick="closeModal('addEvalModal')"><i class="fas fa-times"></i></button>
+        </div>
+        <form action="{{ url_for('add_evaluation') }}" method="POST" id="evalForm">
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>الموظف *</label>
+                        <select name="employee_id" class="form-control" required>
+                            <option value="">اختر الموظف...</option>
+                            {% for emp in employees %}
+                            <option value="{{ emp.id }}">{{ emp.name }} - {{ emp.area }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>التاريخ</label>
+                        <input type="date" name="date" class="form-control" value="{{ today }}">
+                    </div>
+                </div>
+
+                <h4 style="margin:16px 0 12px">معايير التقييم</h4>
+                {% for c in criteria %}
+                <div class="form-row" style="align-items:end">
+                    <div class="form-group" style="flex:2">
+                        <label>{{ c.name }} <span style="color:#9aa0a6;font-size:0.8rem">(الحد الأقصى: {{ c.max_score }})</span></label>
+                        <select name="score_{{ c.id }}" class="form-control">
+                            {% for i in range(c.max_score, 0, -1) %}
+                            <option value="{{ i }}">{{ i }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group" style="flex:3">
+                        <label>ملاحظة</label>
+                        <input type="text" name="score_notes_{{ c.id }}" class="form-control" placeholder="ملاحظة اختيارية">
+                    </div>
+                </div>
+                {% endfor %}
+
+                <div class="form-group">
+                    <label>ملاحظات عامة</label>
+                    <textarea name="notes" class="form-control" rows="2"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeModal('addEvalModal')">إلغاء</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ التقييم</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

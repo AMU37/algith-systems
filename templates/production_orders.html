@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block page_title %}أوامر الإنتاج{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header"><h3 class="card-title"><i class="fas fa-clipboard-list"></i> أوامر الإنتاج</h3>
+        <button class="btn btn-primary btn-sm" onclick="openModal('addPOModal')"><i class="fas fa-plus"></i> إضافة أمر</button></div>
+    <div class="table-container">
+        <table>
+            <thead><tr><th>المنتج</th><th>الكمية</th><th>البداية</th><th>النهاية</th><th>الحالة</th></tr></thead>
+            <tbody>{% for o in orders %}<tr><td>{{ o.product_name }}</td><td>{{ o.quantity }}</td><td>{{ o.start_date or '-' }}</td><td>{{ o.end_date or '-' }}</td><td><span class="badge badge-{{ 'success' if o.status == 'completed' else 'warning' if o.status == 'in_progress' else 'info' }}">{{ 'مكتمل' if o.status == 'completed' else 'قيد التنفيذ' if o.status == 'in_progress' else 'معلق' }}</span></td></tr>{% endfor %}</tbody>
+        </table>
+    </div>
+</div>
+<div class="modal" id="addPOModal"><div class="modal-content"><div class="modal-header"><h3>إضافة أمر إنتاج</h3><button class="modal-close" onclick="closeModal('addPOModal')">&times;</button></div>
+    <form method="POST" action="{{ url_for('add_production_order') }}">
+        <div class="form-group"><label>اسم المنتج *</label><input type="text" name="product_name" class="form-control" required></div>
+        <div class="form-group"><label>الكمية</label><input type="number" name="quantity" class="form-control" step="0.01" value="0"></div>
+        <div class="form-row"><div class="form-group"><label>تاريخ البداية</label><input type="date" name="start_date" class="form-control" value="{{ now }}"></div><div class="form-group"><label>تاريخ النهاية</label><input type="date" name="end_date" class="form-control"></div></div>
+        <div class="form-group"><label>ملاحظات</label><textarea name="notes" class="form-control" rows="2"></textarea></div>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ</button>
+    </form></div></div>
+{% endblock %}

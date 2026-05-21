@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block page_title %}طلبات الخدمة{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header"><h3 class="card-title"><i class="fas fa-clipboard-list"></i> طلبات الخدمة</h3>
+        <button class="btn btn-primary btn-sm" onclick="openModal('addSOModal')"><i class="fas fa-plus"></i> إضافة طلب</button></div>
+    <div class="table-container">
+        <table>
+            <thead><tr><th>العميل</th><th>الخدمة</th><th>التاريخ</th><th>المبلغ</th><th>المدفوع</th><th>الحالة</th><th>إجراءات</th></tr></thead>
+            <tbody>{% for o in orders %}<tr><td>{{ o.client.name if o.client else '-' }}</td><td>{{ o.service.name if o.service else '-' }}</td><td>{{ o.date }}</td><td>{{ "%.0f"|format(o.amount) }}</td><td>{{ "%.0f"|format(o.paid) }}</td><td><span class="badge badge-{{ 'success' if o.status == 'paid' else 'warning' }}">{{ 'مدفوع' if o.status == 'paid' else 'معلق' }}</span></td><td>{% if o.status != 'paid' %}<button class="btn btn-sm btn-success" onclick="openPayModal({{ o.id }})"><i class="fas fa-money-bill"></i> دفع</button>{% endif %}</td></tr>{% endfor %}</tbody>
+        </table>
+    </div>
+</div>
+<div class="modal" id="addSOModal"><div class="modal-content"><div class="modal-header"><h3>إضافة طلب خدمة</h3><button class="modal-close" onclick="closeModal('addSOModal')">&times;</button></div>
+    <form method="POST" action="{{ url_for('add_service_order') }}">
+        <div class="form-row"><div class="form-group"><label>العميل</label><select name="client_id" class="form-control"><option value="">بدون</option>{% for c in clients %}<option value="{{ c.id }}">{{ c.name }}</option>{% endfor %}</select></div><div class="form-group"><label>الخدمة</label><select name="service_id" class="form-control"><option value="">بدون</option>{% for s in services %}<option value="{{ s.id }}">{{ s.name }}</option>{% endfor %}</select></div></div>
+        <div class="form-row"><div class="form-group"><label>التاريخ</label><input type="date" name="date" class="form-control" value="{{ now }}"></div><div class="form-group"><label>الحالة</label><select name="status" class="form-control"><option value="pending">معلق</option><option value="paid">مدفوع</option></select></div></div>
+        <div class="form-row"><div class="form-group"><label>المبلغ</label><input type="number" name="amount" class="form-control" step="0.01" value="0"></div><div class="form-group"><label>المدفوع</label><input type="number" name="paid" class="form-control" step="0.01" value="0"></div></div>
+        <div class="form-group"><label>ملاحظات</label><textarea name="notes" class="form-control" rows="2"></textarea></div>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ</button>
+    </form></div></div>
+<div class="modal" id="paySOModal"><div class="modal-content"><div class="modal-header"><h3>تسجيل دفعة</h3><button class="modal-close" onclick="closeModal('paySOModal')">&times;</button></div>
+    <form method="POST" id="paySOForm">
+        <div class="form-group"><label>مبلغ الدفعة</label><input type="number" name="amount" class="form-control" step="0.01" required></div>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> تسجيل</button>
+    </form></div></div>
+<script>function openPayModal(id){document.getElementById('paySOForm').action='{{ url_for("pay_service_order", id=0) }}'.replace('0',id);openModal('paySOModal')}</script>
+{% endblock %}

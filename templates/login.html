@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - الغيث</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: #F5F5F5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            direction: rtl;
+        }
+
+        /* Top bar */
+        .top-bar {
+            background: #714B67;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .top-bar-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        .top-bar-logo img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            border-radius: 6px;
+            background: white;
+            padding: 3px;
+        }
+        .top-bar-links {
+            display: flex;
+            gap: 20px;
+        }
+        .top-bar-links a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .top-bar-links a:hover { color: white; }
+
+        /* Login section */
+        .login-section {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+        .login-wrapper {
+            display: flex;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+            overflow: hidden;
+            max-width: 900px;
+            width: 100%;
+            min-height: 480px;
+        }
+        .login-banner {
+            flex: 1;
+            background: linear-gradient(135deg, #714B67 0%, #5B3A53 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            color: white;
+            text-align: center;
+        }
+        .login-banner img {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            border-radius: 16px;
+            background: white;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+        .login-banner h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        .login-banner p {
+            font-size: 0.95rem;
+            opacity: 0.85;
+            line-height: 1.7;
+        }
+        .login-form-section {
+            flex: 1;
+            padding: 48px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .login-form-section h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2C2C2C;
+            margin-bottom: 8px;
+        }
+        .login-form-section .subtitle {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 32px;
+        }
+        .form-group { margin-bottom: 20px; }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #4A4A4A;
+            font-size: 0.85rem;
+        }
+        .input-wrapper {
+            position: relative;
+        }
+        .input-wrapper i {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #A0A0A0;
+            font-size: 0.9rem;
+        }
+        .form-control {
+            width: 100%;
+            padding: 12px 42px 12px 14px;
+            border: 1px solid #D9D9D9;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            background: #FAFAFA;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #714B67;
+            box-shadow: 0 0 0 3px rgba(113,75,103,0.12);
+            background: white;
+        }
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: #714B67;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 8px;
+        }
+        .btn-login:hover {
+            background: #5B3A53;
+            box-shadow: 0 2px 8px rgba(113,75,103,0.3);
+        }
+        .flash {
+            padding: 10px 14px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        .flash-error { background: #FDE8EA; color: #C62828; border: 1px solid #EF9A9A; }
+        .flash-success { background: #E8F5E9; color: #1B5E20; border: 1px solid #A5D6A7; }
+        .signup-link {
+            margin-top: 24px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #666;
+        }
+        .signup-link a {
+            color: #714B67;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .signup-link a:hover { text-decoration: underline; }
+
+        /* Footer */
+        .footer {
+            background: #2C2C2C;
+            color: rgba(255,255,255,0.6);
+            padding: 20px 24px;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+        .footer a { color: rgba(255,255,255,0.8); text-decoration: none; }
+        .footer a:hover { color: white; }
+
+        @media (max-width: 768px) {
+            .login-banner { display: none; }
+            .login-form-section { padding: 32px 24px; }
+            .top-bar-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="top-bar-logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="الغيث">
+            <span>الغيث</span>
+        </div>
+        <div class="top-bar-links">
+            <a href="{{ url_for('landing') }}">الرئيسية</a>
+            <a href="{{ url_for('setup') }}">إنشاء حساب</a>
+        </div>
+    </div>
+
+    <div class="login-section">
+        <div class="login-wrapper">
+            <div class="login-banner">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="الغيث">
+                <h2>نظام الغيث لإدارة الأعمال</h2>
+                <p>نظام متكامل لإدارة شركتك بكفاءة عالية<br>الموظفين، الرواتب، المشتريات، المبيعات، والمحاسبة</p>
+            </div>
+            <div class="login-form-section">
+                <h1>تسجيل الدخول</h1>
+                <p class="subtitle">أدخل بياناتك للوصول إلى لوحة التحكم</p>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                {% for category, message in messages %}
+                <div class="flash flash-{{ category }}">
+                    <i class="fas fa-{% if category == 'success' %}check-circle{% else %}exclamation-circle{% endif %}"></i>
+                    <span>{{ message }}</span>
+                </div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+
+                <form method="POST">
+                    <div class="form-group">
+                        <label>اسم المستخدم</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-user"></i>
+                            <input type="text" name="username" class="form-control" required placeholder="أدخل اسم المستخدم">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>كلمة المرور</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" name="password" class="form-control" required placeholder="أدخل كلمة المرور">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-login">
+                        <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
+                    </button>
+                </form>
+
+                <div class="signup-link">
+                    ليس لديك حساب؟ <a href="{{ url_for('setup') }}">إنشاء حساب جديد</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>تصميم وتطوير <a href="tel:773014017">الغيث</a> | 773014017 - 711127883</p>
+    </div>
+</body>
+</html>

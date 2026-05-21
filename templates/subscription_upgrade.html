@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block page_title %}ترقية الاشتراك{% endblock %}
+{% block content %}
+<div style="max-width: 900px; margin: 0 auto;">
+    <div class="card" style="margin-bottom: 24px;">
+        <div class="card-header"><h3 class="card-title"><i class="fas fa-crown"></i> اختر باقتك المناسبة</h3></div>
+        <div style="padding: 24px;">
+            <div class="pricing-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+                {% for code, plan in plans.items() %}
+                <div class="pricing-card" style="border: 2px solid {% if code == current_plan %}#34a853{% else %}#e8eaed{% endif %}; border-radius: 12px; padding: 20px; text-align: center; position: relative;">
+                    {% if code == current_plan %}<div style="position: absolute; top: 8px; left: 8px; background: #34a853; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem;">خطتك الحالية</div>{% endif %}
+                    <h3>{{ plan.name }}</h3>
+                    <div class="price" style="font-size: 2rem; font-weight: 800; color: #1a73e8; margin: 8px 0;">{{ plan.price }} ر.ي <span style="font-size: 0.9rem; color: #5f6368;">/شهر</span></div>
+                    <ul style="list-style: none; text-align: right; margin-bottom: 16px; font-size: 0.9rem;">
+                        <li style="padding: 4px 0;"><i class="fas fa-users" style="color: #1a73e8; margin-left: 6px;"></i> {{ plan.max_users }} مستخدم</li>
+                        {% if code == 'pro' or code == 'enterprise' %}<li style="padding: 4px 0;"><i class="fas fa-check" style="color: #34a853; margin-left: 6px;"></i> جميع الوحدات</li>{% endif %}
+                    </ul>
+                    <form method="POST" action="{{ url_for('subscription_upgrade') }}">
+                        <input type="hidden" name="plan_code" value="{{ code }}">
+                        <button type="submit" class="btn btn-primary" style="width: 100%; {% if code == current_plan %}opacity: 0.6; cursor: not-allowed;{% endif %}" {% if code == current_plan %}disabled{% endif %}>
+                            {% if code == current_plan %}مشترك حالياً{% else %}اشترك الآن{% endif %}
+                        </button>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header"><h3 class="card-title"><i class="fas fa-info-circle"></i> طرق الدفع المتاحة</h3></div>
+        <div style="padding: 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+            <div style="text-align: center; padding: 16px; background: #f8f9fa; border-radius: 8px;"><i class="fas fa-money-bill-wave" style="font-size: 2rem; color: #34a853; margin-bottom: 8px;"></i><h4>الكريمي</h4></div>
+            <div style="text-align: center; padding: 16px; background: #f8f9fa; border-radius: 8px;"><i class="fas fa-mobile-alt" style="font-size: 2rem; color: #1a73e8; margin-bottom: 8px;"></i><h4>جوالي / فلوسك</h4></div>
+            <div style="text-align: center; padding: 16px; background: #f8f9fa; border-radius: 8px;"><i class="fab fa-cc-visa" style="font-size: 2rem; color: #fbbc04; margin-bottom: 8px;"></i><h4>Visa / MasterCard</h4></div>
+        </div>
+        <div style="padding: 0 24px 24px; text-align: center; color: #5f6368;">
+            <p>بعد اختيار الباقة، سيتم تحويلك لصفحة الدفع أو التواصل مع الدعم الفني لإتمام العملية.</p>
+            <p>للدعم: <a href="tel:773014017">773014017</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

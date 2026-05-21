@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block page_title %}انتهت صلاحية الاشتراك{% endblock %}
+{% block content %}
+<div class="card" style="max-width: 600px; margin: 40px auto; text-align: center;">
+    <div class="card-header" style="background: #fce8e6; color: #c5221f;">
+        <h3 class="card-title"><i class="fas fa-exclamation-triangle"></i> انتهت صلاحية الاشتراك</h3>
+    </div>
+    <div style="padding: 32px;">
+        <i class="fas fa-lock" style="font-size: 4rem; color: #c5221f; margin-bottom: 16px;"></i>
+        <h2 style="margin-bottom: 16px;">عذراً، تم تعليق الخدمة</h2>
+        <p style="color: #5f6368; margin-bottom: 24px;">
+            انتهى اشتراك شركتك <strong>{{ company.name }}</strong> بتاريخ <strong>{{ company.subscription_end }}</strong>.
+            يرجى تجديد الاشتراك لاستعادة الوصول إلى النظام.
+        </p>
+        <div style="background: #f8f9fa; padding: 16px; border-radius: 12px; margin-bottom: 24px; text-align: right;">
+            <h4 style="margin-bottom: 8px;">الخطط المتاحة:</h4>
+            <ul style="list-style: none;">
+                <li style="padding: 8px 0; border-bottom: 1px solid #e8eaed;">الباقة الأساسية: 15$ / شهر</li>
+                <li style="padding: 8px 0; border-bottom: 1px solid #e8eaed;">الباقة الاحترافية: 35$ / شهر</li>
+                <li style="padding: 8px 0;">المؤسسات: 99$ / شهر</li>
+            </ul>
+        </div>
+        <a href="{{ url_for('subscription_upgrade') }}" class="btn btn-primary" style="width: 100%;"><i class="fas fa-credit-card"></i> تجديد الاشتراك الآن</a>
+        <p style="margin-top: 16px; font-size: 0.9rem; color: #9aa0a6;">للدفع اليدوي تواصل معنا: <a href="tel:773014017">773014017</a></p>
+    </div>
+</div>
+{% endblock %}
