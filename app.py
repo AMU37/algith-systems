@@ -83,7 +83,8 @@ class Company(db.Model):
     users = db.relationship('User', backref='company', lazy=True)
     subscription = db.relationship('Subscription', backref='company', uselist=False, lazy=True)
 
-class User(UserMixin, db.Model):
+class Users(UserMixin, db.Model):
+    __tablename__ = 'users'  # <-- أضف هذا السطر
     id = db.Column(db.Integer, primary_key=True)
     company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=False)
     username = db.Column(db.String(80), nullable=False)
@@ -146,7 +147,7 @@ class Deduction(db.Model):
     reason = db.Column(db.String(200))
     date = db.Column(db.Date, default=datetime.utcnow)
     month = db.Column(db.String(7))
-    created_by = db.Column(db.Integer, db.ForeignKey('user.id'))
+    created_by = db.Column(db.Integer, db.ForeignKey('users.id'))
 
 class Addition(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -157,7 +158,7 @@ class Addition(db.Model):
     reason = db.Column(db.String(200))
     date = db.Column(db.Date, default=datetime.utcnow)
     month = db.Column(db.String(7))
-    created_by = db.Column(db.Integer, db.ForeignKey('user.id'))
+    created_by = db.Column(db.Integer, db.ForeignKey('users.id'))
 
 class Advance(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -177,7 +178,7 @@ class Evaluation(db.Model):
     date = db.Column(db.Date, default=datetime.utcnow)
     total_score = db.Column(db.Float, default=0)
     notes = db.Column(db.Text)
-    evaluator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    evaluator_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     scores = db.relationship('EvaluationScore', backref='evaluation', lazy=True)
 
 class EvaluationCriteria(db.Model):
@@ -269,7 +270,7 @@ class Purchase(db.Model):
     payment_method = db.Column(db.String(20), default='cash')
     notes = db.Column(db.Text)
     invoice_number = db.Column(db.String(50))
-    created_by = db.Column(db.Integer, db.ForeignKey('user.id'))
+    created_by = db.Column(db.Integer, db.ForeignKey('users.id'))
     items = db.relationship('PurchaseItem', backref='purchase', lazy=True)
 
 class PurchaseItem(db.Model):
@@ -292,7 +293,7 @@ class SalesInvoice(db.Model):
     notes = db.Column(db.Text)
     invoice_number = db.Column(db.String(50))
     status = db.Column(db.String(20), default='pending')
-    created_by = db.Column(db.Integer, db.ForeignKey('user.id'))
+    created_by = db.Column(db.Integer, db.ForeignKey('users.id'))
     items = db.relationship('SalesInvoiceItem', backref='invoice', lazy=True)
 
 class SalesInvoiceItem(db.Model):
@@ -314,7 +315,7 @@ class Invoice(db.Model):
     paid = db.Column(db.Float, default=0)
     status = db.Column(db.String(20), default='pending')
     notes = db.Column(db.Text)
-    created_by = db.Column(db.Integer, db.ForeignKey('user.id'))
+    created_by = db.Column(db.Integer, db.ForeignKey('users.id'))
 
 class Contract(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -349,7 +350,7 @@ class JournalEntry(db.Model):
     description = db.Column(db.String(200))
     entry_type = db.Column(db.String(50))
     reference = db.Column(db.String(50))
-    created_by = db.Column(db.Integer, db.ForeignKey('user.id'))
+    created_by = db.Column(db.Integer, db.ForeignKey('users.id'))
     lines = db.relationship('JournalLine', backref='entry', lazy=True)
 
 class JournalLine(db.Model):
@@ -367,7 +368,7 @@ class GLJournal(db.Model):
     date = db.Column(db.Date, default=datetime.utcnow)
     description = db.Column(db.String(200))
     reference = db.Column(db.String(50))
-    created_by = db.Column(db.Integer, db.ForeignKey('user.id'))
+    created_by = db.Column(db.Integer, db.ForeignKey('users.id'))
     total_debit = db.Column(db.Float, default=0)
     total_credit = db.Column(db.Float, default=0)
     company = db.relationship('Company', backref='gl_journals')
@@ -435,7 +436,7 @@ class Claim(db.Model):
     completion_percentage = db.Column(db.Float, default=0)
     status = db.Column(db.String(20), default='pending')
     notes = db.Column(db.Text)
-    created_by = db.Column(db.Integer, db.ForeignKey('user.id'))
+    created_by = db.Column(db.Integer, db.ForeignKey('users.id'))
 
 class DailyAttendance(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -473,7 +474,7 @@ class MaterialPurchase(db.Model):
     payment_method = db.Column(db.String(20), default='cash')
     notes = db.Column(db.Text)
     invoice_number = db.Column(db.String(50))
-    created_by = db.Column(db.Integer, db.ForeignKey('user.id'))
+    created_by = db.Column(db.Integer, db.ForeignKey('users.id'))
     supplier = db.relationship('Supplier', backref='material_purchases')
     project = db.relationship('Project', backref='material_purchases')
     items = db.relationship('MaterialItem', backref='purchase', lazy=True)
@@ -555,7 +556,7 @@ class ServiceOrder(db.Model):
     paid = db.Column(db.Float, default=0)
     status = db.Column(db.String(20), default='pending')
     notes = db.Column(db.Text)
-    created_by = db.Column(db.Integer, db.ForeignKey('user.id'))
+    created_by = db.Column(db.Integer, db.ForeignKey('users.id'))
     client = db.relationship('Client', backref='service_orders')
     service = db.relationship('Service', backref='orders')
 
