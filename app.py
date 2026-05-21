@@ -8,13 +8,33 @@ from functools import wraps
 import json
 
 app = Flask(__name__)
+# Force PostgreSQL connection
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:ali1993mubark@db.tdkpriaqfpanelmebhsh.supabase.co:5432/postgres'
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'alghith-saas-2026-secret-key')
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 
-# Database path - works on both local and PythonAnywhere
-base_dir = os.path.dirname(os.path.abspath(__file__))
-db_path = os.path.join(base_dir, 'instance', 'alghith.db')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + db_path
+# ==================== DATABASE CONFIGURATION ====================
+# Support both SQLite (local) and PostgreSQL (production on Render/Supabase)
+
+# Try to get database URL from environment variable (Render)
+database_url = os.environ.get('DATABASE_URL')
+
+if database_url:
+    # Render and Supabase use 'postgres://', but SQLAlchemy requires 'postgresql://'
+    if database_url.startswith('postgres://'):
+        database_url = database_url.replace('postgres://', 'postgresql://', 1)
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+    print("✅ Using PostgreSQL database from Supabase")
+else:
+    # Fallback to SQLite for local development
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    instance_path = os.path.join(base_dir, 'instance')
+    if not os.path.exists(instance_path):
+        os.makedirs(instance_path)
+    db_path = os.path.join(instance_path, 'alghith.db')
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + db_path
+    print("⚠️ Using SQLite database (local development)")
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
