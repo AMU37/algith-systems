@@ -65,6 +65,10 @@ body {
     z-index: 99;
 }
 
+.mobile-nav-toggle {
+    display: none;
+}
+
 .nav-items {
     display: flex;
     align-items: center;
@@ -83,6 +87,16 @@ body {
     font-weight: 500;
     border-radius: var(--radius-md);
     transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.nav-link span {
+    display: inline;
+}
+
+.nav-link i + span,
+.nav-link span + i {
+    margin-right: 4px;
 }
 
 .nav-link:hover {
@@ -412,9 +426,14 @@ body {
     background: var(--white);
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-sm);
+    border: none;
     margin-bottom: 24px;
-    overflow: hidden;
+    overflow: visible;
     transition: box-shadow 0.2s;
+}
+
+.card-body {
+    overflow-x: auto;
 }
 
 .card:hover {
@@ -766,11 +785,30 @@ tbody tr:hover {
     }
 }
 
+/* Ensure text in nav links is always visible */
+.nav-link span,
+.nav-link i,
+.dropdown-item span,
+.dropdown-item i {
+    display: inline-block;
+    color: inherit;
+    font-family: inherit;
+}
+
+/* Prevent text clipping on small screens */
+.nav-link,
+.dropdown-item,
+.breadcrumb-item,
+.page-header h2 {
+    white-space: nowrap;
+    overflow: visible;
+}
+
 /* ========================================
    Responsive Design
    ======================================== */
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
     .top-header {
         padding: 0 16px;
     }
@@ -779,25 +817,26 @@ tbody tr:hover {
         display: none;
     }
 
-    .mobile-nav-toggle {
-        display: block;
+    .top-nav {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
     .nav-items {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: var(--white);
-        flex-direction: column;
-        align-items: stretch;
-        padding: 16px;
-        border-top: 1px solid var(--gray-300);
-        box-shadow: var(--shadow-md);
-        max-height: 70vh;
-        overflow-y: auto;
-        z-index: 999;
+        flex-wrap: nowrap;
+        position: relative;
+        top: auto;
+        left: auto;
+        right: auto;
+        background: transparent;
+        flex-direction: row;
+        align-items: center;
+        padding: 0;
+        border-top: none;
+        box-shadow: none;
+        max-height: none;
+        overflow: visible;
+        z-index: auto;
     }
 
     .top-nav.mobile-open .nav-items {
@@ -805,11 +844,22 @@ tbody tr:hover {
     }
 
     .nav-dropdown-menu {
-        position: static;
-        box-shadow: none;
-        border: none;
-        padding-right: 20px;
-        background: transparent;
+        position: absolute;
+        box-shadow: var(--shadow-lg);
+        border: 1px solid var(--gray-300);
+        padding-right: 0;
+        background: var(--white);
+        z-index: 1000;
+    }
+
+    .nav-link {
+        padding: 10px 10px;
+        font-size: 0.8rem;
+        white-space: nowrap;
+    }
+
+    .nav-dropdown-toggle i.fa-chevron-down {
+        display: none;
     }
 
     .stats-grid {

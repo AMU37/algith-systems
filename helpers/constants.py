@@ -6,6 +6,11 @@ BUSINESS_TYPES = {
     'trading': {'name': 'شركة تجارية', 'icon': 'fa-building', 'desc': 'استيراد وتصدير وتجارة عامة'},
     'contracting': {'name': 'شركة مقاولات', 'icon': 'fa-helmet-safety', 'desc': 'مقاولات وإنشاءات'},
     'restaurant': {'name': 'مطعم / كافتيريا', 'icon': 'fa-utensils', 'desc': 'خدمات طعام ومشروبات'},
+    'cleaning': {'name': 'شركة نظافة', 'icon': 'fa-broom', 'desc': 'خدمات النظافة والصيانة'},
+    'factory': {'name': 'مصنع', 'icon': 'fa-industry', 'desc': 'إنتاج وتصنيع'},
+    'hospital': {'name': 'مستشفى / عيادة', 'icon': 'fa-hospital', 'desc': 'خدمات طبية واستشفائية'},
+    'school': {'name': 'مدرسة / مركز تعليمي', 'icon': 'fa-school', 'desc': 'إدارة الطلاب والمواد والامتحانات'},
+    'transport': {'name': 'نقل', 'icon': 'fa-truck', 'desc': 'إدارة المركبات والرحلات والوقود'},
     'employee_transport': {'name': 'نقل موظفين', 'icon': 'fa-bus', 'desc': 'إدارة باصات وسائقين وخطوط سير للموظفين'},
     'general': {'name': 'أخرى', 'icon': 'fa-globe', 'desc': 'نشاط عام - جميع الوحدات متاحة'},
 }
