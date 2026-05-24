@@ -17,7 +17,7 @@
                     <td><span class="badge badge-{{ 'success' if cl.status == 'active' else 'danger' }}">{{ 'نشط' if cl.status == 'active' else 'غير نشط' }}</span></td>
                     <td class="actions-cell">
                         <button class="btn btn-outline btn-sm" onclick="openEditClient({{ cl.id }}, '{{ cl.name }}', '{{ cl.company or '' }}', '{{ cl.phone or '' }}', '{{ cl.email or '' }}', '{{ cl.address or '' }}', '{{ cl.tax_number or '' }}', {{ cl.balance }}, '{{ cl.status }}')"><i class="fas fa-edit"></i></button>
-                        <form id="deleteCl{{ cl.id }}" action="{{ url_for('delete_client', id=cl.id) }}" method="POST" style="display:inline">
+                        <form id="deleteCl{{ cl.id }}" action="{{ url_for('clients.delete_client', id=cl.id) }}" method="POST" style="display:inline">
                             <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete('هل أنت متأكد؟', 'deleteCl{{ cl.id }}')"><i class="fas fa-trash"></i></button>
                         </form>
                     </td>
@@ -31,7 +31,7 @@
 <div class="modal" id="addClientModal">
     <div class="modal-content">
         <div class="modal-header"><h3>إضافة عميل</h3><button class="modal-close" onclick="closeModal('addClientModal')"><i class="fas fa-times"></i></button></div>
-        <form action="{{ url_for('add_client') }}" method="POST">
+        <form action="{{ url_for('clients.add_client') }}" method="POST">
             <div class="modal-body">
                 <div class="form-row">
                     <div class="form-group"><label>الاسم *</label><input type="text" name="name" class="form-control" required></div>

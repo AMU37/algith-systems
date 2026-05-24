@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block page_title %}لوحة تحكم التجزئة{% endblock %}
+{% block content %}
+<div class="stats-grid">
+    <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-cube"></i></div><div class="stat-info"><h3>{{ products_count }}</h3><p>المنتجات</p></div></div>
+    <div class="stat-card"><div class="stat-icon green"><i class="fas fa-receipt"></i></div><div class="stat-info"><h3>{{ today_sales }}</h3><p>مبيعات اليوم</p></div></div>
+    <div class="stat-card"><div class="stat-icon orange"><i class="fas fa-coins"></i></div><div class="stat-info"><h3>{{ "%.0f"|format(today_revenue) }}</h3><p>إيرادات اليوم</p></div></div>
+    <div class="stat-card"><div class="stat-icon purple"><i class="fas fa-exclamation-triangle"></i></div><div class="stat-info"><h3>{{ low_stock }}</h3><p>منتجات منخفضة</p></div></div>
+</div>
+<div class="grid-2">
+    <div class="card"><div class="card-header"><h3 class="card-title"><i class="fas fa-clock"></i> آخر المبيعات</h3></div>
+        <div class="table-container"><table><thead><tr><th>رقم الفاتورة</th><th>العميل</th><th>المبلغ</th><th>الحالة</th></tr></thead><tbody>{% for sale in recent_sales %}<tr><td>{{ sale.invoice_number or '-' }}</td><td>{{ sale.client.name if sale.client else 'نقدي' }}</td><td>{{ "%.0f"|format(sale.total) }}</td><td><span class="badge badge-{{ 'success' if sale.status == 'paid' else 'warning' }}">{{ 'مدفوع' if sale.status == 'paid' else 'معلق' }}</span></td></tr>{% else %}<tr><td colspan="4" style="text-align:center;color:#999;padding:20px;">لا توجد مبيعات</td></tr>{% endfor %}</tbody></table></div>
+    </div>
+    <div class="card"><div class="card-header"><h3 class="card-title"><i class="fas fa-clock"></i> آخر المشتريات</h3></div>
+        <div class="table-container"><table><thead><tr><th>رقم الفاتورة</th><th>المورد</th><th>المبلغ</th><th>التاريخ</th></tr></thead><tbody>{% for pur in recent_purchases %}<tr><td>{{ pur.invoice_number or '-' }}</td><td>{{ pur.supplier.name if pur.supplier else '-' }}</td><td>{{ "%.0f"|format(pur.total) }}</td><td>{{ pur.date }}</td></tr>{% else %}<tr><td colspan="4" style="text-align:center;color:#999;padding:20px;">لا توجد مشتريات</td></tr>{% endfor %}</tbody></table></div>
+    </div>
+</div>
+{% endblock %}

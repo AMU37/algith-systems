@@ -1,0 +1,47 @@
+{% extends "super_admin/base.html" %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3><i class="fas fa-plus-circle"></i> إنشاء شركة جديدة</h3>
+        <a href="{{ url_for('super_admin.companies') }}" class="btn btn-primary"><i class="fas fa-arrow-right"></i> العودة</a>
+    </div>
+    <div style="padding:16px;">
+        <form method="POST">
+            <div class="grid-2">
+                <div style="margin-bottom:12px;">
+                    <label style="display:block;font-weight:600;font-size:0.85rem;margin-bottom:6px;">اسم الشركة <span style="color:#DC3545;">*</span></label>
+                    <input type="text" name="company_name" required class="form-control" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;font-family:inherit;">
+                </div>
+                <div style="margin-bottom:12px;">
+                    <label style="display:block;font-weight:600;font-size:0.85rem;margin-bottom:6px;">نوع النشاط</label>
+                    <select name="business_type" class="form-control" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;font-family:inherit;">
+                        {% for key, bt in business_types.items() %}
+                        <option value="{{ key }}">{{ bt.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div style="margin-bottom:12px;">
+                    <label style="display:block;font-weight:600;font-size:0.85rem;margin-bottom:6px;">اسم المستخدم المدير</label>
+                    <input type="text" name="admin_username" class="form-control" value="admin" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;font-family:inherit;">
+                </div>
+                <div style="margin-bottom:12px;">
+                    <label style="display:block;font-weight:600;font-size:0.85rem;margin-bottom:6px;">كلمة المرور</label>
+                    <input type="password" name="admin_password" class="form-control" value="admin123" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;font-family:inherit;">
+                </div>
+                <div style="margin-bottom:12px;">
+                    <label style="display:block;font-weight:600;font-size:0.85rem;margin-bottom:6px;">الباقة</label>
+                    <select name="plan_code" class="form-control" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;font-family:inherit;">
+                        {% for code, plan in plans.items() %}
+                        <option value="{{ code }}" {% if code == 'trial' %}selected{% endif %}>{{ plan.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div style="margin-top:16px;">
+                <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> حفظ وإنشاء الشركة</button>
+                <a href="{{ url_for('super_admin.companies') }}" class="btn" style="background:#f1f3f4;color:#333;">إلغاء</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

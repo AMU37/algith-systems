@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block page_title %}المرضى{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header"><h3 class="card-title"><i class="fas fa-user-injured"></i> المرضى</h3>
+        <button class="btn btn-primary btn-sm" onclick="openModal('addPtModal')"><i class="fas fa-plus"></i> إضافة مريض</button></div>
+    <div class="table-container">
+        <table>
+            <thead><tr><th>الاسم</th><th>الهاتف</th><th>تاريخ الميلاد</th><th>الجنس</th><th>فصيلة الدم</th><th>إجراءات</th></tr></thead>
+            <tbody>{% for p in patients %}<tr><td>{{ p.name }}</td><td>{{ p.phone or '-' }}</td><td>{{ p.birth_date or '-' }}</td><td>{{ p.gender or '-' }}</td><td>{{ p.blood_type or '-' }}</td><td><button class="btn btn-sm btn-outline"><i class="fas fa-eye"></i></button></td></tr>{% endfor %}</tbody>
+        </table>
+    </div>
+</div>
+<div class="modal" id="addPtModal"><div class="modal-content"><div class="modal-header"><h3>إضافة مريض</h3><button class="modal-close" onclick="closeModal('addPtModal')">&times;</button></div>
+    <form method="POST" action="{{ url_for('hospital.add_patient') }}">
+        <div class="form-group"><label>الاسم *</label><input type="text" name="name" class="form-control" required></div>
+        <div class="form-row"><div class="form-group"><label>الهاتف</label><input type="text" name="phone" class="form-control"></div><div class="form-group"><label>البريد</label><input type="email" name="email" class="form-control"></div></div>
+        <div class="form-row"><div class="form-group"><label>تاريخ الميلاد</label><input type="date" name="birth_date" class="form-control"></div><div class="form-group"><label>الجنس</label><select name="gender" class="form-control"><option value="">اختر</option><option value="male">ذكر</option><option value="female">أنثى</option></select></div></div>
+        <div class="form-row"><div class="form-group"><label>فصيلة الدم</label><input type="text" name="blood_type" class="form-control"></div><div class="form-group"><label>جهة اتصال طوارئ</label><input type="text" name="emergency_contact" class="form-control"></div></div>
+        <div class="form-group"><label>ملاحظات</label><textarea name="notes" class="form-control" rows="2"></textarea></div>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ</button>
+    </form></div></div>
+{% endblock %}

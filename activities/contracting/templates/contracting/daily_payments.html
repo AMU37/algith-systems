@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block page_title %}صرف الأجور{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-money-bill-wave"></i> صرف الأجور اليومية</h3>
+        <button class="btn btn-primary btn-sm" onclick="openModal('addPayModal')"><i class="fas fa-plus"></i> صرف أجر</button>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead><tr><th>الموظف</th><th>المشروع</th><th>التاريخ</th><th>المبلغ</th><th>طريقة الدفع</th><th>ملاحظات</th><th>إجراءات</th></tr></thead>
+            <tbody>
+                {% for p in payments %}
+                <tr><td>{{ p.employee.name }}</td><td>{{ p.project.name if p.project else '-' }}</td><td>{{ p.date }}</td><td>{{ "%.0f"|format(p.amount) }}</td><td>{{ 'نقدي' if p.payment_method == 'cash' else 'تحويل' }}</td><td>{{ p.notes or '-' }}</td>
+                <td><form method="POST" action="{{ url_for('contracting.delete_daily_payment', id=p.id) }}" style="display:inline" onsubmit="return confirm('حذف؟')"><button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button></form></td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal" id="addPayModal">
+    <div class="modal-content">
+        <div class="modal-header"><h3>صرف أجر</h3><button class="modal-close" onclick="closeModal('addPayModal')">&times;</button></div>
+        <form method="POST" action="{{ url_for('contracting.add_daily_payment') }}">
+            <div class="form-group"><label>الموظف *</label><select name="employee_id" class="form-control" required>{% for e in employees %}<option value="{{ e.id }}">{{ e.name }}</option>{% endfor %}</select></div>
+            <div class="form-group"><label>المشروع</label><select name="project_id" class="form-control"><option value="">بدون مشروع</option>{% for p in projects %}<option value="{{ p.id }}">{{ p.name }}</option>{% endfor %}</select></div>
+            <div class="form-row">
+                <div class="form-group"><label>التاريخ</label><input type="date" name="date" class="form-control" value="{{ now }}"></div>
+                <div class="form-group"><label>المبلغ *</label><input type="number" name="amount" class="form-control" step="0.01" required></div>
+            </div>
+            <div class="form-group"><label>طريقة الدفع</label><select name="payment_method" class="form-control"><option value="cash">نقدي</option><option value="transfer">تحويل بنكي</option></select></div>
+            <div class="form-group"><label>ملاحظات</label><textarea name="notes" class="form-control" rows="2"></textarea></div>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

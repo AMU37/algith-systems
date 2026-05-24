@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block page_title %}الزيارات{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header"><h3 class="card-title"><i class="fas fa-walking"></i> الزيارات</h3>
+        <button class="btn btn-primary btn-sm" onclick="openModal('addVisitModal')"><i class="fas fa-plus"></i> إضافة زيارة</button></div>
+    <div class="table-container">
+        <table>
+            <thead><tr><th>الموقع</th><th>التاريخ</th><th>التقييم</th><th>ملاحظات</th></tr></thead>
+            <tbody>{% for v in visits %}<tr><td>{{ v.site.name if v.site else '-' }}</td><td>{{ v.date }}</td><td>{% for i in range(v.rating or 0) %}<i class="fas fa-star" style="color:#f59e0b"></i>{% endfor %}</td><td>{{ v.notes or '-' }}</td></tr>{% endfor %}</tbody>
+        </table>
+    </div>
+</div>
+<div class="modal" id="addVisitModal"><div class="modal-content"><div class="modal-header"><h3>إضافة زيارة</h3><button class="modal-close" onclick="closeModal('addVisitModal')">&times;</button></div>
+    <form method="POST" action="{{ url_for('cleaning.add_visit') }}">
+        <div class="form-group"><label>الموقع</label><select name="site_id" class="form-control"><option value="">بدون</option>{% for s in sites %}<option value="{{ s.id }}">{{ s.name }}</option>{% endfor %}</select></div>
+        <div class="form-row"><div class="form-group"><label>التاريخ</label><input type="date" name="date" class="form-control" value="{{ now }}"></div><div class="form-group"><label>التقييم (1-5)</label><input type="number" name="rating" class="form-control" min="1" max="5" value="5"></div></div>
+        <div class="form-group"><label>ملاحظات</label><textarea name="notes" class="form-control" rows="3"></textarea></div>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ</button>
+    </form></div></div>
+{% endblock %}

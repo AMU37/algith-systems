@@ -1,0 +1,6 @@
+[INFO] Static folder: D:\ghith\NEW\alghith-systems\static
+[INFO] Static folder exists: True
+ * Serving Flask app 'core'
+ * Debug mode: on
+[INFO] Static folder: D:\ghith\NEW\alghith-systems\static
+[INFO] Static folder exists: True

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block page_title %}التحاليل{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header"><h3 class="card-title"><i class="fas fa-vials"></i> التحاليل المخبرية</h3>
+        <button class="btn btn-primary btn-sm" onclick="openModal('addLabModal')"><i class="fas fa-plus"></i> إضافة تحليل</button></div>
+    <div class="table-container">
+        <table>
+            <thead><tr><th>المريض</th><th>اسم التحليل</th><th>التاريخ</th><th>النتيجة</th><th>الحالة</th></tr></thead>
+            <tbody>{% for t in tests %}<tr><td>{{ t.patient.name if t.patient else '-' }}</td><td>{{ t.test_name }}</td><td>{{ t.date }}</td><td>{{ (t.result or '')[:50] }}...</td><td><span class="badge badge-{{ 'success' if t.status == 'completed' else 'warning' }}">{{ 'مكتمل' if t.status == 'completed' else 'قيد الانتظار' }}</span></td></tr>{% endfor %}</tbody>
+        </table>
+    </div>
+</div>
+<div class="modal" id="addLabModal"><div class="modal-content"><div class="modal-header"><h3>إضافة تحليل</h3><button class="modal-close" onclick="closeModal('addLabModal')">&times;</button></div>
+    <form method="POST" action="{{ url_for('hospital.add_lab_test') }}">
+        <div class="form-group"><label>المريض</label><select name="patient_id" class="form-control"><option value="">بدون</option>{% for p in patients %}<option value="{{ p.id }}">{{ p.name }}</option>{% endfor %}</select></div>
+        <div class="form-row"><div class="form-group"><label>اسم التحليل</label><input type="text" name="test_name" class="form-control"></div><div class="form-group"><label>التاريخ</label><input type="date" name="date" class="form-control" value="{{ now }}"></div></div>
+        <div class="form-group"><label>النتيجة</label><textarea name="result" class="form-control" rows="3"></textarea></div>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ</button>
+    </form></div></div>
+{% endblock %}

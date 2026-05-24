@@ -8,17 +8,34 @@
     </div>
     <div class="table-container">
         <table>
-            <thead><tr><th>الكود</th><th>الاسم</th><th>رقم البطاقة</th><th>الوظيفة</th><th>المنطقة</th><th>الراتب الشامل</th><th>تاريخ الالتحاق</th><th>الحالة</th><th>الإجراءات</th></tr></thead>
+            <thead><tr>
+                <th>الكود</th><th>الاسم</th><th>رقم البطاقة</th><th>الوظيفة</th>
+                {% if business_type == 'employee_transport' %}
+                <th>القسم</th><th>الوردية</th><th>الخط</th><th>المدينة</th><th>وقت الوصول</th><th>وقت الانصراف</th><th>نوع النقل</th>
+                {% endif %}
+                <th>المنطقة</th><th>الراتب</th><th>تاريخ الالتحاق</th><th>الحالة</th><th>الإجراءات</th>
+            </tr></thead>
             <tbody>
                 {% for emp in employees %}
                 <tr>
                     <td>{{ emp.code or '-' }}</td><td>{{ emp.name }}</td><td>{{ emp.card_number or '-' }}</td>
-                    <td>{{ emp.position or '-' }}</td><td>{{ emp.area or '-' }}</td>
+                    <td>{{ emp.position or '-' }}</td>
+                    {% if business_type == 'employee_transport' %}
+                    {% set et = et_infos.get(emp.id) %}
+                    <td>{{ et.department if et else '-' }}</td>
+                    <td>{{ et.shift_type.name if et and et.shift_type else '-' }}</td>
+                    <td>{{ et.route.name if et and et.route else '-' }}</td>
+                    <td>{{ et.city if et else '-' }}</td>
+                    <td>{{ et.arrival_time.strftime('%H:%M') if et and et.arrival_time else '-' }}</td>
+                    <td>{{ et.departure_time.strftime('%H:%M') if et and et.departure_time else '-' }}</td>
+                    <td>{{ et.transport_type if et else 'يومي' }}</td>
+                    {% endif %}
+                    <td>{{ emp.area or '-' }}</td>
                     <td>{{ "%.0f"|format(emp.comprehensive_salary) }}</td><td>{{ emp.join_date }}</td>
                     <td><span class="badge badge-{{ 'success' if emp.status == 'active' else 'danger' }}">{{ 'نشط' if emp.status == 'active' else 'غير نشط' }}</span></td>
                     <td class="actions-cell">
                         <button class="btn btn-outline btn-sm" onclick="openEditEmployee({{ emp.id }})"><i class="fas fa-edit"></i></button>
-                        <form id="deleteEmp{{ emp.id }}" action="{{ url_for('delete_employee', id=emp.id) }}" method="POST" style="display:inline">
+                       <form id="deleteEmp{{ emp.id }}" action="{{ url_for('employees.delete_employee', id=emp.id) }}" method="POST" style="display:inline">
                             <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete('هل أنت متأكد؟', 'deleteEmp{{ emp.id }}')"><i class="fas fa-trash"></i></button>
                         </form>
                     </td>
@@ -32,7 +49,7 @@
 <div class="modal" id="addEmployeeModal">
     <div class="modal-content">
         <div class="modal-header"><h3>إضافة موظف جديد</h3><button class="modal-close" onclick="closeModal('addEmployeeModal')"><i class="fas fa-times"></i></button></div>
-        <form action="{{ url_for('add_employee') }}" method="POST">
+        <form action="{{ url_for('employees.add_employee') }}" method="POST">
             <div class="modal-body">
                 <div class="form-row">
                     <div class="form-group"><label>الاسم الكامل *</label><input type="text" name="name" class="form-control" required></div>
@@ -41,7 +58,7 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label>نوع الأجر *</label>
-                        <select name="wage_type" id="wage_type" class="form-control" onchange="toggleWageFields()">
+                        <select name="wage_type" id="add_wage_type" class="form-control" onchange="toggleWageFields()">
                             <option value="monthly">شهري</option>
                             <option value="daily">يومي</option>
                         </select>
@@ -53,11 +70,11 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-row" id="monthly_fields">
+                <div class="form-row" id="add_monthly_fields">
                     <div class="form-group"><label>الراتب الأساسي</label><input type="number" name="basic_salary" class="form-control" value="0" step="0.01"></div>
                     <div class="form-group"><label>الراتب الشامل</label><input type="number" name="comprehensive_salary" class="form-control" value="0" step="0.01"></div>
                 </div>
-                <div class="form-row" id="daily_fields" style="display:none">
+                <div class="form-row" id="add_daily_fields" style="display:none">
                     <div class="form-group"><label>الأجر اليومي</label><input type="number" name="daily_wage" class="form-control" value="0" step="0.01"></div>
                     <div class="form-group"><label>الراتب الشامل (تقديري)</label><input type="number" name="comprehensive_salary" class="form-control" value="0" step="0.01" readonly></div>
                 </div>
@@ -67,18 +84,62 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group"><label>تاريخ الالتحاق</label><input type="date" name="join_date" class="form-control" value="{{ now }}"></div>
-                    <div class="form-group">
-                        <label>المنطقة</label>
-                        <select name="area" class="form-control">
-                            <option value="غير محدد">غير محدد</option>
-                            {% for area in areas %}<option value="{{ area.name }}">{{ area.name }}</option>{% endfor %}
+                    <div class="form-group"><label>الوظيفة</label><input type="text" name="position" class="form-control"></div>
+                </div>
+                {% if business_type == 'employee_transport' %}
+                <hr style="margin:16px 0;border-color:#e8eaed">
+                <h4 style="color:#1a73e8;margin-bottom:12px"><i class="fas fa-bus"></i> بيانات النقل</h4>
+                <div class="form-row">
+                    <div class="form-group"><label>القسم</label><input type="text" name="et_department" class="form-control"></div>
+                    <div class="form-group"><label>الوردية</label>
+                        <select name="et_shift_type_id" class="form-control">
+                            <option value="">---</option>
+                            {% for st in et_shift_types %}<option value="{{ st.id }}">{{ st.name }}</option>{% endfor %}
                         </select>
                     </div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group"><label>الراتب الأساسي</label><input type="number" name="basic_salary" class="form-control" value="0" step="0.01"></div>
-                    <div class="form-group"><label>الراتب الشامل</label><input type="number" name="comprehensive_salary" class="form-control" value="0" step="0.01"></div>
+                    <div class="form-group"><label>تاريخ بدء الوردية</label><input type="date" name="et_shift_start_date" class="form-control"></div>
+                    <div class="form-group"><label>يوم العمل</label>
+                        <select name="et_work_day" class="form-control">
+                            <option value="">---</option>
+                            <option value="السبت">السبت</option><option value="الأحد">الأحد</option>
+                            <option value="الإثنين">الإثنين</option><option value="الثلاثاء">الثلاثاء</option>
+                            <option value="الأربعاء">الأربعاء</option><option value="الخميس">الخميس</option>
+                            <option value="الجمعة">الجمعة</option>
+                        </select>
+                    </div>
                 </div>
+                <div class="form-row">
+                    <div class="form-group"><label>حالة الحركة</label>
+                        <select name="et_movement_status" class="form-control">
+                            <option value="">---</option>
+                            <option value="ثابت">ثابت</option><option value="متحرك">متحرك</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>وقت الوصول</label><input type="time" name="et_arrival_time" class="form-control"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>وقت الانصراف</label><input type="time" name="et_departure_time" class="form-control"></div>
+                    <div class="form-group"><label>الخط</label>
+                        <select name="et_route_id" class="form-control">
+                            <option value="">---</option>
+                            {% for r in et_routes %}<option value="{{ r.id }}">{{ r.name }}</option>{% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>المدينة</label><input type="text" name="et_city" class="form-control"></div>
+                    <div class="form-group"><label>مكان السكن</label><input type="text" name="et_residence_location" class="form-control"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>نظام العمل</label>
+                        <select name="et_transport_type" class="form-control">
+                            <option value="ورديات">ورديات</option><option value="إداري">إداري</option>
+                        </select>
+                    </div>
+                </div>
+                {% endif %}
                 <div class="form-group"><label>ملاحظات</label><textarea name="notes" class="form-control" rows="2"></textarea></div>
                 <hr style="margin:16px 0;border-color:#e8eaed">
                 <div class="checkbox-group" style="margin-bottom:12px">
@@ -131,6 +192,60 @@
                     <div class="form-group"><label>الراتب الأساسي</label><input type="number" name="basic_salary" id="edit_basic_salary" class="form-control" step="0.01"></div>
                     <div class="form-group"><label>الراتب الشامل</label><input type="number" name="comprehensive_salary" id="edit_comprehensive_salary" class="form-control" step="0.01"></div>
                 </div>
+                {% if business_type == 'employee_transport' %}
+                <hr style="margin:16px 0;border-color:#e8eaed">
+                <h4 style="color:#1a73e8;margin-bottom:12px"><i class="fas fa-bus"></i> بيانات النقل</h4>
+                <div class="form-row">
+                    <div class="form-group"><label>القسم</label><input type="text" name="et_department" id="edit_et_department" class="form-control"></div>
+                    <div class="form-group"><label>الوردية</label>
+                        <select name="et_shift_type_id" id="edit_et_shift_type_id" class="form-control">
+                            <option value="">---</option>
+                            {% for st in et_shift_types %}<option value="{{ st.id }}">{{ st.name }}</option>{% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>تاريخ بدء الوردية</label><input type="date" name="et_shift_start_date" id="edit_et_shift_start_date" class="form-control"></div>
+                    <div class="form-group"><label>يوم العمل</label>
+                        <select name="et_work_day" id="edit_et_work_day" class="form-control">
+                            <option value="">---</option>
+                            <option value="السبت">السبت</option><option value="الأحد">الأحد</option>
+                            <option value="الإثنين">الإثنين</option><option value="الثلاثاء">الثلاثاء</option>
+                            <option value="الأربعاء">الأربعاء</option><option value="الخميس">الخميس</option>
+                            <option value="الجمعة">الجمعة</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>حالة الحركة</label>
+                        <select name="et_movement_status" id="edit_et_movement_status" class="form-control">
+                            <option value="">---</option>
+                            <option value="ثابت">ثابت</option><option value="متحرك">متحرك</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>وقت الوصول</label><input type="time" name="et_arrival_time" id="edit_et_arrival_time" class="form-control"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>وقت الانصراف</label><input type="time" name="et_departure_time" id="edit_et_departure_time" class="form-control"></div>
+                    <div class="form-group"><label>الخط</label>
+                        <select name="et_route_id" id="edit_et_route_id" class="form-control">
+                            <option value="">---</option>
+                            {% for r in et_routes %}<option value="{{ r.id }}">{{ r.name }}</option>{% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>المدينة</label><input type="text" name="et_city" id="edit_et_city" class="form-control"></div>
+                    <div class="form-group"><label>مكان السكن</label><input type="text" name="et_residence_location" id="edit_et_residence_location" class="form-control"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>نوع النقل</label>
+                        <select name="et_transport_type" id="edit_et_transport_type" class="form-control">
+                            <option value="يومي">يومي</option><option value="أسبوعي">أسبوعي</option>
+                        </select>
+                    </div>
+                </div>
+                {% endif %}
                 <div class="form-group">
                     <label>الحالة</label>
                     <select name="status" id="edit_status" class="form-control">
@@ -149,9 +264,9 @@
 
 <script>
 function toggleWageFields() {
-    var wt = document.getElementById('wage_type').value;
-    document.getElementById('monthly_fields').style.display = wt === 'monthly' ? 'flex' : 'none';
-    document.getElementById('daily_fields').style.display = wt === 'daily' ? 'flex' : 'none';
+    var wt = document.getElementById('add_wage_type').value;
+    document.getElementById('add_monthly_fields').style.display = wt === 'monthly' ? 'flex' : 'none';
+    document.getElementById('add_daily_fields').style.display = wt === 'daily' ? 'flex' : 'none';
 }
 function openEditEmployee(id) {
     fetch('/api/employee/' + id).then(r => r.json()).then(data => {
@@ -166,7 +281,20 @@ function openEditEmployee(id) {
         document.getElementById('edit_basic_salary').value = data.basic_salary;
         document.getElementById('edit_comprehensive_salary').value = data.comprehensive_salary;
         document.getElementById('edit_status').value = data.status;
-        document.getElementById('edit_notes').value = '';
+        document.getElementById('edit_notes').value = data.notes || '';
+        {% if business_type == 'employee_transport' %}
+        document.getElementById('edit_et_department').value = data.et_department || '';
+        document.getElementById('edit_et_shift_type_id').value = data.et_shift_type_id || '';
+        document.getElementById('edit_et_shift_start_date').value = data.et_shift_start_date || '';
+        document.getElementById('edit_et_work_day').value = data.et_work_day || '';
+        document.getElementById('edit_et_movement_status').value = data.et_movement_status || '';
+        document.getElementById('edit_et_arrival_time').value = data.et_arrival_time || '';
+        document.getElementById('edit_et_departure_time').value = data.et_departure_time || '';
+        document.getElementById('edit_et_route_id').value = data.et_route_id || '';
+        document.getElementById('edit_et_city').value = data.et_city || '';
+        document.getElementById('edit_et_residence_location').value = data.et_residence_location || '';
+        document.getElementById('edit_et_transport_type').value = data.et_transport_type || 'يومي';
+        {% endif %}
         document.getElementById('editEmployeeForm').action = '/employee/edit/' + id;
         openModal('editEmployeeModal');
     });

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block page_title %}لوحة تحكم النظافة{% endblock %}
+{% block content %}
+<div class="stats-grid">
+    <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-handshake"></i></div><div class="stat-info"><h3>{{ clients_count }}</h3><p>العملاء</p></div></div>
+    <div class="stat-card"><div class="stat-icon green"><i class="fas fa-people-group"></i></div><div class="stat-info"><h3>{{ teams_count }}</h3><p>الفرق</p></div></div>
+    <div class="stat-card"><div class="stat-icon orange"><i class="fas fa-file-contract"></i></div><div class="stat-info"><h3>{{ active_contracts }}</h3><p>العقود النشطة</p></div></div>
+    <div class="stat-card"><div class="stat-icon purple"><i class="fas fa-walking"></i></div><div class="stat-info"><h3>{{ today_visits }}</h3><p>زيارات اليوم</p></div></div>
+</div>
+<div class="card"><div class="card-header"><h3 class="card-title"><i class="fas fa-clock"></i> آخر الزيارات</h3></div>
+    <div class="table-container"><table><thead><tr><th>الموقع</th><th>التاريخ</th><th>التقييم</th></tr></thead><tbody>{% for v in recent_visits %}<tr><td>{{ v.site.name if v.site else '-' }}</td><td>{{ v.date }}</td><td>{{ v.rating or '-' }}</td></tr>{% else %}<tr><td colspan="3" style="text-align:center;color:#999;padding:20px;">لا توجد زيارات</td></tr>{% endfor %}</tbody></table></div>
+</div>
+{% endblock %}

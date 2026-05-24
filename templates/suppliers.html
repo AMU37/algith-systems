@@ -17,7 +17,7 @@
                     <td><span class="badge badge-{{ 'success' if sup.status == 'active' else 'danger' }}">{{ 'نشط' if sup.status == 'active' else 'غير نشط' }}</span></td>
                     <td class="actions-cell">
                         <button class="btn btn-outline btn-sm" onclick="openEditSupplier({{ sup.id }}, '{{ sup.name }}', '{{ sup.company or '' }}', '{{ sup.phone or '' }}', '{{ sup.email or '' }}', '{{ sup.address or '' }}', '{{ sup.tax_number or '' }}', {{ sup.balance }}, '{{ sup.status }}')"><i class="fas fa-edit"></i></button>
-                        <form id="deleteSup{{ sup.id }}" action="{{ url_for('delete_supplier', id=sup.id) }}" method="POST" style="display:inline">
+                        <form id="deleteSup{{ sup.id }}" action="{{ url_for('suppliers.delete_supplier', id=sup.id) }}" method="POST" style="display:inline">
                             <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete('هل أنت متأكد؟', 'deleteSup{{ sup.id }}')"><i class="fas fa-trash"></i></button>
                         </form>
                     </td>
@@ -31,7 +31,7 @@
 <div class="modal" id="addSupplierModal">
     <div class="modal-content">
         <div class="modal-header"><h3>إضافة مورد</h3><button class="modal-close" onclick="closeModal('addSupplierModal')"><i class="fas fa-times"></i></button></div>
-        <form action="{{ url_for('add_supplier') }}" method="POST">
+        <form action="{{ url_for('suppliers.add_supplier') }}" method="POST">
             <div class="modal-body">
                 <div class="form-row">
                     <div class="form-group"><label>الاسم *</label><input type="text" name="name" class="form-control" required></div>

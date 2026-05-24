@@ -1,4 +1,5 @@
 {% extends "super_admin/base.html" %}
+
 {% block content %}
 <div class="stats-grid">
     <div class="stat-card">
@@ -8,65 +9,50 @@
     </div>
     <div class="stat-card">
         <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
-        <h3>{{ active_subs }}</h3>
-        <p>اشتراكات نشطة</p>
+        <h3>{{ active_companies }}</h3>
+        <p>شركات نشطة</p>
     </div>
     <div class="stat-card">
-        <div class="stat-icon orange"><i class="fas fa-ban"></i></div>
-        <h3>{{ blocked_companies }}</h3>
-        <p>شركات موقوفة</p>
-    </div>
-    <div class="stat-card">
-        <div class="stat-icon purple"><i class="fas fa-coins"></i></div>
-        <h3>{{ "%.0f"|format(total_revenue) }}$</h3>
-        <p>إجمالي الإيرادات</p>
+        <div class="stat-icon purple"><i class="fas fa-users"></i></div>
+        <h3>{{ users_count }}</h3>
+        <p>إجمالي المستخدمين</p>
     </div>
 </div>
 
-<div class="grid-2">
-    <div class="card">
-        <div class="card-header">
-            <h3><i class="fas fa-clock"></i> آخر الشركات المسجلة</h3>
-        </div>
-        <div class="table-container">
-            <table>
-                <thead><tr><th>الشركة</th><th>النوع</th><th>الباقة</th><th>التاريخ</th></tr></thead>
-                <tbody>
-                    {% for c in recent_companies %}
-                    <tr>
-                        <td><strong>{{ c.name }}</strong></td>
-                        <td>{{ c.business_type }}</td>
-                        <td><span class="badge badge-success">{{ c.plan_code }}</span></td>
-                        <td>{{ c.created_at.strftime('%Y-%m-%d') if c.created_at else '-' }}</td>
-                    </tr>
-                    {% else %}
-                    <tr><td colspan="4" style="text-align:center;color:#999;padding:20px;">لا توجد شركات بعد</td></tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+<div class="card">
+    <div class="card-header">
+        <h3><i class="fas fa-chart-line"></i> ملخص سريع</h3>
     </div>
-    <div class="card">
-        <div class="card-header">
-            <h3><i class="fas fa-credit-card"></i> آخر المدفوعات</h3>
-        </div>
-        <div class="table-container">
-            <table>
-                <thead><tr><th>الشركة</th><th>المبلغ</th><th>الحالة</th><th>التاريخ</th></tr></thead>
-                <tbody>
-                    {% for p in recent_payments %}
-                    <tr>
-                        <td><strong>{{ p.company.name }}</strong></td>
-                        <td>{{ p.amount }}$</td>
-                        <td><span class="badge badge-{{ 'success' if p.status == 'completed' else 'warning' }}">{{ p.status }}</span></td>
-                        <td>{{ p.created_at.strftime('%Y-%m-%d') if p.created_at else '-' }}</td>
-                    </tr>
-                    {% else %}
-                    <tr><td colspan="4" style="text-align:center;color:#999;padding:20px;">لا توجد مدفوعات بعد</td></tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr><th>الإجراء</th><th>الرابط</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>إدارة الشركات</td><td><a href="{{ url_for('super_admin.companies') }}" class="btn btn-primary btn-sm">عرض</a></td></tr>
+                <tr><td>إدارة الباقات</td><td><a href="{{ url_for('super_admin.plans') }}" class="btn btn-primary btn-sm">عرض</a></td></tr>
+                <tr><td>التقارير</td><td><a href="{{ url_for('super_admin.reports') }}" class="btn btn-primary btn-sm">عرض</a></td></tr>
+                <tr><td>الأنشطة</td><td><a href="{{ url_for('super_admin.activities') }}" class="btn btn-primary btn-sm">عرض</a></td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3><i class="fas fa-rocket"></i> روابط سريعة</h3>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr><th>الرابط</th><th>الوصف</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><a href="{{ url_for('auth.setup') }}">/setup</a></td><td>إنشاء شركة جديدة</td></tr>
+                <tr><td><a href="{{ url_for('auth.login') }}">/login</a></td><td>تسجيل الدخول</td></tr>
+                <tr><td><a href="{{ url_for('dashboard.index') }}">/dashboard</a></td><td>لوحة تحكم المستخدم</td></tr>
+            </tbody>
+        </table>
     </div>
 </div>
 {% endblock %}

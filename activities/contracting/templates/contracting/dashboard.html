@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block page_title %}لوحة تحكم المقاولات{% endblock %}
+{% block content %}
+<div class="stats-grid">
+    <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-project-diagram"></i></div><div class="stat-info"><h3>{{ active_projects }}</h3><p>المشاريع النشطة</p></div></div>
+    <div class="stat-card"><div class="stat-icon green"><i class="fas fa-file-invoice-dollar"></i></div><div class="stat-info"><h3>{{ total_claims }}</h3><p>إجمالي المستخلصات</p></div></div>
+    <div class="stat-card"><div class="stat-icon orange"><i class="fas fa-money-bill-wave"></i></div><div class="stat-info"><h3>{{ "%.0f"|format(total_purchases) }}</h3><p>المشتريات</p></div></div>
+    <div class="stat-card"><div class="stat-icon purple"><i class="fas fa-clipboard-check"></i></div><div class="stat-info"><h3>{{ total_attendance }}</h3><p>الحضور</p></div></div>
+</div>
+<div class="grid-2">
+    <div class="card"><div class="card-header"><h3 class="card-title"><i class="fas fa-clock"></i> آخر المستخلصات</h3></div>
+        <div class="table-container"><table><thead><tr><th>الرقم</th><th>المشروع</th><th>المبلغ</th><th>الحالة</th></tr></thead><tbody>{% for c in recent_claims %}<tr><td>{{ c.claim_number or '-' }}</td><td>{{ c.project.name if c.project else '-' }}</td><td>{{ "%.0f"|format(c.amount) }}</td><td><span class="badge badge-{{ 'success' if c.status == 'paid' else 'warning' }}">{{ 'مدفوع' if c.status == 'paid' else 'معلق' }}</span></td></tr>{% else %}<tr><td colspan="4" style="text-align:center;color:#999;padding:20px;">لا توجد مستخلصات</td></tr>{% endfor %}</tbody></table></div>
+    </div>
+    <div class="card"><div class="card-header"><h3 class="card-title"><i class="fas fa-clock"></i> آخر المشاريع</h3></div>
+        <div class="table-container"><table><thead><tr><th>الاسم</th><th>العميل</th><th>القيمة</th><th>الحالة</th></tr></thead><tbody>{% for p in recent_projects %}<tr><td>{{ p.name }}</td><td>{{ p.client.name if p.client else '-' }}</td><td>{{ "%.0f"|format(p.contract_value) }}</td><td><span class="badge badge-{{ 'success' if p.status == 'active' else 'warning' }}">{{ 'نشط' if p.status == 'active' else 'متوقف' }}</span></td></tr>{% else %}<tr><td colspan="4" style="text-align:center;color:#999;padding:20px;">لا توجد مشاريع</td></tr>{% endfor %}</tbody></table></div>
+    </div>
+</div>
+{% endblock %}

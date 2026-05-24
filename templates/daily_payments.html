@@ -1,18 +1,31 @@
 {% extends "base.html" %}
-{% block page_title %}صرف الأجور{% endblock %}
+{% block page_title %}الدفعات اليومية{% endblock %}
 {% block content %}
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title"><i class="fas fa-money-bill-wave"></i> صرف الأجور اليومية</h3>
-        <button class="btn btn-primary btn-sm" onclick="openModal('addPayModal')"><i class="fas fa-plus"></i> صرف أجر</button>
+        <h3 class="card-title"><i class="fas fa-money-bill-wave"></i> الدفعات اليومية</h3>
+        <button class="btn btn-primary btn-sm" onclick="openModal('addPayModal')"><i class="fas fa-plus"></i> إضافة دفعة</button>
     </div>
     <div class="table-container">
         <table>
-            <thead><tr><th>الموظف</th><th>المشروع</th><th>التاريخ</th><th>المبلغ</th><th>طريقة الدفع</th><th>ملاحظات</th><th>إجراءات</th></tr></thead>
+            <thead><tr><th>التاريخ</th><th>الموظف</th><th>المشروع</th><th>المبلغ</th><th>طريقة الدفع</th><th>ملاحظات</th><th>الإجراءات</th></tr></thead>
             <tbody>
                 {% for p in payments %}
-                <tr><td>{{ p.employee.name }}</td><td>{{ p.project.name if p.project else '-' }}</td><td>{{ p.date }}</td><td>{{ "%.0f"|format(p.amount) }}</td><td>{{ 'نقدي' if p.payment_method == 'cash' else 'تحويل' }}</td><td>{{ p.notes or '-' }}</td>
-                <td><form method="POST" action="{{ url_for('delete_daily_payment', id=p.id) }}" style="display:inline" onsubmit="return confirm('حذف؟')"><button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button></form></td></tr>
+                <tr>
+                    <td>{{ p.date }}</td>
+                    <td>{{ p.employee.name if p.employee else '-' }}</td>
+                    <td>{{ p.project.name if p.project else '-' }}</td>
+                    <td>{{ "%.0f"|format(p.amount) }}</td>
+                    <td>{{ {'cash':'نقدي','bank':'تحويل','credit':'آجل'}.get(p.payment_method, p.payment_method) }}</td>
+                    <td>{{ p.notes or '-' }}</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('employees.delete_payment', id=p.id) }}" style="display:inline" onsubmit="return confirm('حذف؟')">
+                            <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="7" style="text-align:center;color:var(--gray-500)">لا توجد دفعات</td></tr>
                 {% endfor %}
             </tbody>
         </table>
@@ -20,15 +33,19 @@
 </div>
 <div class="modal" id="addPayModal">
     <div class="modal-content">
-        <div class="modal-header"><h3>صرف أجر</h3><button class="modal-close" onclick="closeModal('addPayModal')">&times;</button></div>
-        <form method="POST" action="{{ url_for('add_daily_payment') }}">
-            <div class="form-group"><label>الموظف *</label><select name="employee_id" class="form-control" required>{% for e in employees %}<option value="{{ e.id }}">{{ e.name }}</option>{% endfor %}</select></div>
-            <div class="form-group"><label>المشروع</label><select name="project_id" class="form-control"><option value="">بدون مشروع</option>{% for p in projects %}<option value="{{ p.id }}">{{ p.name }}</option>{% endfor %}</select></div>
+        <div class="modal-header"><h3>إضافة دفعة</h3><button class="modal-close" onclick="closeModal('addPayModal')">&times;</button></div>
+        <form method="POST" action="{{ url_for('employees.add_payment') }}">
+            <div class="form-group"><label>الموظف *</label><select name="employee_id" class="form-control" required>
+                <option value="">اختر...</option>{% for emp in employees %}<option value="{{ emp.id }}">{{ emp.name }}</option>{% endfor %}</select></div>
             <div class="form-row">
                 <div class="form-group"><label>التاريخ</label><input type="date" name="date" class="form-control" value="{{ now }}"></div>
-                <div class="form-group"><label>المبلغ *</label><input type="number" name="amount" class="form-control" step="0.01" required></div>
+                <div class="form-group"><label>المبلغ</label><input type="number" name="amount" class="form-control" step="0.01" value="0"></div>
             </div>
-            <div class="form-group"><label>طريقة الدفع</label><select name="payment_method" class="form-control"><option value="cash">نقدي</option><option value="transfer">تحويل بنكي</option></select></div>
+            <div class="form-group"><label>طريقة الدفع</label><select name="payment_method" class="form-control">
+                <option value="cash">نقدي</option><option value="bank">تحويل</option><option value="credit">آجل</option></select></div>
+            {% if projects %}
+            <div class="form-group"><label>المشروع</label><select name="project_id" class="form-control"><option value="">بدون</option>{% for p in projects %}<option value="{{ p.id }}">{{ p.name }}</option>{% endfor %}</select></div>
+            {% endif %}
             <div class="form-group"><label>ملاحظات</label><textarea name="notes" class="form-control" rows="2"></textarea></div>
             <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ</button>
         </form>

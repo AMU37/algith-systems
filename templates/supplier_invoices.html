@@ -33,7 +33,7 @@
                     <td>{{ inv.date }}</td>
                     <td><span class="badge badge-{{ 'success' if inv.status == 'paid' else 'warning' }}">{{ 'مدفوعة' if inv.status == 'paid' else 'معلقة' }}</span></td>
                     <td class="actions-cell">
-                        <form id="deleteSI{{ inv.id }}" action="{{ url_for('delete_supplier_invoice', id=inv.id) }}" method="POST" style="display:inline">
+                        <form id="deleteSI{{ inv.id }}" action="{{ url_for('suppliers.delete_supplier_invoice', id=inv.id) }}" method="POST" style="display:inline">
                             <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete('هل أنت متأكد؟', 'deleteSI{{ inv.id }}')">
                                 <i class="fas fa-trash"></i>
                             </button>
@@ -52,7 +52,7 @@
             <h3>إضافة فاتورة مورد</h3>
             <button class="modal-close" onclick="closeModal('addInvModal')"><i class="fas fa-times"></i></button>
         </div>
-        <form action="{{ url_for('add_supplier_invoice') }}" method="POST">
+        <form action="{{ url_for('suppliers.add_supplier_invoice') }}" method="POST">
             <div class="modal-body">
                 <div class="form-row">
                     <div class="form-group">

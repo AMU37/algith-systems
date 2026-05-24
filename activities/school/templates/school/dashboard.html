@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block page_title %}لوحة تحكم المدرسة{% endblock %}
+{% block content %}
+<div class="stats-grid">
+    <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-user-graduate"></i></div><div class="stat-info"><h3>{{ students_count }}</h3><p>الطلاب</p></div></div>
+    <div class="stat-card"><div class="stat-icon green"><i class="fas fa-book-open"></i></div><div class="stat-info"><h3>{{ subjects_count }}</h3><p>المواد</p></div></div>
+    <div class="stat-card"><div class="stat-icon orange"><i class="fas fa-money-bill"></i></div><div class="stat-info"><h3>{{ "%.0f"|format(total_fees) }}</h3><p>إجمالي الرسوم</p></div></div>
+    <div class="stat-card"><div class="stat-icon purple"><i class="fas fa-exclamation-circle"></i></div><div class="stat-info"><h3>{{ pending_fees }}</h3><p>رسوم معلقة</p></div></div>
+</div>
+<div class="card"><div class="card-header"><h3 class="card-title"><i class="fas fa-clock"></i> آخر الامتحانات</h3></div>
+    <div class="table-container"><table><thead><tr><th>المادة</th><th>الطالب</th><th>الدرجة</th><th>من</th></tr></thead><tbody>{% for e in recent_exams %}<tr><td>{{ e.subject.name if e.subject else '-' }}</td><td>{{ e.student.name if e.student else '-' }}</td><td>{{ e.score }}</td><td>{{ e.max_score }}</td></tr>{% else %}<tr><td colspan="4" style="text-align:center;color:#999;padding:20px;">لا توجد امتحانات</td></tr>{% endfor %}</tbody></table></div>
+</div>
+{% endblock %}

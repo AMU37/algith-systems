@@ -1,24 +1,37 @@
 {% extends "base.html" %}
-{% block page_title %}التحضير اليومي{% endblock %}
+{% block page_title %}الحضور{% endblock %}
 {% block content %}
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title"><i class="fas fa-clipboard-check"></i> التحضير اليومي</h3>
+        <h3 class="card-title"><i class="fas fa-clipboard-check"></i> الحضور</h3>
         <div style="display:flex;gap:8px;align-items:center">
-            <input type="date" id="attDate" class="form-control" value="{{ today }}" onchange="location.href='{{ url_for('attendance') }}?date='+this.value" style="width:auto">
-            <button class="btn btn-primary btn-sm" onclick="openModal('addAttModal')"><i class="fas fa-plus"></i> إضافة</button>
+            <form method="GET" style="display:flex;gap:8px;align-items:center">
+                <input type="date" name="date" class="form-control" value="{{ today }}" style="width:auto">
+                <button class="btn btn-outline btn-sm"><i class="fas fa-search"></i></button>
+            </form>
+            <button class="btn btn-primary btn-sm" onclick="openModal('addAttModal')"><i class="fas fa-plus"></i> تسجيل حضور</button>
         </div>
     </div>
     <div class="table-container">
         <table>
-            <thead><tr><th>الموظف</th><th>المشروع</th><th>الحالة</th><th>الساعات</th><th>الأجر اليومي</th><th>ملاحظات</th></tr></thead>
+            <thead><tr><th>الموظف</th><th>المشروع</th><th>الحالة</th><th>عدد الساعات</th><th>الأجر اليومي</th><th>ملاحظات</th><th>الإجراءات</th></tr></thead>
             <tbody>
-                {% for a in attendances %}
+                {% for att in attendances %}
                 <tr>
-                    <td>{{ a.employee.name }}</td><td>{{ a.project.name if a.project else '-' }}</td>
-                    <td><span class="badge badge-{{ 'success' if a.status == 'present' else 'danger' }}">{{ 'حاضر' if a.status == 'present' else 'غائب' }}</span></td>
-                    <td>{{ a.hours }}</td><td>{{ "%.0f"|format(a.daily_wage) }}</td><td>{{ a.notes or '-' }}</td>
+                    <td>{{ att.employee.name if att.employee else '-' }}</td>
+                    <td>{{ att.project.name if att.project else '-' }}</td>
+                    <td><span class="badge badge-{{ 'success' if att.status == 'present' else 'warning' if att.status == 'late' else 'danger' }}">{{ {'present':'حاضر','late':'متأخر','absent':'غائب','leave':'إجازة'}.get(att.status, att.status) }}</span></td>
+                    <td>{{ att.hours }}</td>
+                    <td>{{ "%.0f"|format(att.daily_wage) }}</td>
+                    <td>{{ att.notes or '-' }}</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('employees.delete_attendance', id=att.id) }}" style="display:inline" onsubmit="return confirm('حذف؟')">
+                            <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                        </form>
+                    </td>
                 </tr>
+                {% else %}
+                <tr><td colspan="7" style="text-align:center;color:var(--gray-500)">لا توجد سجلات حضور لهذا اليوم</td></tr>
                 {% endfor %}
             </tbody>
         </table>
@@ -27,17 +40,22 @@
 <div class="modal" id="addAttModal">
     <div class="modal-content">
         <div class="modal-header"><h3>تسجيل حضور</h3><button class="modal-close" onclick="closeModal('addAttModal')">&times;</button></div>
-        <form method="POST" action="{{ url_for('add_attendance') }}">
-            <div class="form-group"><label>الموظف *</label><select name="employee_id" class="form-control" required>{% for e in employees %}<option value="{{ e.id }}">{{ e.name }}</option>{% endfor %}</select></div>
-            <div class="form-group"><label>المشروع</label><select name="project_id" class="form-control"><option value="">بدون مشروع</option>{% for p in projects %}<option value="{{ p.id }}">{{ p.name }}</option>{% endfor %}</select></div>
+        <form method="POST" action="{{ url_for('employees.add_attendance') }}">
+            <div class="form-group"><label>الموظف *</label><select name="employee_id" class="form-control" required>
+                <option value="">اختر موظف...</option>{% for emp in employees %}<option value="{{ emp.id }}">{{ emp.name }}</option>{% endfor %}</select></div>
             <div class="form-row">
                 <div class="form-group"><label>التاريخ</label><input type="date" name="date" class="form-control" value="{{ today }}"></div>
-                <div class="form-group"><label>الحالة</label><select name="status" class="form-control"><option value="present">حاضر</option><option value="absent">غائب</option></select></div>
+                <div class="form-group"><label>الحالة</label><select name="status" class="form-control">
+                    <option value="present">حاضر</option><option value="late">متأخر</option><option value="absent">غائب</option><option value="leave">إجازة</option></select></div>
             </div>
             <div class="form-row">
-                <div class="form-group"><label>الساعات</label><input type="number" name="hours" class="form-control" step="0.5" value="8"></div>
+                <div class="form-group"><label>عدد الساعات</label><input type="number" name="hours" class="form-control" step="0.5" value="8"></div>
                 <div class="form-group"><label>الأجر اليومي</label><input type="number" name="daily_wage" class="form-control" step="0.01" value="0"></div>
             </div>
+            {% if projects %}
+            <div class="form-group"><label>المشروع</label><select name="project_id" class="form-control">
+                <option value="">بدون مشروع</option>{% for p in projects %}<option value="{{ p.id }}">{{ p.name }}</option>{% endfor %}</select></div>
+            {% endif %}
             <div class="form-group"><label>ملاحظات</label><textarea name="notes" class="form-control" rows="2"></textarea></div>
             <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ</button>
         </form>

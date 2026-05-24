@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block page_title %}مشتريات {{ supplier.name }}{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-file-invoice"></i> مشتريات {{ supplier.name }}</h3>
+        <a href="{{ url_for('suppliers.suppliers') }}" class="btn btn-outline btn-sm"><i class="fas fa-arrow-right"></i> عودة للموردين</a>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead><tr><th>التاريخ</th><th>المنتج</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr></thead>
+            <tbody>
+                {% for p in purchases %}
+                <tr>
+                    <td>{{ p.date }}</td>
+                    <td>{{ p.product.name if p.product else p.notes or '-' }}</td>
+                    <td>{{ p.quantity or '-' }}</td>
+                    <td>{{ "%.0f"|format(p.price) if p.price else '-' }}</td>
+                    <td>{{ "%.0f"|format(p.total) }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5" style="text-align:center;color:var(--gray-500)">لا توجد مشتريات من هذا المورد</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -26,14 +26,14 @@
                 {% for c in contracts %}
                 <tr>
                     <td>{{ c.contract_number or '-' }}</td>
-                    <td>{{ c.client.name }}</td>
+                    <td>{{ c.client.name if c.client else '-' }}</td>
                     <td><span class="badge badge-info">{{ 'سنوي' if c.type == 'yearly' else 'شهري' if c.type == 'monthly' else 'بدون' }}</span></td>
                     <td>{{ c.start_date }}</td>
                     <td>{{ c.end_date or '-' }}</td>
                     <td>{{ "%.0f"|format(c.amount) }}</td>
                     <td><span class="badge badge-{{ 'success' if c.status == 'active' else 'danger' }}">{{ 'نشط' if c.status == 'active' else 'منتهي' }}</span></td>
                     <td class="actions-cell">
-                        <form id="deleteCC{{ c.id }}" action="{{ url_for('delete_client_contract', id=c.id) }}" method="POST" style="display:inline">
+                        <form id="deleteCC{{ c.id }}" action="{{ url_for('clients.delete_client_contract', id=c.id) }}" method="POST" style="display:inline">
                             <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete('هل أنت متأكد؟', 'deleteCC{{ c.id }}')">
                                 <i class="fas fa-trash"></i>
                             </button>
@@ -52,7 +52,7 @@
             <h3>إضافة عقد عميل</h3>
             <button class="modal-close" onclick="closeModal('addContractModal')"><i class="fas fa-times"></i></button>
         </div>
-        <form action="{{ url_for('add_client_contract') }}" method="POST">
+        <form action="{{ url_for('clients.add_client_contract') }}" method="POST">
             <div class="modal-body">
                 <div class="form-row">
                     <div class="form-group">
@@ -98,7 +98,7 @@
                     <textarea name="terms" class="form-control" rows="3"></textarea>
                 </div>
             </div>
-            <div class="modal-footer">
+            <div style="display:flex;gap:8px;justify-content:flex-end;padding:16px 24px;border-top:1px solid var(--gray-300)">
                 <button type="button" class="btn btn-outline" onclick="closeModal('addContractModal')">إلغاء</button>
                 <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ</button>
             </div>

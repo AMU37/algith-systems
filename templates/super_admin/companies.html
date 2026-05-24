@@ -3,7 +3,10 @@
 <div class="card">
     <div class="card-header">
         <h3><i class="fas fa-building"></i> إدارة الشركات</h3>
-        <span style="color:#5f6368;font-size:0.85rem;">إجمالي: {{ companies|length }} شركة</span>
+        <div style="display:flex;gap:8px;align-items:center;">
+            <span style="color:#5f6368;font-size:0.85rem;">إجمالي: {{ companies|length }} شركة</span>
+            <a href="{{ url_for('super_admin.create_company') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> إضافة شركة</a>
+        </div>
     </div>
     <div class="table-container">
         <table>
@@ -32,7 +35,7 @@
                     </td>
                     <td>{{ c.subscription_end or '-' }}</td>
                     <td>
-                        <form method="POST" action="{{ url_for('super_admin_toggle_block', id=c.id) }}" style="display:inline;">
+                        <form method="POST" action="{{ url_for('super_admin.toggle_block', id=c.id) }}" style="display:inline;">
                             <button class="btn btn-sm {% if c.is_blocked %}btn-success{% else %}btn-danger{% endif %}">
                                 <i class="fas fa-{% if c.is_blocked %}unlock{% else %}lock{% endif %}"></i>
                                 {% if c.is_blocked %}تفعيل{% else %}إيقاف{% endif %}

@@ -44,7 +44,7 @@
             <h3>إضافة قيد محاسبي</h3>
             <button class="modal-close" onclick="closeModal('addJournalModal')"><i class="fas fa-times"></i></button>
         </div>
-        <form action="{{ url_for('add_journal_manual') }}" method="POST" onsubmit="document.getElementById('journalLinesData').value = collectJournalLines()">
+        <form action="{{ url_for('accounting.add_journal_manual') }}" method="POST" onsubmit="document.getElementById('journalLinesData').value = collectJournalLines()">
             <div class="modal-body">
                 <div class="form-row">
                     <div class="form-group">

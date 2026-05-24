@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#714B67">
     <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
     <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/logo.png') }}">
-    <title>{% block title %}{{ company.name if company else 'الغيث' }}{% endblock %}</title>
+    <title>{% block title %}{{ company.name if company else 'نظام الإدارة' }}{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -19,16 +19,33 @@
         <header class="top-header">
             <div class="header-right">
                 <div class="logo">
-                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="الغيث" class="logo-img">
-                    <span>{{ company.name if company else 'الغيث' }}</span>
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="شعار" class="logo-img" onerror="this.src='https://via.placeholder.com/36'">
+                    <span class="logo-text">{{ company.name if company else 'نظام الإدارة' }}</span>
                 </div>
             </div>
             <div class="header-left">
-                <div class="user-menu">
+                <div class="user-menu" onclick="toggleUserDropdown()">
                     <div class="user-avatar-sm"><i class="fas fa-user"></i></div>
-                    <span class="user-name-sm">{{ current_user.full_name }}</span>
+                    <div class="user-info">
+                        <span class="user-name-sm">{{ current_user.full_name or current_user.username }}</span>
+                        <small class="user-role-sm">{{ {'admin':'مدير','super_admin':'مشرف عام','accountant':'محاسب','hr':'موارد بشرية','employee':'موظف','driver':'سائق'}.get(current_user.role, current_user.role) }}</small>
+                    </div>
+                    <i class="fas fa-chevron-down" style="font-size:0.7rem;color:var(--gray-500)"></i>
                 </div>
-                <a href="{{ url_for('logout') }}" class="logout-btn"><i class="fas fa-right-from-bracket"></i><span>خروج</span></a>
+                <div class="user-dropdown" id="userDropdown">
+                    <div class="dropdown-header">
+                        <div class="user-avatar-md"><i class="fas fa-user"></i></div>
+                        <div>
+                            <strong>{{ current_user.full_name or current_user.username }}</strong>
+                            <small>{{ company.name if company else '' }}</small>
+                        </div>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    {% if current_user.role != 'driver' %}
+                    <a href="{{ url_for('settings.settings') }}" class="dropdown-item"><i class="fas fa-cog"></i> الإعدادات</a>
+                    {% endif %}
+                    <a href="{{ url_for('auth.logout') }}" class="dropdown-item logout-item"><i class="fas fa-right-from-bracket"></i> تسجيل خروج</a>
+                </div>
             </div>
         </header>
 
@@ -36,445 +53,460 @@
         <nav class="top-nav" id="topNav">
             <button class="mobile-nav-toggle" id="mobileNavToggle"><i class="fas fa-bars"></i></button>
             <div class="nav-items">
-                <a href="{{ url_for('dashboard') }}" class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}">
+                {% if current_user.role == 'driver' %}
+                <a href="{{ url_for('employee_transport.driver_view') }}" class="nav-link active">
+                    <i class="fas fa-bus"></i><span>واجهة السائق</span>
+                </a>
+                {% else %}
+                <a href="{{ url_for('dashboard.index') }}" class="nav-link {% if request.endpoint == 'dashboard.index' %}active{% endif %}">
                     <i class="fas fa-home"></i><span>الرئيسية</span>
                 </a>
 
                 {% if business_type == 'contracting' %}
+                <!-- المشاريع -->
                 <div class="nav-dropdown">
                     <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-building"></i><span>المشاريع</span><i class="fas fa-chevron-down"></i></a>
                     <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('projects') }}" class="dropdown-item {% if request.endpoint == 'projects' %}active{% endif %}"><i class="fas fa-project-diagram"></i>المشاريع</a>
-                        <a href="{{ url_for('claims') }}" class="dropdown-item {% if request.endpoint == 'claims' %}active{% endif %}"><i class="fas fa-file-invoice-dollar"></i>المستخلصات</a>
+                        <a href="{{ url_for('contracting.projects') }}" class="dropdown-item"><i class="fas fa-project-diagram"></i>المشاريع</a>
+                        <a href="{{ url_for('contracting.claims') }}" class="dropdown-item"><i class="fas fa-file-invoice-dollar"></i>المستخلصات</a>
+                        <a href="{{ url_for('contracting.materials') }}" class="dropdown-item"><i class="fas fa-boxes-stacked"></i>المواد</a>
+                        <a href="{{ url_for('contracting.material_purchases') }}" class="dropdown-item"><i class="fas fa-cart-shopping"></i>مشتريات المواد</a>
+                        <a href="{{ url_for('contracting.daily_payments') }}" class="dropdown-item"><i class="fas fa-money-bill-wave"></i>الدفعات اليومية</a>
+                        <a href="{{ url_for('contracting.daily_attendance') }}" class="dropdown-item"><i class="fas fa-clipboard-check"></i>الحضور اليومي</a>
                     </div>
                 </div>
+                <!-- الموارد البشرية -->
                 <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-hard-hat"></i><span>العمالة</span><i class="fas fa-chevron-down"></i></a>
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-hard-hat"></i><span>الموارد البشرية</span><i class="fas fa-chevron-down"></i></a>
                     <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('employees') }}" class="dropdown-item {% if request.endpoint == 'employees' %}active{% endif %}"><i class="fas fa-users"></i>الموظفين</a>
-                        <a href="{{ url_for('attendance') }}" class="dropdown-item {% if request.endpoint == 'attendance' %}active{% endif %}"><i class="fas fa-clipboard-check"></i>التحضير</a>
-                        <a href="{{ url_for('daily_payments') }}" class="dropdown-item {% if request.endpoint == 'daily_payments' %}active{% endif %}"><i class="fas fa-money-bill-wave"></i>صرف الأجور</a>
-                        <a href="{{ url_for('salaries') }}" class="dropdown-item {% if request.endpoint == 'salaries' %}active{% endif %}"><i class="fas fa-money-check-dollar"></i>الرواتب</a>
+                        <a href="{{ url_for('employees.employees') }}" class="dropdown-item"><i class="fas fa-users"></i>الموظفين</a>
+                        <a href="{{ url_for('employees.salaries') }}" class="dropdown-item"><i class="fas fa-money-check-dollar"></i>الرواتب</a>
                     </div>
                 </div>
+                <!-- المعدات -->
                 <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-truck-field"></i><span>الموردين</span><i class="fas fa-chevron-down"></i></a>
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-tools"></i><span>المعدات</span><i class="fas fa-chevron-down"></i></a>
                     <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('suppliers') }}" class="dropdown-item {% if request.endpoint == 'suppliers' %}active{% endif %}"><i class="fas fa-building"></i>الموردين</a>
-                        <a href="{{ url_for('supplier_invoices') }}" class="dropdown-item {% if request.endpoint == 'supplier_invoices' %}active{% endif %}"><i class="fas fa-file-invoice"></i>الفواتير</a>
+                        <a href="{{ url_for('equipment.equipment') }}" class="dropdown-item"><i class="fas fa-tools"></i>المعدات</a>
                     </div>
                 </div>
+                <!-- الموردين -->
                 <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-cubes"></i><span>المواد</span><i class="fas fa-chevron-down"></i></a>
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-truck"></i><span>الموردين</span><i class="fas fa-chevron-down"></i></a>
                     <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('materials') }}" class="dropdown-item {% if request.endpoint == 'materials' %}active{% endif %}"><i class="fas fa-boxes-stacked"></i>شراء المواد</a>
-                        <a href="{{ url_for('equipment') }}" class="dropdown-item {% if request.endpoint == 'equipment' %}active{% endif %}"><i class="fas fa-gear"></i>المعدات</a>
-                        <a href="{{ url_for('fuel') }}" class="dropdown-item {% if request.endpoint == 'fuel' %}active{% endif %}"><i class="fas fa-gas-pump"></i>المحروقات</a>
+                        <a href="{{ url_for('suppliers.suppliers') }}" class="dropdown-item"><i class="fas fa-building"></i>الموردين</a>
+                        <a href="{{ url_for('suppliers.supplier_invoices') }}" class="dropdown-item"><i class="fas fa-file-invoice"></i>الفواتير</a>
                     </div>
                 </div>
+                <!-- العملاء -->
                 <div class="nav-dropdown">
                     <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-handshake"></i><span>العملاء</span><i class="fas fa-chevron-down"></i></a>
                     <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('clients') }}" class="dropdown-item {% if request.endpoint == 'clients' %}active{% endif %}"><i class="fas fa-user-group"></i>العملاء</a>
-                        <a href="{{ url_for('client_contracts') }}" class="dropdown-item {% if request.endpoint == 'client_contracts' %}active{% endif %}"><i class="fas fa-file-contract"></i>العقود</a>
+                        <a href="{{ url_for('clients.clients') }}" class="dropdown-item"><i class="fas fa-user-group"></i>العملاء</a>
+                        <a href="{{ url_for('clients.client_contracts') }}" class="dropdown-item"><i class="fas fa-file-contract"></i>العقود</a>
                     </div>
                 </div>
+                <!-- المالية -->
                 <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-chart-pie"></i><span>المالية</span><i class="fas fa-chevron-down"></i></a>
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-chart-line"></i><span>المالية</span><i class="fas fa-chevron-down"></i></a>
                     <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('financial_dashboard') }}" class="dropdown-item {% if request.endpoint == 'financial_dashboard' %}active{% endif %}"><i class="fas fa-chart-line"></i>لوحة المالية</a>
-                        <a href="{{ url_for('accounts') }}" class="dropdown-item {% if request.endpoint == 'accounts' %}active{% endif %}"><i class="fas fa-book"></i>دليل الحسابات</a>
-                        <a href="{{ url_for('journal') }}" class="dropdown-item {% if request.endpoint == 'journal' %}active{% endif %}"><i class="fas fa-book-open"></i>القيود</a>
-                        <a href="{{ url_for('reports') }}" class="dropdown-item {% if request.endpoint == 'reports' %}active{% endif %}"><i class="fas fa-chart-bar"></i>التقارير</a>
+                        <a href="{{ url_for('accounting.financial_dashboard') }}" class="dropdown-item"><i class="fas fa-chart-line"></i>لوحة المالية</a>
+                        <a href="{{ url_for('accounting.accounts') }}" class="dropdown-item"><i class="fas fa-book"></i>دليل الحسابات</a>
+                        <a href="{{ url_for('accounting.journal') }}" class="dropdown-item"><i class="fas fa-book-open"></i>القيود</a>
+                        <a href="{{ url_for('accounting.reports') }}" class="dropdown-item"><i class="fas fa-chart-bar"></i>التقارير</a>
                     </div>
                 </div>
 
                 {% elif business_type == 'restaurant' %}
+                <!-- طلبات المطعم -->
                 <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-cash-register"></i><span>المبيعات</span><i class="fas fa-chevron-down"></i></a>
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-utensils"></i><span>الطلبات</span><i class="fas fa-chevron-down"></i></a>
                     <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('orders') }}" class="dropdown-item {% if request.endpoint == 'orders' %}active{% endif %}"><i class="fas fa-utensils"></i>الطلبات</a>
+                        <a href="{{ url_for('restaurant.orders') }}" class="dropdown-item"><i class="fas fa-receipt"></i>الطلبات الحالية</a>
+                        <a href="{{ url_for('restaurant.menu') }}" class="dropdown-item"><i class="fas fa-list"></i>قائمة الطعام</a>
                     </div>
                 </div>
+                <!-- المخزون -->
                 <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-book-open"></i><span>القائمة</span><i class="fas fa-chevron-down"></i></a>
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-boxes"></i><span>المخزون</span><i class="fas fa-chevron-down"></i></a>
                     <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('menu') }}" class="dropdown-item {% if request.endpoint == 'menu' %}active{% endif %}"><i class="fas fa-list"></i>الأصناف</a>
+                        <a href="{{ url_for('retail.products') }}" class="dropdown-item"><i class="fas fa-cube"></i>المواد الخام</a>
+                        <a href="{{ url_for('suppliers.suppliers') }}" class="dropdown-item"><i class="fas fa-truck"></i>الموردين</a>
                     </div>
                 </div>
+                <!-- الموارد البشرية -->
                 <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-boxes-stacked"></i><span>المخزون</span><i class="fas fa-chevron-down"></i></a>
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-users"></i><span>الموارد البشرية</span><i class="fas fa-chevron-down"></i></a>
                     <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('products') }}" class="dropdown-item {% if request.endpoint == 'products' %}active{% endif %}"><i class="fas fa-cube"></i>المواد الخام</a>
+                        <a href="{{ url_for('employees.employees') }}" class="dropdown-item"><i class="fas fa-users"></i>الموظفين</a>
+                        <a href="{{ url_for('employees.salaries') }}" class="dropdown-item"><i class="fas fa-money-check-dollar"></i>الرواتب</a>
                     </div>
                 </div>
-                <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-users"></i><span>الموظفين</span><i class="fas fa-chevron-down"></i></a>
-                    <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('employees') }}" class="dropdown-item {% if request.endpoint == 'employees' %}active{% endif %}"><i class="fas fa-user-tie"></i>الموظفين</a>
-                        <a href="{{ url_for('salaries') }}" class="dropdown-item {% if request.endpoint == 'salaries' %}active{% endif %}"><i class="fas fa-money-check-dollar"></i>الرواتب</a>
-                    </div>
-                </div>
-                <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-chart-pie"></i><span>المالية</span><i class="fas fa-chevron-down"></i></a>
-                    <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('financial_dashboard') }}" class="dropdown-item {% if request.endpoint == 'financial_dashboard' %}active{% endif %}"><i class="fas fa-chart-line"></i>لوحة المالية</a>
-                        <a href="{{ url_for('accounts') }}" class="dropdown-item {% if request.endpoint == 'accounts' %}active{% endif %}"><i class="fas fa-book"></i>دليل الحسابات</a>
-                        <a href="{{ url_for('journal') }}" class="dropdown-item {% if request.endpoint == 'journal' %}active{% endif %}"><i class="fas fa-book-open"></i>القيود</a>
-                        <a href="{{ url_for('reports') }}" class="dropdown-item {% if request.endpoint == 'reports' %}active{% endif %}"><i class="fas fa-chart-bar"></i>التقارير</a>
-                    </div>
-                </div>
-
-                {% elif business_type == 'hospital' %}
-                <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-user-injured"></i><span>المرضى</span><i class="fas fa-chevron-down"></i></a>
-                    <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('patients') }}" class="dropdown-item {% if request.endpoint == 'patients' %}active{% endif %}"><i class="fas fa-users"></i>المرضى</a>
-                        <a href="{{ url_for('appointments') }}" class="dropdown-item {% if request.endpoint == 'appointments' %}active{% endif %}"><i class="fas fa-calendar-check"></i>المواعيد</a>
-                    </div>
-                </div>
-                <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-user-doctor"></i><span>الأطباء</span><i class="fas fa-chevron-down"></i></a>
-                    <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('doctors') }}" class="dropdown-item {% if request.endpoint == 'doctors' %}active{% endif %}"><i class="fas fa-stethoscope"></i>الأطباء</a>
-                    </div>
-                </div>
-                <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-flask"></i><span>المختبر</span><i class="fas fa-chevron-down"></i></a>
-                    <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('lab') }}" class="dropdown-item {% if request.endpoint == 'lab' %}active{% endif %}"><i class="fas fa-vials"></i>التحاليل</a>
-                    </div>
-                </div>
-                <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-pills"></i><span>الصيدلية</span><i class="fas fa-chevron-down"></i></a>
-                    <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('medicines') }}" class="dropdown-item {% if request.endpoint == 'medicines' %}active{% endif %}"><i class="fas fa-capsules"></i>الأدوية</a>
-                    </div>
-                </div>
-                <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-chart-pie"></i><span>المالية</span><i class="fas fa-chevron-down"></i></a>
-                    <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('financial_dashboard') }}" class="dropdown-item {% if request.endpoint == 'financial_dashboard' %}active{% endif %}"><i class="fas fa-chart-line"></i>لوحة المالية</a>
-                        <a href="{{ url_for('accounts') }}" class="dropdown-item {% if request.endpoint == 'accounts' %}active{% endif %}"><i class="fas fa-book"></i>دليل الحسابات</a>
-                        <a href="{{ url_for('journal') }}" class="dropdown-item {% if request.endpoint == 'journal' %}active{% endif %}"><i class="fas fa-book-open"></i>القيود</a>
-                        <a href="{{ url_for('reports') }}" class="dropdown-item {% if request.endpoint == 'reports' %}active{% endif %}"><i class="fas fa-chart-bar"></i>التقارير</a>
-                    </div>
-                </div>
-
-                {% elif business_type == 'school' %}
-                <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-user-graduate"></i><span>الطلاب</span><i class="fas fa-chevron-down"></i></a>
-                    <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('students') }}" class="dropdown-item {% if request.endpoint == 'students' %}active{% endif %}"><i class="fas fa-users"></i>الطلاب</a>
-                        <a href="{{ url_for('exams') }}" class="dropdown-item {% if request.endpoint == 'exams' %}active{% endif %}"><i class="fas fa-file-pen"></i>الامتحانات</a>
-                        <a href="{{ url_for('fees') }}" class="dropdown-item {% if request.endpoint == 'fees' %}active{% endif %}"><i class="fas fa-money-bill"></i>الرسوم</a>
-                    </div>
-                </div>
-                <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-book"></i><span>الأكاديمية</span><i class="fas fa-chevron-down"></i></a>
-                    <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('subjects') }}" class="dropdown-item {% if request.endpoint == 'subjects' %}active{% endif %}"><i class="fas fa-book-open"></i>المواد</a>
-                    </div>
-                </div>
-                <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-users"></i><span>الموظفين</span><i class="fas fa-chevron-down"></i></a>
-                    <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('employees') }}" class="dropdown-item {% if request.endpoint == 'employees' %}active{% endif %}"><i class="fas fa-user-tie"></i>المعلمين</a>
-                        <a href="{{ url_for('salaries') }}" class="dropdown-item {% if request.endpoint == 'salaries' %}active{% endif %}"><i class="fas fa-money-check-dollar"></i>الرواتب</a>
-                    </div>
-                </div>
-                <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-chart-pie"></i><span>المالية</span><i class="fas fa-chevron-down"></i></a>
-                    <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('financial_dashboard') }}" class="dropdown-item {% if request.endpoint == 'financial_dashboard' %}active{% endif %}"><i class="fas fa-chart-line"></i>لوحة المالية</a>
-                        <a href="{{ url_for('accounts') }}" class="dropdown-item {% if request.endpoint == 'accounts' %}active{% endif %}"><i class="fas fa-book"></i>دليل الحسابات</a>
-                        <a href="{{ url_for('journal') }}" class="dropdown-item {% if request.endpoint == 'journal' %}active{% endif %}"><i class="fas fa-book-open"></i>القيود</a>
-                        <a href="{{ url_for('reports') }}" class="dropdown-item {% if request.endpoint == 'reports' %}active{% endif %}"><i class="fas fa-chart-bar"></i>التقارير</a>
-                    </div>
-                </div>
-
-                {% elif business_type == 'transport' %}
-                <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-truck"></i><span>الأسطول</span><i class="fas fa-chevron-down"></i></a>
-                    <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('vehicles') }}" class="dropdown-item {% if request.endpoint == 'vehicles' %}active{% endif %}"><i class="fas fa-car"></i>المركبات</a>
-                        <a href="{{ url_for('vehicle_maintenance') }}" class="dropdown-item {% if request.endpoint == 'vehicle_maintenance' %}active{% endif %}"><i class="fas fa-wrench"></i>الصيانة</a>
-                        <a href="{{ url_for('fuel') }}" class="dropdown-item {% if request.endpoint == 'fuel' %}active{% endif %}"><i class="fas fa-gas-pump"></i>المحروقات</a>
-                    </div>
-                </div>
-                <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-route"></i><span>الرحلات</span><i class="fas fa-chevron-down"></i></a>
-                    <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('trips') }}" class="dropdown-item {% if request.endpoint == 'trips' %}active{% endif %}"><i class="fas fa-map-location-dot"></i>الرحلات</a>
-                    </div>
-                </div>
+                <!-- العملاء -->
                 <div class="nav-dropdown">
                     <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-handshake"></i><span>العملاء</span><i class="fas fa-chevron-down"></i></a>
                     <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('clients') }}" class="dropdown-item {% if request.endpoint == 'clients' %}active{% endif %}"><i class="fas fa-user-group"></i>العملاء</a>
+                        <a href="{{ url_for('clients.clients') }}" class="dropdown-item"><i class="fas fa-user-group"></i>العملاء</a>
                     </div>
                 </div>
+                <!-- المالية -->
                 <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-chart-pie"></i><span>المالية</span><i class="fas fa-chevron-down"></i></a>
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-chart-line"></i><span>المالية</span><i class="fas fa-chevron-down"></i></a>
                     <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('financial_dashboard') }}" class="dropdown-item {% if request.endpoint == 'financial_dashboard' %}active{% endif %}"><i class="fas fa-chart-line"></i>لوحة المالية</a>
-                        <a href="{{ url_for('accounts') }}" class="dropdown-item {% if request.endpoint == 'accounts' %}active{% endif %}"><i class="fas fa-book"></i>دليل الحسابات</a>
-                        <a href="{{ url_for('journal') }}" class="dropdown-item {% if request.endpoint == 'journal' %}active{% endif %}"><i class="fas fa-book-open"></i>القيود</a>
-                        <a href="{{ url_for('reports') }}" class="dropdown-item {% if request.endpoint == 'reports' %}active{% endif %}"><i class="fas fa-chart-bar"></i>التقارير</a>
-                    </div>
-                </div>
-
-                {% elif business_type == 'factory' %}
-                <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-industry"></i><span>الإنتاج</span><i class="fas fa-chevron-down"></i></a>
-                    <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('production_orders') }}" class="dropdown-item {% if request.endpoint == 'production_orders' %}active{% endif %}"><i class="fas fa-clipboard-list"></i>أوامر الإنتاج</a>
-                        <a href="{{ url_for('quality') }}" class="dropdown-item {% if request.endpoint == 'quality' %}active{% endif %}"><i class="fas fa-check-double"></i>الجودة</a>
-                        <a href="{{ url_for('machines') }}" class="dropdown-item {% if request.endpoint == 'machines' %}active{% endif %}"><i class="fas fa-gear"></i>الآلات</a>
-                    </div>
-                </div>
-                <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-users"></i><span>الموظفين</span><i class="fas fa-chevron-down"></i></a>
-                    <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('employees') }}" class="dropdown-item {% if request.endpoint == 'employees' %}active{% endif %}"><i class="fas fa-user-tie"></i>الموظفين</a>
-                        <a href="{{ url_for('salaries') }}" class="dropdown-item {% if request.endpoint == 'salaries' %}active{% endif %}"><i class="fas fa-money-check-dollar"></i>الرواتب</a>
-                    </div>
-                </div>
-                <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-chart-pie"></i><span>المالية</span><i class="fas fa-chevron-down"></i></a>
-                    <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('financial_dashboard') }}" class="dropdown-item {% if request.endpoint == 'financial_dashboard' %}active{% endif %}"><i class="fas fa-chart-line"></i>لوحة المالية</a>
-                        <a href="{{ url_for('accounts') }}" class="dropdown-item {% if request.endpoint == 'accounts' %}active{% endif %}"><i class="fas fa-book"></i>دليل الحسابات</a>
-                        <a href="{{ url_for('journal') }}" class="dropdown-item {% if request.endpoint == 'journal' %}active{% endif %}"><i class="fas fa-book-open"></i>القيود</a>
-                        <a href="{{ url_for('reports') }}" class="dropdown-item {% if request.endpoint == 'reports' %}active{% endif %}"><i class="fas fa-chart-bar"></i>التقارير</a>
+                        <a href="{{ url_for('accounting.financial_dashboard') }}" class="dropdown-item"><i class="fas fa-chart-line"></i>لوحة المالية</a>
+                        <a href="{{ url_for('accounting.reports') }}" class="dropdown-item"><i class="fas fa-chart-bar"></i>التقارير</a>
                     </div>
                 </div>
 
                 {% elif business_type == 'retail' %}
+                <!-- المبيعات -->
                 <div class="nav-dropdown">
                     <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-cash-register"></i><span>المبيعات</span><i class="fas fa-chevron-down"></i></a>
                     <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('sales') }}" class="dropdown-item {% if request.endpoint == 'sales' %}active{% endif %}"><i class="fas fa-receipt"></i>فواتير البيع</a>
-                        <a href="{{ url_for('clients') }}" class="dropdown-item {% if request.endpoint == 'clients' %}active{% endif %}"><i class="fas fa-user-group"></i>العملاء</a>
+                        <a href="{{ url_for('retail.sales') }}" class="dropdown-item"><i class="fas fa-receipt"></i>فواتير البيع</a>
+                        <a href="{{ url_for('clients.clients') }}" class="dropdown-item"><i class="fas fa-user-group"></i>العملاء</a>
                     </div>
                 </div>
+                <!-- المخزون -->
                 <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-boxes-stacked"></i><span>المخزون</span><i class="fas fa-chevron-down"></i></a>
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-boxes"></i><span>المخزون</span><i class="fas fa-chevron-down"></i></a>
                     <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('products') }}" class="dropdown-item {% if request.endpoint == 'products' %}active{% endif %}"><i class="fas fa-cube"></i>المنتجات</a>
+                        <a href="{{ url_for('retail.products') }}" class="dropdown-item"><i class="fas fa-cube"></i>المنتجات</a>
+                        <a href="{{ url_for('retail.purchases') }}" class="dropdown-item"><i class="fas fa-cart-shopping"></i>المشتريات</a>
                     </div>
                 </div>
+                <!-- الموارد البشرية -->
                 <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-truck-field"></i><span>المشتريات</span><i class="fas fa-chevron-down"></i></a>
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-users"></i><span>الموارد البشرية</span><i class="fas fa-chevron-down"></i></a>
                     <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('suppliers') }}" class="dropdown-item {% if request.endpoint == 'suppliers' %}active{% endif %}"><i class="fas fa-building"></i>الموردين</a>
-                        <a href="{{ url_for('purchases') }}" class="dropdown-item {% if request.endpoint == 'purchases' %}active{% endif %}"><i class="fas fa-cart-shopping"></i>فواتير الشراء</a>
+                        <a href="{{ url_for('employees.employees') }}" class="dropdown-item"><i class="fas fa-users"></i>الموظفين</a>
+                        <a href="{{ url_for('employees.salaries') }}" class="dropdown-item"><i class="fas fa-money-check-dollar"></i>الرواتب</a>
                     </div>
                 </div>
+                <!-- الموردين -->
                 <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-users"></i><span>الموظفين</span><i class="fas fa-chevron-down"></i></a>
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-truck"></i><span>الموردين</span><i class="fas fa-chevron-down"></i></a>
                     <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('employees') }}" class="dropdown-item {% if request.endpoint == 'employees' %}active{% endif %}"><i class="fas fa-user-tie"></i>الموظفين</a>
-                        <a href="{{ url_for('salaries') }}" class="dropdown-item {% if request.endpoint == 'salaries' %}active{% endif %}"><i class="fas fa-money-check-dollar"></i>الرواتب</a>
+                        <a href="{{ url_for('suppliers.suppliers') }}" class="dropdown-item"><i class="fas fa-building"></i>الموردين</a>
+                        <a href="{{ url_for('suppliers.supplier_invoices') }}" class="dropdown-item"><i class="fas fa-file-invoice"></i>الفواتير</a>
                     </div>
                 </div>
+                <!-- المالية -->
                 <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-chart-pie"></i><span>المالية</span><i class="fas fa-chevron-down"></i></a>
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-chart-line"></i><span>المالية</span><i class="fas fa-chevron-down"></i></a>
                     <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('financial_dashboard') }}" class="dropdown-item {% if request.endpoint == 'financial_dashboard' %}active{% endif %}"><i class="fas fa-chart-line"></i>لوحة المالية</a>
-                        <a href="{{ url_for('accounts') }}" class="dropdown-item {% if request.endpoint == 'accounts' %}active{% endif %}"><i class="fas fa-book"></i>دليل الحسابات</a>
-                        <a href="{{ url_for('journal') }}" class="dropdown-item {% if request.endpoint == 'journal' %}active{% endif %}"><i class="fas fa-book-open"></i>القيود</a>
-                        <a href="{{ url_for('reports') }}" class="dropdown-item {% if request.endpoint == 'reports' %}active{% endif %}"><i class="fas fa-chart-bar"></i>التقارير</a>
-                    </div>
-                </div>
-
-                {% elif business_type == 'trading' %}
-                <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-cart-shopping"></i><span>المشتريات</span><i class="fas fa-chevron-down"></i></a>
-                    <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('suppliers') }}" class="dropdown-item {% if request.endpoint == 'suppliers' %}active{% endif %}"><i class="fas fa-building"></i>الموردين</a>
-                        <a href="{{ url_for('purchases') }}" class="dropdown-item {% if request.endpoint == 'purchases' %}active{% endif %}"><i class="fas fa-file-invoice"></i>فواتير الشراء</a>
-                    </div>
-                </div>
-                <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-cash-register"></i><span>المبيعات</span><i class="fas fa-chevron-down"></i></a>
-                    <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('clients') }}" class="dropdown-item {% if request.endpoint == 'clients' %}active{% endif %}"><i class="fas fa-user-group"></i>العملاء</a>
-                        <a href="{{ url_for('sales') }}" class="dropdown-item {% if request.endpoint == 'sales' %}active{% endif %}"><i class="fas fa-receipt"></i>فواتير البيع</a>
-                    </div>
-                </div>
-                <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-warehouse"></i><span>المخازن</span><i class="fas fa-chevron-down"></i></a>
-                    <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('products') }}" class="dropdown-item {% if request.endpoint == 'products' %}active{% endif %}"><i class="fas fa-cube"></i>المنتجات</a>
-                    </div>
-                </div>
-                <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-users"></i><span>الموظفين</span><i class="fas fa-chevron-down"></i></a>
-                    <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('employees') }}" class="dropdown-item {% if request.endpoint == 'employees' %}active{% endif %}"><i class="fas fa-user-tie"></i>الموظفين</a>
-                        <a href="{{ url_for('salaries') }}" class="dropdown-item {% if request.endpoint == 'salaries' %}active{% endif %}"><i class="fas fa-money-check-dollar"></i>الرواتب</a>
-                    </div>
-                </div>
-                <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-chart-pie"></i><span>المالية</span><i class="fas fa-chevron-down"></i></a>
-                    <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('financial_dashboard') }}" class="dropdown-item {% if request.endpoint == 'financial_dashboard' %}active{% endif %}"><i class="fas fa-chart-line"></i>لوحة المالية</a>
-                        <a href="{{ url_for('accounts') }}" class="dropdown-item {% if request.endpoint == 'accounts' %}active{% endif %}"><i class="fas fa-book"></i>دليل الحسابات</a>
-                        <a href="{{ url_for('journal') }}" class="dropdown-item {% if request.endpoint == 'journal' %}active{% endif %}"><i class="fas fa-book-open"></i>القيود</a>
-                        <a href="{{ url_for('reports') }}" class="dropdown-item {% if request.endpoint == 'reports' %}active{% endif %}"><i class="fas fa-chart-bar"></i>التقارير</a>
+                        <a href="{{ url_for('accounting.financial_dashboard') }}" class="dropdown-item"><i class="fas fa-chart-line"></i>لوحة المالية</a>
+                        <a href="{{ url_for('accounting.accounts') }}" class="dropdown-item"><i class="fas fa-book"></i>دليل الحسابات</a>
+                        <a href="{{ url_for('accounting.reports') }}" class="dropdown-item"><i class="fas fa-chart-bar"></i>التقارير</a>
                     </div>
                 </div>
 
                 {% elif business_type == 'cleaning' %}
+                <!-- النظافة -->
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-broom"></i><span>النظافة</span><i class="fas fa-chevron-down"></i></a>
+                    <div class="nav-dropdown-menu">
+                        <a href="{{ url_for('cleaning.work_sites') }}" class="dropdown-item"><i class="fas fa-map-marker-alt"></i>مواقع العمل</a>
+                        <a href="{{ url_for('cleaning.teams') }}" class="dropdown-item"><i class="fas fa-people-group"></i>الفرق</a>
+                        <a href="{{ url_for('cleaning.visits') }}" class="dropdown-item"><i class="fas fa-walking"></i>الزيارات</a>
+                        <a href="{{ url_for('cleaning.supervisor_reports') }}" class="dropdown-item"><i class="fas fa-file-alt"></i>تقارير المشرفين</a>
+                        <a href="{{ url_for('cleaning.complaints') }}" class="dropdown-item"><i class="fas fa-exclamation-triangle"></i>الشكاوى</a>
+                    </div>
+                </div>
+                <!-- الموارد البشرية -->
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-users"></i><span>الموارد البشرية</span><i class="fas fa-chevron-down"></i></a>
+                    <div class="nav-dropdown-menu">
+                        <a href="{{ url_for('employees.employees') }}" class="dropdown-item"><i class="fas fa-users"></i>الموظفين</a>
+                        <a href="{{ url_for('employees.salaries') }}" class="dropdown-item"><i class="fas fa-money-check-dollar"></i>الرواتب</a>
+                    </div>
+                </div>
+                <!-- الموردين -->
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-truck"></i><span>الموردين</span><i class="fas fa-chevron-down"></i></a>
+                    <div class="nav-dropdown-menu">
+                        <a href="{{ url_for('suppliers.suppliers') }}" class="dropdown-item"><i class="fas fa-building"></i>الموردين</a>
+                        <a href="{{ url_for('suppliers.supplier_invoices') }}" class="dropdown-item"><i class="fas fa-file-invoice"></i>الفواتير</a>
+                    </div>
+                </div>
+                <!-- العملاء -->
                 <div class="nav-dropdown">
                     <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-handshake"></i><span>العملاء</span><i class="fas fa-chevron-down"></i></a>
                     <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('clients') }}" class="dropdown-item {% if request.endpoint == 'clients' %}active{% endif %}"><i class="fas fa-user-group"></i>العملاء</a>
-                        <a href="{{ url_for('client_contracts') }}" class="dropdown-item {% if request.endpoint == 'client_contracts' %}active{% endif %}"><i class="fas fa-file-contract"></i>العقود</a>
-                        <a href="{{ url_for('work_sites') }}" class="dropdown-item {% if request.endpoint == 'work_sites' %}active{% endif %}"><i class="fas fa-location-dot"></i>مواقع العمل</a>
+                        <a href="{{ url_for('clients.clients') }}" class="dropdown-item"><i class="fas fa-user-group"></i>العملاء</a>
+                        <a href="{{ url_for('clients.client_contracts') }}" class="dropdown-item"><i class="fas fa-file-contract"></i>العقود</a>
+                        <a href="{{ url_for('accounting.financial_dashboard') }}" class="dropdown-item"><i class="fas fa-chart-line"></i>المالية</a>
                     </div>
                 </div>
+
+                {% elif business_type == 'factory' %}
+                <!-- الإنتاج -->
                 <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-hard-hat"></i><span>العمالة</span><i class="fas fa-chevron-down"></i></a>
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-industry"></i><span>الإنتاج</span><i class="fas fa-chevron-down"></i></a>
                     <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('employees') }}" class="dropdown-item {% if request.endpoint == 'employees' %}active{% endif %}"><i class="fas fa-users"></i>العمال</a>
-                        <a href="{{ url_for('teams') }}" class="dropdown-item {% if request.endpoint == 'teams' %}active{% endif %}"><i class="fas fa-people-group"></i>الفرق</a>
-                        <a href="{{ url_for('attendance') }}" class="dropdown-item {% if request.endpoint == 'attendance' %}active{% endif %}"><i class="fas fa-clipboard-check"></i>الحضور</a>
+                        <a href="{{ url_for('factory.production_orders') }}" class="dropdown-item"><i class="fas fa-clipboard-list"></i>أوامر الإنتاج</a>
+                        <a href="{{ url_for('factory.machines') }}" class="dropdown-item"><i class="fas fa-gear"></i>الآلات</a>
+                        <a href="{{ url_for('factory.quality') }}" class="dropdown-item"><i class="fas fa-check-double"></i>فحص الجودة</a>
                     </div>
                 </div>
+                <!-- الموارد البشرية -->
                 <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-eye"></i><span>المتابعة</span><i class="fas fa-chevron-down"></i></a>
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-users"></i><span>الموارد البشرية</span><i class="fas fa-chevron-down"></i></a>
                     <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('visits') }}" class="dropdown-item {% if request.endpoint == 'visits' %}active{% endif %}"><i class="fas fa-walking"></i>الزيارات</a>
-                        <a href="{{ url_for('supervisor_reports') }}" class="dropdown-item {% if request.endpoint == 'supervisor_reports' %}active{% endif %}"><i class="fas fa-file-lines"></i>التقارير</a>
-                        <a href="{{ url_for('complaints') }}" class="dropdown-item {% if request.endpoint == 'complaints' %}active{% endif %}"><i class="fas fa-triangle-exclamation"></i>الشكاوى</a>
+                        <a href="{{ url_for('employees.employees') }}" class="dropdown-item"><i class="fas fa-users"></i>الموظفين</a>
+                        <a href="{{ url_for('employees.salaries') }}" class="dropdown-item"><i class="fas fa-money-check-dollar"></i>الرواتب</a>
                     </div>
                 </div>
+                <!-- الموردين -->
                 <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-tools"></i><span>المعدات</span><i class="fas fa-chevron-down"></i></a>
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-truck"></i><span>الموردين</span><i class="fas fa-chevron-down"></i></a>
                     <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('equipment') }}" class="dropdown-item {% if request.endpoint == 'equipment' %}active{% endif %}"><i class="fas fa-gear"></i>المعدات</a>
-                        <a href="{{ url_for('fuel') }}" class="dropdown-item {% if request.endpoint == 'fuel' %}active{% endif %}"><i class="fas fa-gas-pump"></i>المحروقات</a>
+                        <a href="{{ url_for('suppliers.suppliers') }}" class="dropdown-item"><i class="fas fa-building"></i>الموردين</a>
+                        <a href="{{ url_for('suppliers.supplier_invoices') }}" class="dropdown-item"><i class="fas fa-file-invoice"></i>الفواتير</a>
                     </div>
                 </div>
+                <!-- العملاء -->
                 <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-chart-pie"></i><span>المالية</span><i class="fas fa-chevron-down"></i></a>
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-handshake"></i><span>العملاء</span><i class="fas fa-chevron-down"></i></a>
                     <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('financial_dashboard') }}" class="dropdown-item {% if request.endpoint == 'financial_dashboard' %}active{% endif %}"><i class="fas fa-chart-line"></i>لوحة المالية</a>
-                        <a href="{{ url_for('accounts') }}" class="dropdown-item {% if request.endpoint == 'accounts' %}active{% endif %}"><i class="fas fa-book"></i>دليل الحسابات</a>
-                        <a href="{{ url_for('salaries') }}" class="dropdown-item {% if request.endpoint == 'salaries' %}active{% endif %}"><i class="fas fa-money-check-dollar"></i>الرواتب</a>
-                        <a href="{{ url_for('journal') }}" class="dropdown-item {% if request.endpoint == 'journal' %}active{% endif %}"><i class="fas fa-book-open"></i>القيود</a>
-                        <a href="{{ url_for('reports') }}" class="dropdown-item {% if request.endpoint == 'reports' %}active{% endif %}"><i class="fas fa-chart-bar"></i>التقارير</a>
+                        <a href="{{ url_for('clients.clients') }}" class="dropdown-item"><i class="fas fa-user-group"></i>العملاء</a>
+                    </div>
+                </div>
+                <!-- المالية -->
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-chart-line"></i><span>المالية</span><i class="fas fa-chevron-down"></i></a>
+                    <div class="nav-dropdown-menu">
+                        <a href="{{ url_for('accounting.financial_dashboard') }}" class="dropdown-item"><i class="fas fa-chart-line"></i>لوحة المالية</a>
+                        <a href="{{ url_for('accounting.accounts') }}" class="dropdown-item"><i class="fas fa-book"></i>دليل الحسابات</a>
+                        <a href="{{ url_for('accounting.reports') }}" class="dropdown-item"><i class="fas fa-chart-bar"></i>التقارير</a>
+                    </div>
+                </div>
+
+                {% elif business_type == 'hospital' %}
+                <!-- المستشفى -->
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-hospital"></i><span>المستشفى</span><i class="fas fa-chevron-down"></i></a>
+                    <div class="nav-dropdown-menu">
+                        <a href="{{ url_for('hospital.patients') }}" class="dropdown-item"><i class="fas fa-user-injured"></i>المرضى</a>
+                        <a href="{{ url_for('hospital.doctors') }}" class="dropdown-item"><i class="fas fa-user-doctor"></i>الأطباء</a>
+                        <a href="{{ url_for('hospital.appointments') }}" class="dropdown-item"><i class="fas fa-calendar-check"></i>المواعيد</a>
+                        <a href="{{ url_for('hospital.medicines') }}" class="dropdown-item"><i class="fas fa-pills"></i>الأدوية</a>
+                        <a href="{{ url_for('hospital.lab') }}" class="dropdown-item"><i class="fas fa-flask"></i>المختبر</a>
+                    </div>
+                </div>
+                <!-- الموارد البشرية -->
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-users"></i><span>الموارد البشرية</span><i class="fas fa-chevron-down"></i></a>
+                    <div class="nav-dropdown-menu">
+                        <a href="{{ url_for('employees.employees') }}" class="dropdown-item"><i class="fas fa-users"></i>الموظفين</a>
+                        <a href="{{ url_for('employees.salaries') }}" class="dropdown-item"><i class="fas fa-money-check-dollar"></i>الرواتب</a>
+                    </div>
+                </div>
+                <!-- الموردين -->
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-truck"></i><span>الموردين</span><i class="fas fa-chevron-down"></i></a>
+                    <div class="nav-dropdown-menu">
+                        <a href="{{ url_for('suppliers.suppliers') }}" class="dropdown-item"><i class="fas fa-building"></i>الموردين</a>
+                        <a href="{{ url_for('suppliers.supplier_invoices') }}" class="dropdown-item"><i class="fas fa-file-invoice"></i>الفواتير</a>
+                    </div>
+                </div>
+                <!-- المالية -->
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-chart-line"></i><span>المالية</span><i class="fas fa-chevron-down"></i></a>
+                    <div class="nav-dropdown-menu">
+                        <a href="{{ url_for('accounting.financial_dashboard') }}" class="dropdown-item"><i class="fas fa-chart-line"></i>لوحة المالية</a>
+                        <a href="{{ url_for('accounting.accounts') }}" class="dropdown-item"><i class="fas fa-book"></i>دليل الحسابات</a>
+                        <a href="{{ url_for('accounting.reports') }}" class="dropdown-item"><i class="fas fa-chart-bar"></i>التقارير</a>
+                    </div>
+                </div>
+
+                {% elif business_type == 'school' %}
+                <!-- المدرسة -->
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-school"></i><span>المدرسة</span><i class="fas fa-chevron-down"></i></a>
+                    <div class="nav-dropdown-menu">
+                        <a href="{{ url_for('school.students') }}" class="dropdown-item"><i class="fas fa-user-graduate"></i>الطلاب</a>
+                        <a href="{{ url_for('school.subjects') }}" class="dropdown-item"><i class="fas fa-book-open"></i>المواد</a>
+                        <a href="{{ url_for('school.exams') }}" class="dropdown-item"><i class="fas fa-pen-to-square"></i>الامتحانات</a>
+                        <a href="{{ url_for('school.fees') }}" class="dropdown-item"><i class="fas fa-money-bill"></i>الرسوم</a>
+                    </div>
+                </div>
+                <!-- الموارد البشرية -->
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-users"></i><span>الموارد البشرية</span><i class="fas fa-chevron-down"></i></a>
+                    <div class="nav-dropdown-menu">
+                        <a href="{{ url_for('employees.employees') }}" class="dropdown-item"><i class="fas fa-users"></i>الموظفين</a>
+                        <a href="{{ url_for('employees.salaries') }}" class="dropdown-item"><i class="fas fa-money-check-dollar"></i>الرواتب</a>
+                    </div>
+                </div>
+                <!-- المالية -->
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-chart-line"></i><span>المالية</span><i class="fas fa-chevron-down"></i></a>
+                    <div class="nav-dropdown-menu">
+                        <a href="{{ url_for('accounting.financial_dashboard') }}" class="dropdown-item"><i class="fas fa-chart-line"></i>لوحة المالية</a>
+                        <a href="{{ url_for('accounting.accounts') }}" class="dropdown-item"><i class="fas fa-book"></i>دليل الحسابات</a>
+                        <a href="{{ url_for('accounting.reports') }}" class="dropdown-item"><i class="fas fa-chart-bar"></i>التقارير</a>
                     </div>
                 </div>
 
                 {% elif business_type == 'service' %}
+                <!-- الخدمات -->
                 <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-users"></i><span>الموظفين</span><i class="fas fa-chevron-down"></i></a>
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-briefcase"></i><span>الخدمات</span><i class="fas fa-chevron-down"></i></a>
                     <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('employees') }}" class="dropdown-item {% if request.endpoint == 'employees' %}active{% endif %}"><i class="fas fa-user-tie"></i>الموظفين</a>
-                        <a href="{{ url_for('salaries') }}" class="dropdown-item {% if request.endpoint == 'salaries' %}active{% endif %}"><i class="fas fa-money-check-dollar"></i>الرواتب</a>
-                        <a href="{{ url_for('evaluations') }}" class="dropdown-item {% if request.endpoint == 'evaluations' %}active{% endif %}"><i class="fas fa-star"></i>التقييم</a>
+                        <a href="{{ url_for('service.services') }}" class="dropdown-item"><i class="fas fa-concierge-bell"></i>الخدمات</a>
+                        <a href="{{ url_for('service.contracts') }}" class="dropdown-item"><i class="fas fa-file-contract"></i>العقود</a>
+                        <a href="{{ url_for('service.orders') }}" class="dropdown-item"><i class="fas fa-receipt"></i>الطلبات</a>
                     </div>
                 </div>
+                <!-- الموارد البشرية -->
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-users"></i><span>الموارد البشرية</span><i class="fas fa-chevron-down"></i></a>
+                    <div class="nav-dropdown-menu">
+                        <a href="{{ url_for('employees.employees') }}" class="dropdown-item"><i class="fas fa-users"></i>الموظفين</a>
+                        <a href="{{ url_for('employees.salaries') }}" class="dropdown-item"><i class="fas fa-money-check-dollar"></i>الرواتب</a>
+                    </div>
+                </div>
+                <!-- الموردين -->
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-truck"></i><span>الموردين</span><i class="fas fa-chevron-down"></i></a>
+                    <div class="nav-dropdown-menu">
+                        <a href="{{ url_for('suppliers.suppliers') }}" class="dropdown-item"><i class="fas fa-building"></i>الموردين</a>
+                        <a href="{{ url_for('suppliers.supplier_invoices') }}" class="dropdown-item"><i class="fas fa-file-invoice"></i>الفواتير</a>
+                    </div>
+                </div>
+                <!-- العملاء -->
                 <div class="nav-dropdown">
                     <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-handshake"></i><span>العملاء</span><i class="fas fa-chevron-down"></i></a>
                     <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('clients') }}" class="dropdown-item {% if request.endpoint == 'clients' %}active{% endif %}"><i class="fas fa-user-group"></i>العملاء</a>
-                        <a href="{{ url_for('client_contracts') }}" class="dropdown-item {% if request.endpoint == 'client_contracts' %}active{% endif %}"><i class="fas fa-file-contract"></i>العقود</a>
-                        <a href="{{ url_for('service_orders') }}" class="dropdown-item {% if request.endpoint == 'service_orders' %}active{% endif %}"><i class="fas fa-clipboard-list"></i>الطلبات</a>
+                        <a href="{{ url_for('clients.clients') }}" class="dropdown-item"><i class="fas fa-user-group"></i>العملاء</a>
+                        <a href="{{ url_for('clients.client_contracts') }}" class="dropdown-item"><i class="fas fa-file-contract"></i>العقود</a>
                     </div>
                 </div>
+                <!-- المالية -->
                 <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-concierge-bell"></i><span>الخدمات</span><i class="fas fa-chevron-down"></i></a>
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-chart-line"></i><span>المالية</span><i class="fas fa-chevron-down"></i></a>
                     <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('services_list') }}" class="dropdown-item {% if request.endpoint == 'services_list' %}active{% endif %}"><i class="fas fa-list"></i>أنواع الخدمات</a>
-                        <a href="{{ url_for('service_contracts') }}" class="dropdown-item {% if request.endpoint == 'service_contracts' %}active{% endif %}"><i class="fas fa-file-signature"></i>عقود الخدمات</a>
+                        <a href="{{ url_for('accounting.financial_dashboard') }}" class="dropdown-item"><i class="fas fa-chart-line"></i>لوحة المالية</a>
+                        <a href="{{ url_for('accounting.accounts') }}" class="dropdown-item"><i class="fas fa-book"></i>دليل الحسابات</a>
+                        <a href="{{ url_for('accounting.reports') }}" class="dropdown-item"><i class="fas fa-chart-bar"></i>التقارير</a>
                     </div>
                 </div>
+
+                {% elif business_type == 'transport' %}
+                <!-- النقل -->
                 <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-chart-pie"></i><span>المالية</span><i class="fas fa-chevron-down"></i></a>
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-truck"></i><span>النقل</span><i class="fas fa-chevron-down"></i></a>
                     <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('financial_dashboard') }}" class="dropdown-item {% if request.endpoint == 'financial_dashboard' %}active{% endif %}"><i class="fas fa-chart-line"></i>لوحة المالية</a>
-                        <a href="{{ url_for('accounts') }}" class="dropdown-item {% if request.endpoint == 'accounts' %}active{% endif %}"><i class="fas fa-book"></i>دليل الحسابات</a>
-                        <a href="{{ url_for('journal') }}" class="dropdown-item {% if request.endpoint == 'journal' %}active{% endif %}"><i class="fas fa-book-open"></i>القيود</a>
-                        <a href="{{ url_for('reports') }}" class="dropdown-item {% if request.endpoint == 'reports' %}active{% endif %}"><i class="fas fa-chart-bar"></i>التقارير</a>
+                        <a href="{{ url_for('transport.vehicles') }}" class="dropdown-item"><i class="fas fa-car"></i>المركبات</a>
+                        <a href="{{ url_for('transport.trips') }}" class="dropdown-item"><i class="fas fa-route"></i>الرحلات</a>
+                        <a href="{{ url_for('transport.fuel') }}" class="dropdown-item"><i class="fas fa-gas-pump"></i>الوقود</a>
+                        <a href="{{ url_for('transport.maintenance') }}" class="dropdown-item"><i class="fas fa-wrench"></i>الصيانة</a>
+                    </div>
+                </div>
+
+                {% elif business_type == 'employee_transport' %}
+                <!-- نقل الموظفين -->
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-bus"></i><span>نقل الموظفين</span><i class="fas fa-chevron-down"></i></a>
+                    <div class="nav-dropdown-menu">
+                        <a href="{{ url_for('employee_transport.dashboard') }}" class="dropdown-item"><i class="fas fa-tachometer-alt"></i>لوحة التحكم</a>
+                        <a href="{{ url_for('employee_transport.et_employees') }}" class="dropdown-item"><i class="fas fa-users"></i>الموظفين</a>
+                        <a href="{{ url_for('employee_transport.buses') }}" class="dropdown-item"><i class="fas fa-bus"></i>الباصات</a>
+                        <a href="{{ url_for('employee_transport.drivers') }}" class="dropdown-item"><i class="fas fa-user-clock"></i>السائقين</a>
+                        <a href="{{ url_for('employee_transport.routes') }}" class="dropdown-item"><i class="fas fa-route"></i>خطوط السير</a>
+                        <a href="{{ url_for('employee_transport.shift_types') }}" class="dropdown-item"><i class="fas fa-clock"></i>أنواع الدوام</a>
+                        <a href="{{ url_for('employee_transport.assignments') }}" class="dropdown-item"><i class="fas fa-users-gear"></i>تعيين الموظفين</a>
+                        <a href="{{ url_for('employee_transport.trips') }}" class="dropdown-item"><i class="fas fa-calendar-day"></i>رحلات اليوم</a>
+                        <a href="{{ url_for('employee_transport.driver_view') }}" class="dropdown-item"><i class="fas fa-user-cog"></i>واجهة السائق</a>
+                        <a href="{{ url_for('employee_transport.violations') }}" class="dropdown-item"><i class="fas fa-exclamation-triangle"></i>المخالفات</a>
+                        <a href="{{ url_for('employee_transport.trip_reports') }}" class="dropdown-item"><i class="fas fa-file-alt"></i>تقارير الرحلات (مقارنة)</a>
+                        <a href="{{ url_for('employee_transport.reports') }}" class="dropdown-item"><i class="fas fa-chart-bar"></i>التقارير</a>
+                    </div>
+                </div>
+                <!-- الموردين -->
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-truck"></i><span>الموردين</span><i class="fas fa-chevron-down"></i></a>
+                    <div class="nav-dropdown-menu">
+                        <a href="{{ url_for('suppliers.suppliers') }}" class="dropdown-item"><i class="fas fa-building"></i>الموردين</a>
+                        <a href="{{ url_for('suppliers.supplier_invoices') }}" class="dropdown-item"><i class="fas fa-file-invoice"></i>الفواتير</a>
+                    </div>
+                </div>
+                <!-- العملاء -->
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-handshake"></i><span>العملاء</span><i class="fas fa-chevron-down"></i></a>
+                    <div class="nav-dropdown-menu">
+                        <a href="{{ url_for('clients.clients') }}" class="dropdown-item"><i class="fas fa-user-group"></i>العملاء</a>
+                        <a href="{{ url_for('clients.client_contracts') }}" class="dropdown-item"><i class="fas fa-file-contract"></i>العقود</a>
+                        <a href="{{ url_for('accounting.financial_dashboard') }}" class="dropdown-item"><i class="fas fa-chart-line"></i>المالية</a>
                     </div>
                 </div>
 
                 {% else %}
+                <!-- القائمة العامة -->
                 {% if 'employees' in modules or current_user.role == 'admin' %}
                 <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-users"></i><span>الموظفين</span><i class="fas fa-chevron-down"></i></a>
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-users"></i><span>الموارد البشرية</span><i class="fas fa-chevron-down"></i></a>
                     <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('employees') }}" class="dropdown-item {% if request.endpoint == 'employees' %}active{% endif %}"><i class="fas fa-user-tie"></i>الموظفين</a>
-                        <a href="{{ url_for('salaries') }}" class="dropdown-item {% if request.endpoint == 'salaries' %}active{% endif %}"><i class="fas fa-money-check-dollar"></i>الرواتب</a>
-                        <a href="{{ url_for('evaluations') }}" class="dropdown-item {% if request.endpoint == 'evaluations' %}active{% endif %}"><i class="fas fa-star"></i>التقييم</a>
+                        <a href="{{ url_for('employees.employees') }}" class="dropdown-item"><i class="fas fa-users"></i>الموظفين</a>
+                        <a href="{{ url_for('employees.salaries') }}" class="dropdown-item"><i class="fas fa-money-check-dollar"></i>الرواتب</a>
                     </div>
                 </div>
                 {% endif %}
+
                 {% if 'suppliers' in modules or current_user.role == 'admin' %}
                 <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-truck-field"></i><span>الموردين</span><i class="fas fa-chevron-down"></i></a>
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-truck"></i><span>الموردين</span><i class="fas fa-chevron-down"></i></a>
                     <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('suppliers') }}" class="dropdown-item {% if request.endpoint == 'suppliers' %}active{% endif %}"><i class="fas fa-building"></i>الموردين</a>
-                        <a href="{{ url_for('supplier_invoices') }}" class="dropdown-item {% if request.endpoint == 'supplier_invoices' %}active{% endif %}"><i class="fas fa-file-invoice-dollar"></i>الفواتير</a>
+                        <a href="{{ url_for('suppliers.suppliers') }}" class="dropdown-item"><i class="fas fa-building"></i>الموردين</a>
+                        <a href="{{ url_for('suppliers.supplier_invoices') }}" class="dropdown-item"><i class="fas fa-file-invoice"></i>الفواتير</a>
                     </div>
                 </div>
                 {% endif %}
+
                 {% if 'clients' in modules or current_user.role == 'admin' %}
                 <div class="nav-dropdown">
                     <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-handshake"></i><span>العملاء</span><i class="fas fa-chevron-down"></i></a>
                     <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('clients') }}" class="dropdown-item {% if request.endpoint == 'clients' %}active{% endif %}"><i class="fas fa-user-group"></i>العملاء</a>
-                        <a href="{{ url_for('client_contracts') }}" class="dropdown-item {% if request.endpoint == 'client_contracts' %}active{% endif %}"><i class="fas fa-file-contract"></i>العقود</a>
+                        <a href="{{ url_for('clients.clients') }}" class="dropdown-item"><i class="fas fa-user-group"></i>العملاء</a>
+                        <a href="{{ url_for('clients.client_contracts') }}" class="dropdown-item"><i class="fas fa-file-contract"></i>العقود</a>
                     </div>
                 </div>
                 {% endif %}
-                {% if 'products' in modules or current_user.role == 'admin' %}
-                <a href="{{ url_for('products') }}" class="nav-link {% if request.endpoint == 'products' %}active{% endif %}"><i class="fas fa-boxes-stacked"></i><span>المنتجات</span></a>
-                {% endif %}
-                {% if 'purchases' in modules or current_user.role == 'admin' %}
-                <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-cart-shopping"></i><span>المشتريات</span><i class="fas fa-chevron-down"></i></a>
-                    <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('purchases') }}" class="dropdown-item {% if request.endpoint == 'purchases' %}active{% endif %}"><i class="fas fa-file-invoice"></i>فواتير الشراء</a>
-                    </div>
-                </div>
-                {% endif %}
-                {% if 'sales' in modules or current_user.role == 'admin' %}
-                <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-cash-register"></i><span>المبيعات</span><i class="fas fa-chevron-down"></i></a>
-                    <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('sales') }}" class="dropdown-item {% if request.endpoint == 'sales' %}active{% endif %}"><i class="fas fa-receipt"></i>فواتير البيع</a>
-                    </div>
-                </div>
-                {% endif %}
+
                 {% if 'accounting' in modules or current_user.role == 'admin' %}
                 <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-chart-pie"></i><span>المالية</span><i class="fas fa-chevron-down"></i></a>
+                    <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-chart-line"></i><span>المالية</span><i class="fas fa-chevron-down"></i></a>
                     <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('financial_dashboard') }}" class="dropdown-item {% if request.endpoint == 'financial_dashboard' %}active{% endif %}"><i class="fas fa-chart-line"></i>لوحة المالية</a>
-                        <a href="{{ url_for('accounts') }}" class="dropdown-item {% if request.endpoint == 'accounts' %}active{% endif %}"><i class="fas fa-book"></i>دليل الحسابات</a>
-                        <a href="{{ url_for('journal') }}" class="dropdown-item {% if request.endpoint == 'journal' %}active{% endif %}"><i class="fas fa-book-open"></i>القيود</a>
-                        <a href="{{ url_for('reports') }}" class="dropdown-item {% if request.endpoint == 'reports' %}active{% endif %}"><i class="fas fa-chart-bar"></i>التقارير</a>
+                        <a href="{{ url_for('accounting.financial_dashboard') }}" class="dropdown-item"><i class="fas fa-chart-line"></i>لوحة المالية</a>
+                        <a href="{{ url_for('accounting.accounts') }}" class="dropdown-item"><i class="fas fa-book"></i>دليل الحسابات</a>
+                        <a href="{{ url_for('accounting.reports') }}" class="dropdown-item"><i class="fas fa-chart-bar"></i>التقارير</a>
                     </div>
                 </div>
+                {% endif %}
                 {% endif %}
                 {% endif %}
 
+                <!-- الإعدادات (تظهر لجميع أنواع الأنشطة) -->
                 {% if current_user.role == 'admin' %}
                 <div class="nav-dropdown">
                     <a href="#" class="nav-link nav-dropdown-toggle"><i class="fas fa-cog"></i><span>الإعدادات</span><i class="fas fa-chevron-down"></i></a>
                     <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('users') }}" class="dropdown-item {% if request.endpoint == 'users' %}active{% endif %}"><i class="fas fa-users-cog"></i>المستخدمين</a>
-                        <a href="{{ url_for('settings') }}" class="dropdown-item {% if request.endpoint == 'settings' %}active{% endif %}"><i class="fas fa-building"></i>إعدادات الشركة</a>
+                        <a href="{{ url_for('settings.settings') }}" class="dropdown-item"><i class="fas fa-building"></i>إعدادات الشركة</a>
+                        <a href="{{ url_for('users.users') }}" class="dropdown-item"><i class="fas fa-users-cog"></i>المستخدمين</a>
                     </div>
                 </div>
                 {% endif %}
             </div>
         </nav>
+
+        <!-- Breadcrumb -->
+        {% block breadcrumb %}
+        <nav class="breadcrumb-nav">
+            <a href="{{ url_for('dashboard.index') }}" class="breadcrumb-item"><i class="fas fa-home"></i> الرئيسية</a>
+            {% block breadcrumb_items %}{% endblock %}
+        </nav>
+        {% endblock %}
 
         <!-- Main Content -->
         <main class="main-content">
@@ -492,30 +524,62 @@
                 </div>
                 {% endif %}
                 {% endwith %}
+                {% block page_header %}
+                <div class="page-header">
+                    <h2>{% block page_title %}{% endblock %}</h2>
+                    <a href="{{ url_for('dashboard.index') }}" class="btn-back"><i class="fas fa-arrow-right"></i> الرجوع للرئيسية</a>
+                </div>
+                {% endblock %}
                 {% block content %}{% endblock %}
             </div>
         </main>
     </div>
+    {% else %}
+    <!-- المستخدم غير مسجل الدخول -->
+    {% block public_content %}{% endblock %}
     {% endif %}
+
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script>
+        // User dropdown toggle
+        function toggleUserDropdown() {
+            var d = document.getElementById('userDropdown');
+            d.classList.toggle('open');
+        }
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.user-menu') && !e.target.closest('.user-dropdown')) {
+                var d = document.getElementById('userDropdown');
+                if (d) d.classList.remove('open');
+            }
+        });
+
+        // Service Worker
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register("{{ url_for('static', filename='js/sw.js') }}").catch(function() {});
         }
+
         // Dropdown toggle
         document.querySelectorAll('.nav-dropdown-toggle').forEach(function(toggle) {
             toggle.addEventListener('click', function(e) {
                 e.preventDefault();
                 var dropdown = this.closest('.nav-dropdown');
+                // Close other dropdowns
+                document.querySelectorAll('.nav-dropdown.open').forEach(function(d) {
+                    if (d !== dropdown) d.classList.remove('open');
+                });
                 dropdown.classList.toggle('open');
             });
         });
+
         // Close dropdowns on outside click
         document.addEventListener('click', function(e) {
             if (!e.target.closest('.nav-dropdown')) {
-                document.querySelectorAll('.nav-dropdown.open').forEach(function(d) { d.classList.remove('open'); });
+                document.querySelectorAll('.nav-dropdown.open').forEach(function(d) {
+                    d.classList.remove('open');
+                });
             }
         });
+
         // Mobile nav toggle
         var mobileToggle = document.getElementById('mobileNavToggle');
         var topNav = document.getElementById('topNav');
@@ -524,6 +588,14 @@
                 topNav.classList.toggle('mobile-open');
             });
         }
+
+        // Auto-close flash messages
+        setTimeout(function() {
+            document.querySelectorAll('.flash').forEach(function(flash) {
+                flash.style.opacity = '0';
+                setTimeout(function() { flash.remove(); }, 300);
+            });
+        }, 5000);
     </script>
     {% block scripts %}{% endblock %}
 </body>

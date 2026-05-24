@@ -5,11 +5,11 @@
     <div class="card-header">
         <h3 class="card-title"><i class="fas fa-money-check-dollar"></i> رواتب شهر {{ month }}</h3>
         <div style="display:flex;gap:12px;align-items:center">
-            <form action="{{ url_for('salaries') }}" method="GET" style="display:flex;gap:8px">
+            <form action="{{ url_for('employees.salaries') }}" method="GET" style="display:flex;gap:8px">
                 <input type="month" name="month" class="form-control" value="{{ month }}" style="width:auto">
                 <button type="submit" class="btn btn-outline">عرض</button>
             </form>
-            <form action="{{ url_for('generate_salaries', month=month) }}" method="POST">
+            <form action="{{ url_for('employees.generate_salaries', month=month) }}" method="POST">
                 <button type="submit" class="btn btn-primary"><i class="fas fa-calculator"></i> إنشاء الرواتب</button>
             </form>
         </div>
@@ -41,7 +41,7 @@
                     <td><span class="badge badge-{{ 'success' if data.salary.is_paid else 'warning' }}">{{ 'مدفوع' if data.salary.is_paid else 'غير مدفوع' }}</span></td>
                     <td>
                         {% if not data.salary.is_paid %}
-                        <form action="{{ url_for('pay_salary', id=data.salary.id) }}" method="POST" style="display:inline">
+                        <form action="{{ url_for('employees.pay_salary', id=data.salary.id) }}" method="POST" style="display:inline">
                             <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-money-bill"></i> صرف</button>
                         </form>
                         {% endif %}

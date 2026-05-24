@@ -8,255 +8,343 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Tajawal', sans-serif;
-            background: #F5F5F5;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            direction: rtl;
+        body{
+            font-family:'Tajawal',sans-serif;
+            background:
+                radial-gradient(circle at top right, rgba(113,75,103,.10), transparent 26%),
+                radial-gradient(circle at bottom left, rgba(113,75,103,.08), transparent 24%),
+                #f6f7fb;
+            min-height:100vh;
+            display:flex;
+            flex-direction:column;
+            direction:rtl;
+            color:#1f2937;
         }
 
-        .top-bar {
-            background: #714B67;
-            padding: 12px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+        .top-bar{
+            background:linear-gradient(135deg,#714b67 0%,#5b3a53 100%);
+            padding:12px 24px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:16px;
+            box-shadow:0 8px 24px rgba(0,0,0,.08);
         }
-        .top-bar-logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: white;
-            font-size: 1.2rem;
-            font-weight: 700;
+        .top-bar-logo{
+            display:flex;
+            align-items:center;
+            gap:10px;
+            color:#fff;
+            font-size:1.1rem;
+            font-weight:800;
         }
-        .top-bar-logo img {
-            width: 32px;
-            height: 32px;
-            object-fit: contain;
-            border-radius: 6px;
-            background: white;
-            padding: 3px;
+        .top-bar-logo img{
+            width:34px;
+            height:34px;
+            object-fit:contain;
+            border-radius:8px;
+            background:#fff;
+            padding:4px;
         }
-        .top-bar-links a {
-            color: rgba(255,255,255,0.8);
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 500;
-            margin-right: 20px;
+        .top-bar-links{
+            display:flex;
+            gap:18px;
+            flex-wrap:wrap;
         }
-        .top-bar-links a:hover { color: white; }
+        .top-bar-links a{
+            color:rgba(255,255,255,.82);
+            text-decoration:none;
+            font-size:.9rem;
+            font-weight:600;
+            transition:color .2s ease;
+        }
+        .top-bar-links a:hover{ color:#fff; }
 
-        .setup-section {
-            flex: 1;
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-            padding: 32px 20px;
+        .setup-section{
+            flex:1;
+            display:flex;
+            align-items:flex-start;
+            justify-content:center;
+            padding:32px 18px;
         }
-        .setup-container {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 16px rgba(0,0,0,0.08);
-            width: 100%;
-            max-width: 720px;
-            max-height: 90vh;
-            overflow-y: auto;
-            padding: 32px;
+        .setup-container{
+            background:#fff;
+            border-radius:24px;
+            box-shadow:0 20px 60px rgba(15,23,42,.08);
+            width:100%;
+            max-width:920px;
+            max-height:calc(100vh - 150px);
+            overflow-y:auto;
+            padding:32px;
+            border:1px solid #e7eaf0;
         }
-        .setup-header {
-            text-align: center;
-            margin-bottom: 28px;
+        .setup-header{
+            text-align:center;
+            margin-bottom:28px;
         }
-        .setup-header h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #2C2C2C;
-            margin-bottom: 6px;
+        .setup-header h1{
+            font-size:1.6rem;
+            font-weight:900;
+            color:#111827;
+            margin-bottom:8px;
         }
-        .setup-header p {
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        /* Progress */
-        .progress-bar {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 24px;
-        }
-        .progress-step {
-            flex: 1;
-            height: 4px;
-            background: #EBEBEB;
-            border-radius: 2px;
-            transition: background 0.3s;
-        }
-        .progress-step.active { background: #714B67; }
-
-        /* Steps */
-        .step { display: none; }
-        .step.active { display: block; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
-        .step-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #2C2C2C;
-            margin-bottom: 18px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .step-title span {
-            width: 28px;
-            height: 28px;
-            background: #714B67;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.85rem;
-            font-weight: 700;
+        .setup-header p{
+            color:#6b7280;
+            font-size:.95rem;
+            line-height:1.8;
         }
 
-        /* Business cards */
-        .business-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-            gap: 12px;
-            margin-bottom: 20px;
+        .progress-bar{
+            display:flex;
+            gap:8px;
+            margin-bottom:24px;
         }
-        .business-card {
-            border: 2px solid #EBEBEB;
-            border-radius: 10px;
-            padding: 18px 14px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            position: relative;
+        .progress-step{
+            flex:1;
+            height:5px;
+            background:#ebedf2;
+            border-radius:999px;
+            transition:background .25s ease;
         }
-        .business-card:hover {
-            border-color: #714B67;
-            background: #F3EEF1;
-        }
-        .business-card.selected {
-            border-color: #714B67;
-            background: #F3EEF1;
-        }
-        .business-card.selected::after {
-            content: '\f058';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            color: #714B67;
-            font-size: 1rem;
-        }
-        .business-card i {
-            font-size: 1.8rem;
-            color: #714B67;
-            margin-bottom: 8px;
-            display: block;
-        }
-        .business-card h3 {
-            font-size: 0.88rem;
-            color: #2C2C2C;
-            margin-bottom: 4px;
-            font-weight: 600;
-        }
-        .business-card p {
-            font-size: 0.75rem;
-            color: #888;
+        .progress-step.active{ background:#714b67; }
+
+        .step{ display:none; }
+        .step.active{ display:block; animation:fadeIn .25s ease; }
+        @keyframes fadeIn{
+            from{ opacity:0; transform:translateY(8px); }
+            to{ opacity:1; transform:translateY(0); }
         }
 
-        /* Forms */
-        .form-group { margin-bottom: 16px; }
-        .form-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 600;
-            color: #4A4A4A;
-            font-size: 0.85rem;
+        .step-title{
+            font-size:1.1rem;
+            font-weight:900;
+            color:#111827;
+            margin-bottom:18px;
+            display:flex;
+            align-items:center;
+            gap:10px;
         }
-        .form-control {
-            width: 100%;
-            padding: 10px 14px;
-            border: 1px solid #D9D9D9;
-            border-radius: 6px;
-            font-family: inherit;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-            background: #FAFAFA;
+        .step-title span{
+            width:30px;
+            height:30px;
+            background:#714b67;
+            color:#fff;
+            border-radius:50%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:.85rem;
+            font-weight:800;
         }
-        .form-control:focus {
-            outline: none;
-            border-color: #714B67;
-            box-shadow: 0 0 0 3px rgba(113,75,103,0.12);
-            background: white;
+
+        .business-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));
+            gap:12px;
+            margin-bottom:20px;
         }
-        .form-control.error { border-color: #DC3545; }
-        .error-msg { color: #DC3545; font-size: 0.78rem; margin-top: 4px; display: none; }
-        .error-msg.show { display: block; }
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-
-        /* Buttons */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            padding: 10px 24px;
-            border: none;
-            border-radius: 6px;
-            font-family: inherit;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
+        .business-card{
+            border:1.5px solid #e7eaf0;
+            border-radius:16px;
+            padding:18px 14px;
+            text-align:center;
+            cursor:pointer;
+            transition:all .2s ease;
+            position:relative;
+            background:#fff;
         }
-        .btn-primary { background: #714B67; color: white; }
-        .btn-primary:hover { background: #5B3A53; box-shadow: 0 2px 8px rgba(113,75,103,0.3); }
-        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
-        .btn-outline { background: transparent; border: 1px solid #D9D9D9; color: #666; }
-        .btn-outline:hover { border-color: #714B67; color: #714B67; }
-        .btn-group { display: flex; gap: 10px; justify-content: space-between; margin-top: 20px; }
+        .business-card:hover,
+        .business-card.selected{
+            border-color:#714b67;
+            background:#f3eef1;
+            box-shadow:0 8px 22px rgba(113,75,103,.08);
+        }
+        .business-card.selected::after{
+            content:'\f058';
+            font-family:'Font Awesome 6 Free';
+            font-weight:900;
+            position:absolute;
+            top:8px;
+            left:8px;
+            color:#714b67;
+            font-size:1rem;
+        }
+        .business-card i{
+            font-size:1.9rem;
+            color:#714b67;
+            margin-bottom:8px;
+            display:block;
+        }
+        .business-card h3{
+            font-size:.9rem;
+            color:#111827;
+            margin-bottom:4px;
+            font-weight:800;
+        }
+        .business-card p{
+            font-size:.8rem;
+            color:#6b7280;
+            line-height:1.6;
+        }
 
-        /* Flash */
-        .flash { padding: 10px 14px; border-radius: 6px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; font-size: 0.85rem; }
-        .flash-success { background: #E8F5E9; color: #1B5E20; border: 1px solid #A5D6A7; }
-        .flash-error { background: #FDE8EA; color: #C62828; border: 1px solid #EF9A9A; }
+        .form-group{ margin-bottom:16px; }
+        .form-group label{
+            display:block;
+            margin-bottom:6px;
+            font-weight:700;
+            color:#374151;
+            font-size:.9rem;
+        }
+        .form-control{
+            width:100%;
+            padding:11px 14px;
+            border:1.5px solid #d9dee7;
+            border-radius:12px;
+            font-family:inherit;
+            font-size:.95rem;
+            transition:all .2s ease;
+            background:#fafbfc;
+        }
+        .form-control:focus{
+            outline:none;
+            border-color:#714b67;
+            box-shadow:0 0 0 4px rgba(113,75,103,.12);
+            background:#fff;
+        }
+        .form-control.error{ border-color:#dc3545; }
+        .error-msg{
+            color:#dc3545;
+            font-size:.8rem;
+            margin-top:5px;
+            display:none;
+        }
+        .error-msg.show{ display:block; }
 
-        /* Footer */
-        .footer-text { text-align: center; margin-top: 20px; color: #888; font-size: 0.8rem; }
-        .footer-text a { color: #714B67; text-decoration: none; }
+        .form-row{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:14px;
+        }
 
-        /* Spinner */
-        .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.6s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        .btn{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            gap:8px;
+            padding:11px 22px;
+            border:none;
+            border-radius:12px;
+            font-family:inherit;
+            font-size:.95rem;
+            font-weight:800;
+            cursor:pointer;
+            transition:all .2s ease;
+        }
+        .btn-primary{
+            background:linear-gradient(135deg,#714b67,#5b3a53);
+            color:#fff;
+        }
+        .btn-primary:hover{
+            transform:translateY(-1px);
+            box-shadow:0 12px 24px rgba(113,75,103,.2);
+        }
+        .btn-primary:disabled{
+            opacity:.6;
+            cursor:not-allowed;
+            transform:none;
+        }
+        .btn-outline{
+            background:#fff;
+            border:1.5px solid #d9dee7;
+            color:#4b5563;
+        }
+        .btn-outline:hover{
+            border-color:#714b67;
+            color:#714b67;
+            background:#f9f7f8;
+        }
+        .btn-group{
+            display:flex;
+            gap:10px;
+            justify-content:space-between;
+            margin-top:20px;
+        }
 
-        input[type="color"] { width: 50px; height: 38px; padding: 3px; border-radius: 6px; cursor: pointer; }
+        .flash{
+            padding:12px 14px;
+            border-radius:12px;
+            margin-bottom:16px;
+            display:flex;
+            align-items:flex-start;
+            gap:8px;
+            font-size:.9rem;
+            line-height:1.7;
+        }
+        .flash-success{ background:#e8f5e9; color:#1b5e20; border:1px solid #b7dfbb; }
+        .flash-error{ background:#fde8ea; color:#b42318; border:1px solid #f4b8bd; }
 
-        @media (max-width: 600px) {
-            .setup-container { padding: 20px; }
-            .form-row { grid-template-columns: 1fr; }
-            .business-grid { grid-template-columns: 1fr 1fr; }
+        .footer-text{
+            text-align:center;
+            margin-top:20px;
+            color:#6b7280;
+            font-size:.85rem;
+        }
+        .footer-text a{
+            color:#714b67;
+            text-decoration:none;
+            font-weight:800;
+        }
+
+        .spinner{
+            display:inline-block;
+            width:16px;
+            height:16px;
+            border:2px solid rgba(255,255,255,.3);
+            border-top-color:#fff;
+            border-radius:50%;
+            animation:spin .6s linear infinite;
+        }
+        @keyframes spin { to { transform:rotate(360deg); } }
+
+        input[type="color"]{
+            width:56px;
+            height:40px;
+            padding:4px;
+            border-radius:10px;
+            cursor:pointer;
+            border:1.5px solid #d9dee7;
+            background:#fff;
+        }
+
+        .plan-price{
+            font-size:1.35rem;
+            font-weight:900;
+            color:#714b67;
+            margin:8px 0 6px;
+        }
+
+        @media (max-width: 800px){
+            .setup-container{ padding:20px; }
+            .form-row{ grid-template-columns:1fr; }
+            .business-grid{ grid-template-columns:1fr 1fr; }
+        }
+        @media (max-width: 600px){
+            .top-bar-links{ display:none; }
+            .business-grid{ grid-template-columns:1fr; }
+            .btn-group{ flex-direction:column; }
+            .btn{ width:100%; }
         }
     </style>
 </head>
 <body>
     <div class="top-bar">
         <div class="top-bar-logo">
-            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="الغيث">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="الغيث" onerror="this.style.display='none'">
             <span>الغيث</span>
         </div>
         <div class="top-bar-links">
-            <a href="{{ url_for('landing') }}">الرئيسية</a>
-            <a href="{{ url_for('login') }}">تسجيل الدخول</a>
+            <a href="{{ url_for('auth.landing') }}">الرئيسية</a>
+            <a href="{{ url_for('auth.login') }}">تسجيل الدخول</a>
         </div>
     </div>
 
@@ -264,18 +352,21 @@
         <div class="setup-container">
             <div class="setup-header">
                 <h1>إنشاء حساب جديد</h1>
-                <p>أنشئ شركتك وابدأ بإدارة أعمالك</p>
+                <p>أنشئ شركتك وابدأ بإدارة أعمالك من منصة واحدة.</p>
             </div>
 
             {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
             {% for category, message in messages %}
-            <div class="flash flash-{{ category }}"><i class="fas fa-{% if category == 'success' %}check-circle{% else %}exclamation-circle{% endif %}"></i><span>{{ message }}</span></div>
+            <div class="flash flash-{{ category }}">
+                <i class="fas fa-{% if category == 'success' %}check-circle{% else %}exclamation-circle{% endif %}"></i>
+                <span>{{ message }}</span>
+            </div>
             {% endfor %}
             {% endif %}
             {% endwith %}
 
-            <form method="POST" id="setupForm">
+            <form method="POST" action="{{ url_for('auth.setup') }}" id="setupForm" novalidate>
                 <div class="progress-bar">
                     <div class="progress-step active" id="prog1"></div>
                     <div class="progress-step" id="prog2"></div>
@@ -363,7 +454,7 @@
                         </div>
                         <div class="form-group">
                             <label>كلمة المرور *</label>
-                            <input type="text" name="admin_password" id="admin_password" class="form-control" value="admin123">
+                            <input type="password" name="admin_password" id="admin_password" class="form-control" value="admin123">
                             <div class="error-msg" id="err-admin_password">كلمة المرور مطلوبة</div>
                         </div>
                     </div>
@@ -379,11 +470,11 @@
 
                 <div class="step" id="step4">
                     <div class="step-title"><span>4</span> اختر الباقة</div>
-                    <div class="business-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
+                    <div class="business-grid" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr));">
                         {% for code, plan in plans.items() %}
-                        <div class="business-card" data-plan="{{ code }}" onclick="selectPlan('{{ code }}')" style="border-color: {{ plan.color if plan.color else '#EBEBEB' }};">
+                        <div class="business-card" data-plan="{{ code }}" onclick="selectPlan('{{ code }}')">
                             <h3>{{ plan.name }}</h3>
-                            <p style="font-size: 1.4rem; font-weight: 800; color: #714B67; margin: 8px 0;">{{ plan.price }} ر.ي</p>
+                            <div class="plan-price">{{ plan.price }} ر.ي</div>
                             <p>{{ plan.max_users }} مستخدم</p>
                         </div>
                         {% endfor %}
@@ -404,16 +495,21 @@
 
     <script>
         let currentStep = 1;
+
         function selectBusiness(type) {
             document.querySelectorAll('.business-card[data-type]').forEach(c => c.classList.remove('selected'));
-            document.querySelector('.business-card[data-type="' + type + '"]').classList.add('selected');
+            const selected = document.querySelector('.business-card[data-type="' + type + '"]');
+            if (selected) selected.classList.add('selected');
             document.getElementById('business_type').value = type;
         }
+
         function selectPlan(code) {
             document.querySelectorAll('.business-card[data-plan]').forEach(c => c.classList.remove('selected'));
-            document.querySelector('.business-card[data-plan="' + code + '"]').classList.add('selected');
+            const selected = document.querySelector('.business-card[data-plan="' + code + '"]');
+            if (selected) selected.classList.add('selected');
             document.getElementById('plan_code').value = code;
         }
+
         function showStep(n) {
             document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
             document.getElementById('step' + n).classList.add('active');
@@ -421,40 +517,68 @@
                 document.getElementById('prog' + i).classList.toggle('active', i <= n);
             }
             currentStep = n;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+
         function showError(id) {
-            var el = document.getElementById('err-' + id);
+            const el = document.getElementById('err-' + id);
             if (el) el.classList.add('show');
-            var input = document.getElementById(id);
+            const input = document.getElementById(id);
             if (input) input.classList.add('error');
         }
+
         function clearErrors() {
             document.querySelectorAll('.error-msg').forEach(e => e.classList.remove('show'));
             document.querySelectorAll('.form-control').forEach(e => e.classList.remove('error'));
         }
+
         function nextStep(n) {
             clearErrors();
             if (n === 2 && currentStep === 1) {
-                var bt = document.getElementById('business_type').value;
+                const bt = document.getElementById('business_type').value;
                 if (!bt) { showError('business'); return; }
             }
             if (n === 3 && currentStep === 2) {
-                var cn = document.getElementById('company_name').value.trim();
+                const cn = document.getElementById('company_name').value.trim();
                 if (!cn) { showError('company_name'); return; }
             }
             showStep(n);
         }
-        document.getElementById('setupForm').addEventListener('submit', function(e) {
+
+        function submitForm() {
+            var companyName = document.getElementById('company_name').value.trim();
+            var username = document.getElementById('admin_username').value.trim();
+            var password = document.getElementById('admin_password').value.trim();
+
             clearErrors();
-            var un = document.getElementById('admin_username').value.trim();
-            var pw = document.getElementById('admin_password').value.trim();
             var valid = true;
-            if (!un) { showError('admin_username'); valid = false; }
-            if (!pw) { showError('admin_password'); valid = false; }
-            if (!valid) { e.preventDefault(); return; }
+
+            if (!companyName) { showError('company_name'); valid = false; }
+            if (!username) { showError('admin_username'); valid = false; }
+            if (!password) { showError('admin_password'); valid = false; }
+
+            if (!valid) {
+                return false;
+            }
+
             var btn = document.getElementById('submitBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<span class="spinner"></span> جاري الإنشاء...';
+            if (btn) {
+                btn.innerHTML = '<span class="spinner"></span> جاري الإنشاء...';
+                btn.disabled = true;
+            }
+            return true;
+        }
+
+        document.getElementById('setupForm').onsubmit = function() {
+            return submitForm();
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const defaultPlan = document.querySelector('.business-card[data-plan="trial"]');
+            if (defaultPlan) defaultPlan.classList.add('selected');
+
+            const defaultBusiness = document.querySelector('.business-card[data-type="general"]');
+            if (defaultBusiness) defaultBusiness.classList.add('selected');
         });
     </script>
 </body>

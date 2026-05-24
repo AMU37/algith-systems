@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block page_title %}لوحة تحكم الخدمات{% endblock %}
+{% block content %}
+<div class="stats-grid">
+    <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-concierge-bell"></i></div><div class="stat-info"><h3>{{ services_count }}</h3><p>الخدمات</p></div></div>
+    <div class="stat-card"><div class="stat-icon green"><i class="fas fa-file-contract"></i></div><div class="stat-info"><h3>{{ active_contracts }}</h3><p>العقود النشطة</p></div></div>
+    <div class="stat-card"><div class="stat-icon orange"><i class="fas fa-coins"></i></div><div class="stat-info"><h3>{{ "%.0f"|format(total_revenue) }}</h3><p>إجمالي الإيرادات</p></div></div>
+    <div class="stat-card"><div class="stat-icon purple"><i class="fas fa-hourglass-half"></i></div><div class="stat-info"><h3>{{ pending_orders }}</h3><p>طلبات معلقة</p></div></div>
+</div>
+<div class="card"><div class="card-header"><h3 class="card-title"><i class="fas fa-clock"></i> آخر الطلبات</h3></div>
+    <div class="table-container"><table><thead><tr><th>العميل</th><th>الخدمة</th><th>المبلغ</th><th>الحالة</th></tr></thead><tbody>{% for o in recent_orders %}<tr><td>{{ o.client.name if o.client else '-' }}</td><td>{{ o.service.name if o.service else '-' }}</td><td>{{ "%.0f"|format(o.amount) }}</td><td><span class="badge badge-{{ 'success' if o.status == 'completed' else 'warning' }}">{{ 'مكتمل' if o.status == 'completed' else 'معلق' }}</span></td></tr>{% else %}<tr><td colspan="4" style="text-align:center;color:#999;padding:20px;">لا توجد طلبات</td></tr>{% endfor %}</tbody></table></div>
+</div>
+{% endblock %}

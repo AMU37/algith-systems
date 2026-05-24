@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block page_title %}لوحة تحكم النقل{% endblock %}
+{% block content %}
+<div class="stats-grid">
+    <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-car"></i></div><div class="stat-info"><h3>{{ vehicles_count }}</h3><p>المركبات</p></div></div>
+    <div class="stat-card"><div class="stat-icon green"><i class="fas fa-route"></i></div><div class="stat-info"><h3>{{ today_trips }}</h3><p>رحلات اليوم</p></div></div>
+    <div class="stat-card"><div class="stat-icon orange"><i class="fas fa-coins"></i></div><div class="stat-info"><h3>{{ "%.0f"|format(total_revenue) }}</h3><p>إجمالي الإيرادات</p></div></div>
+    <div class="stat-card"><div class="stat-icon purple"><i class="fas fa-hourglass-half"></i></div><div class="stat-info"><h3>{{ pending_trips }}</h3><p>رحلات معلقة</p></div></div>
+</div>
+<div class="card"><div class="card-header"><h3 class="card-title"><i class="fas fa-clock"></i> آخر الرحلات</h3></div>
+    <div class="table-container"><table><thead><tr><th>المركبة</th><th>من</th><th>إلى</th><th>الإيراد</th><th>الحالة</th></tr></thead><tbody>{% for t in recent_trips %}<tr><td>{{ t.vehicle.plate_number if t.vehicle else '-' }}</td><td>{{ t.from_location or '-' }}</td><td>{{ t.to_location or '-' }}</td><td>{{ "%.0f"|format(t.revenue) }}</td><td><span class="badge badge-{{ 'success' if t.status == 'completed' else 'warning' }}">{{ 'مكتمل' if t.status == 'completed' else 'معلق' }}</span></td></tr>{% else %}<tr><td colspan="5" style="text-align:center;color:#999;padding:20px;">لا توجد رحلات</td></tr>{% endfor %}</tbody></table></div>
+</div>
+{% endblock %}

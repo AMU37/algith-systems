@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block page_title %}لوحة تحكم المستشفى{% endblock %}
+{% block content %}
+<div class="stats-grid">
+    <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-user-injured"></i></div><div class="stat-info"><h3>{{ patients_count }}</h3><p>المرضى</p></div></div>
+    <div class="stat-card"><div class="stat-icon green"><i class="fas fa-user-doctor"></i></div><div class="stat-info"><h3>{{ doctors_count }}</h3><p>الأطباء</p></div></div>
+    <div class="stat-card"><div class="stat-icon orange"><i class="fas fa-calendar-check"></i></div><div class="stat-info"><h3>{{ today_appointments }}</h3><p>مواعيد اليوم</p></div></div>
+    <div class="stat-card"><div class="stat-icon purple"><i class="fas fa-clock"></i></div><div class="stat-info"><h3>{{ pending_appointments }}</h3><p>مواعيد معلقة</p></div></div>
+</div>
+<div class="card"><div class="card-header"><h3 class="card-title"><i class="fas fa-clock"></i> آخر المواعيد</h3></div>
+    <div class="table-container"><table><thead><tr><th>المريض</th><th>الطبيب</th><th>التاريخ</th><th>الحالة</th></tr></thead><tbody>{% for a in recent_appointments %}<tr><td>{{ a.patient.name if a.patient else '-' }}</td><td>{{ a.doctor.name if a.doctor else '-' }}</td><td>{{ a.date }}</td><td><span class="badge badge-{{ 'success' if a.status == 'completed' else 'warning' }}">{{ 'مكتمل' if a.status == 'completed' else 'مجدول' }}</span></td></tr>{% else %}<tr><td colspan="4" style="text-align:center;color:#999;padding:20px;">لا توجد مواعيد</td></tr>{% endfor %}</tbody></table></div>
+</div>
+{% endblock %}

@@ -2,21 +2,7 @@
 {% block page_title %}المحروقات{% endblock %}
 {% block content %}
 <div class="card">
-    <div class="card-header"><h3 class="card-title"><i class="fas fa-gas-pump"></i> المحروقات</h3>
-        <button class="btn btn-primary btn-sm" onclick="openModal('addFuelModal')"><i class="fas fa-plus"></i> إضافة</button></div>
-    <div class="table-container">
-        <table>
-            <thead><tr><th>المركبة/المعدة</th><th>التاريخ</th><th>الكمية</th><th>التكلفة</th><th>ملاحظات</th></tr></thead>
-            <tbody>{% for f in fuel %}<tr><td>{{ f.vehicle.plate_number if f.vehicle else '-' }}</td><td>{{ f.date }}</td><td>{{ f.quantity }}</td><td>{{ "%.0f"|format(f.cost) }}</td><td>{{ f.notes or '-' }}</td></tr>{% endfor %}</tbody>
-        </table>
-    </div>
+    <div class="card-header"><h3 class="card-title"><i class="fas fa-gas-pump"></i> المحروقات</h3></div>
+    <div class="card-body"><p style="color:var(--gray-500)">إدارة المحروقات قيد التطوير</p></div>
 </div>
-<div class="modal" id="addFuelModal"><div class="modal-content"><div class="modal-header"><h3>إضافة محروقات</h3><button class="modal-close" onclick="closeModal('addFuelModal')">&times;</button></div>
-    <form method="POST" action="{{ url_for('add_fuel') }}">
-        <div class="form-group"><label>المركبة/المعدة</label><select name="vehicle_id" class="form-control"><option value="">بدون</option>{% for v in vehicles %}<option value="{{ v.id }}">{{ v.plate_number }} - {{ v.type }}</option>{% endfor %}</select></div>
-        <div class="form-row"><div class="form-group"><label>التاريخ</label><input type="date" name="date" class="form-control" value="{{ now }}"></div><div class="form-group"><label>الكمية</label><input type="number" name="quantity" class="form-control" step="0.01" required></div></div>
-        <div class="form-group"><label>التكلفة</label><input type="number" name="cost" class="form-control" step="0.01" value="0"></div>
-        <div class="form-group"><label>ملاحظات</label><textarea name="notes" class="form-control" rows="2"></textarea></div>
-        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ</button>
-    </form></div></div>
 {% endblock %}

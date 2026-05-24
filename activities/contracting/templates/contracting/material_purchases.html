@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block page_title %}مشتريات المواد{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-shopping-cart"></i> مشتريات المواد</h3>
+        <button class="btn btn-primary btn-sm" onclick="openModal('addPurModal')"><i class="fas fa-plus"></i> إضافة شراء</button>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead><tr><th>التاريخ</th><th>رقم الفاتورة</th><th>المورد</th><th>المشروع</th><th>الإجمالي</th><th>المدفوع</th><th>المتبقي</th><th>طريقة الدفع</th><th>الإجراءات</th></tr></thead>
+            <tbody>
+                {% for p in purchases %}
+                <tr>
+                    <td>{{ p.date }}</td><td>{{ p.invoice_number or '-' }}</td>
+                    <td>{{ p.supplier.name if p.supplier else '-' }}</td>
+                    <td>{{ p.project.name if p.project else '-' }}</td>
+                    <td>{{ "%.0f"|format(p.total) }}</td><td>{{ "%.0f"|format(p.paid) }}</td>
+                    <td>{{ "%.0f"|format(p.total - p.paid) }}</td>
+                    <td>{{ {'cash':'نقدي','credit':'آجل','bank':'تحويل'}.get(p.payment_method, p.payment_method) }}</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('contracting.delete_material_purchase', id=p.id) }}" style="display:inline" onsubmit="return confirm('حذف؟')">
+                            <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="9" style="text-align:center;color:var(--gray-500)">لا توجد مشتريات</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal" id="addPurModal">
+    <div class="modal-content">
+        <div class="modal-header"><h3>إضافة شراء مواد</h3><button class="modal-close" onclick="closeModal('addPurModal')">&times;</button></div>
+        <form method="POST" action="{{ url_for('contracting.add_material_purchase') }}">
+            <div class="form-row">
+                <div class="form-group"><label>التاريخ</label><input type="date" name="date" class="form-control" value="{{ now }}"></div>
+                <div class="form-group"><label>رقم الفاتورة</label><input type="text" name="invoice_number" class="form-control"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>المورد</label><select name="supplier_id" class="form-control"><option value="">اختر...</option>{% for s in suppliers %}<option value="{{ s.id }}">{{ s.name }}</option>{% endfor %}</select></div>
+                <div class="form-group"><label>المشروع</label><select name="project_id" class="form-control"><option value="">بدون</option>{% for p in projects %}<option value="{{ p.id }}">{{ p.name }}</option>{% endfor %}</select></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>الإجمالي</label><input type="number" name="total" class="form-control" step="0.01" value="0"></div>
+                <div class="form-group"><label>المدفوع</label><input type="number" name="paid" class="form-control" step="0.01" value="0"></div>
+            </div>
+            <div class="form-group"><label>طريقة الدفع</label><select name="payment_method" class="form-control"><option value="cash">نقدي</option><option value="bank">تحويل</option><option value="credit">آجل</option></select></div>
+            <div class="form-group"><label>ملاحظات</label><textarea name="notes" class="form-control" rows="2"></textarea></div>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

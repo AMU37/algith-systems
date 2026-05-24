@@ -239,8 +239,8 @@
             <a href="#announcements">الأخبار</a>
         </div>
         <div class="nav-actions">
-            <a href="{{ url_for('login') }}" class="btn btn-outline"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</a>
-            <a href="{{ url_for('setup') }}" class="btn btn-primary"><i class="fas fa-rocket"></i> حساب جديد</a>
+            <a href="{{ url_for('auth.login') }}" class="btn btn-outline"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</a>
+            <a href="{{ url_for('auth.setup') }}" class="btn btn-primary"><i class="fas fa-rocket"></i> حساب جديد</a>
         </div>
     </nav>
 
@@ -251,8 +251,8 @@
                 <h1>أدِر عملك بذكاء مع <span>الغيث</span></h1>
                 <p>منصة سحابية واحدة لإدارة شركتك بالكامل - الموظفين، الرواتب، المشتريات، المبيعات، والمحاسبة. مصمم خصيصاً للشركات العربية.</p>
                 <div class="hero-btns">
-                    <a href="{{ url_for('setup') }}" class="btn btn-white"><i class="fas fa-rocket"></i> ابدأ مجاناً الآن</a>
-                    <a href="{{ url_for('login') }}" class="btn btn-glass"><i class="fas fa-sign-in-alt"></i> لدي حساب</a>
+                    <a href="{{ url_for('auth.setup') }}" class="btn btn-white"><i class="fas fa-rocket"></i> ابدأ مجاناً الآن</a>
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-glass"><i class="fas fa-sign-in-alt"></i> لدي حساب</a>
                 </div>
             </div>
             <div class="hero-image">
@@ -413,7 +413,7 @@
                         {% if code == 'pro' %}<li><i class="fas fa-check"></i> دعم فني متميز</li>{% endif %}
                         {% if code == 'enterprise' %}<li><i class="fas fa-check"></i> تخصيص كامل</li>{% endif %}
                     </ul>
-                    <a href="{{ url_for('setup') }}" class="btn {% if code == 'trial' %}btn-primary{% else %}btn-outline{% endif %}">
+                    <a href="{{ url_for('auth.setup') }}" class="btn {% if code == 'trial' %}btn-primary{% else %}btn-outline{% endif %}">
                         {% if code == 'trial' %}ابدأ مجاناً{% else %}اختر الباقة{% endif %}
                     </a>
                 </div>
@@ -426,7 +426,7 @@
     <section class="cta">
         <h2>جاهز لإدارة أعمالك بذكاء؟</h2>
         <p>أنشئ حسابك في أقل من دقيقة وابدأ فوراً</p>
-        <a href="{{ url_for('setup') }}" class="btn btn-white"><i class="fas fa-rocket"></i> إنشاء حساب مجاني</a>
+        <a href="{{ url_for('auth.setup') }}" class="btn btn-white"><i class="fas fa-rocket"></i> إنشاء حساب مجاني</a>
     </section>
 
     <!-- Footer -->

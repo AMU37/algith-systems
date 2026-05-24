@@ -5,7 +5,7 @@
     <div class="card-header">
         <h3 class="card-title"><i class="fas fa-building"></i> إعدادات الشركة</h3>
     </div>
-    <form action="{{ url_for('update_settings') }}" method="POST">
+    <form method="POST">
         <div class="modal-body">
             <div class="form-row">
                 <div class="form-group">
@@ -88,7 +88,7 @@
     <div class="card-header">
         <h3 class="card-title"><i class="fas fa-lock"></i> تغيير كلمة المرور</h3>
     </div>
-    <form action="{{ url_for('change_password') }}" method="POST">
+    <form action="{{ url_for('auth.change_password') }}" method="POST">
         <div class="modal-body">
             <div class="form-row">
                 <div class="form-group">
