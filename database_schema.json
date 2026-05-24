@@ -1,0 +1,6005 @@
+{
+  "account": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "code": {
+        "type": "VARCHAR(20)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "name": {
+        "type": "VARCHAR(120)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "type": {
+        "type": "VARCHAR(20)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "parent_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "balance": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "description": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "parent_id"
+        ],
+        "referred_table": "account"
+      }
+    ],
+    "indexes": []
+  },
+  "addition": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "employee_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "type": {
+        "type": "VARCHAR(50)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "amount": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "reason": {
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "month": {
+        "type": "VARCHAR(7)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_by": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "employee_id"
+        ],
+        "referred_table": "employee"
+      },
+      {
+        "columns": [
+          "created_by"
+        ],
+        "referred_table": "user"
+      }
+    ],
+    "indexes": []
+  },
+  "advance": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "employee_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "amount": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "remaining": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "monthly_deduction": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "notes": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "employee_id"
+        ],
+        "referred_table": "employee"
+      }
+    ],
+    "indexes": []
+  },
+  "appointment": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "patient_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "doctor_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "time": {
+        "type": "VARCHAR(10)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "notes": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "patient_id"
+        ],
+        "referred_table": "patient"
+      },
+      {
+        "columns": [
+          "doctor_id"
+        ],
+        "referred_table": "doctor"
+      }
+    ],
+    "indexes": []
+  },
+  "area": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "name": {
+        "type": "VARCHAR(100)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "description": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      }
+    ],
+    "indexes": []
+  },
+  "claim": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "project_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "claim_number": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "amount": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "approved_amount": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "paid_amount": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "completion_percentage": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "notes": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_by": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "project_id"
+        ],
+        "referred_table": "project"
+      },
+      {
+        "columns": [
+          "created_by"
+        ],
+        "referred_table": "user"
+      }
+    ],
+    "indexes": []
+  },
+  "client": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "name": {
+        "type": "VARCHAR(120)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "company_name": {
+        "type": "VARCHAR(120)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "phone": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "email": {
+        "type": "VARCHAR(120)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "address": {
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "tax_number": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "balance": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "notes": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      }
+    ],
+    "indexes": []
+  },
+  "client_contract": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "client_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "contract_number": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "type": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "start_date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "end_date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "amount": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "terms": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "client_id"
+        ],
+        "referred_table": "client"
+      }
+    ],
+    "indexes": []
+  },
+  "company": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "name": {
+        "type": "VARCHAR(120)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "code": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "phone": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "email": {
+        "type": "VARCHAR(120)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "address": {
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "tax_number": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "commercial_reg": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "activity": {
+        "type": "VARCHAR(100)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "business_type": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "slogan": {
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "primary_color": {
+        "type": "VARCHAR(7)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "is_active": {
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "subscription_status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "subscription_end": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "is_blocked": {
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "plan_code": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "currency": {
+        "type": "VARCHAR(10)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "exchange_rate": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "currency_locked": {
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [],
+    "indexes": []
+  },
+  "complaint": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "client_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "site_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "description": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "resolution": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "resolved_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "client_id"
+        ],
+        "referred_table": "client"
+      },
+      {
+        "columns": [
+          "site_id"
+        ],
+        "referred_table": "work_site"
+      }
+    ],
+    "indexes": []
+  },
+  "contract": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "supplier_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "contract_number": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "type": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "start_date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "end_date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "amount": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "terms": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "supplier_id"
+        ],
+        "referred_table": "supplier"
+      }
+    ],
+    "indexes": []
+  },
+  "daily_attendance": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "employee_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "project_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "hours": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "daily_wage": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "notes": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "employee_id"
+        ],
+        "referred_table": "employee"
+      },
+      {
+        "columns": [
+          "project_id"
+        ],
+        "referred_table": "project"
+      }
+    ],
+    "indexes": []
+  },
+  "daily_payment": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "employee_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "project_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "amount": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "payment_method": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "notes": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "employee_id"
+        ],
+        "referred_table": "employee"
+      },
+      {
+        "columns": [
+          "project_id"
+        ],
+        "referred_table": "project"
+      }
+    ],
+    "indexes": []
+  },
+  "deduction": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "employee_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "type": {
+        "type": "VARCHAR(50)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "amount": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "reason": {
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "month": {
+        "type": "VARCHAR(7)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_by": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "employee_id"
+        ],
+        "referred_table": "employee"
+      },
+      {
+        "columns": [
+          "created_by"
+        ],
+        "referred_table": "user"
+      }
+    ],
+    "indexes": []
+  },
+  "doctor": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "name": {
+        "type": "VARCHAR(120)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "specialty": {
+        "type": "VARCHAR(100)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "phone": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "email": {
+        "type": "VARCHAR(120)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "license_number": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      }
+    ],
+    "indexes": []
+  },
+  "employee": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "name": {
+        "type": "VARCHAR(120)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "card_number": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "code": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "birth_date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "birth_place": {
+        "type": "VARCHAR(100)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "position": {
+        "type": "VARCHAR(100)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "join_date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "wage_type": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "comprehensive_salary": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "basic_salary": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "daily_wage": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "area": {
+        "type": "VARCHAR(100)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "notes": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      }
+    ],
+    "indexes": []
+  },
+  "equipment": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "name": {
+        "type": "VARCHAR(120)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "type": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "model": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "serial_number": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "purchase_date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "purchase_cost": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "notes": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      }
+    ],
+    "indexes": []
+  },
+  "equipment_maintenance": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "equipment_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "type": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "cost": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "description": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "equipment_id"
+        ],
+        "referred_table": "equipment"
+      }
+    ],
+    "indexes": []
+  },
+  "et_assignment": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "employee_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "route_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "shift_type_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "is_residential": {
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "start_date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "end_date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "employee_id"
+        ],
+        "referred_table": "employee"
+      },
+      {
+        "columns": [
+          "route_id"
+        ],
+        "referred_table": "et_route"
+      },
+      {
+        "columns": [
+          "shift_type_id"
+        ],
+        "referred_table": "et_shift_type"
+      }
+    ],
+    "indexes": []
+  },
+  "et_bus": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "plate_number": {
+        "type": "VARCHAR(50)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "capacity": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "model": {
+        "type": "VARCHAR(100)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "color": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "notes": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      }
+    ],
+    "indexes": []
+  },
+  "et_driver": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "name": {
+        "type": "VARCHAR(120)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "phone": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "license_number": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "employee_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "notes": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "user_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "username": {
+        "type": "VARCHAR(80)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "employee_id"
+        ],
+        "referred_table": "employee"
+      },
+      {
+        "columns": [
+          "user_id"
+        ],
+        "referred_table": "user"
+      }
+    ],
+    "indexes": []
+  },
+  "et_employee_info": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 1
+      },
+      "employee_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "department": {
+        "type": "VARCHAR(100)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "shift_type_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "shift_start_date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "work_day": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "movement_status": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "is_administrative": {
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": "1",
+        "primary_key": 0
+      },
+      "arrival_time": {
+        "type": "TIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "departure_time": {
+        "type": "TIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "route_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "city": {
+        "type": "VARCHAR(100)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "residence_location": {
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "transport_type": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": "'يومي'",
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": "CURRENT_TIMESTAMP",
+        "primary_key": 0
+      },
+      "external_company": {
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "route_id"
+        ],
+        "referred_table": "et_route"
+      },
+      {
+        "columns": [
+          "shift_type_id"
+        ],
+        "referred_table": "et_shift_type"
+      },
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "employee_id"
+        ],
+        "referred_table": "employee"
+      }
+    ],
+    "indexes": []
+  },
+  "et_ride_log": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "trip_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "employee_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "action": {
+        "type": "VARCHAR(20)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "time": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "method": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "notes": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "trip_id"
+        ],
+        "referred_table": "et_trip"
+      },
+      {
+        "columns": [
+          "employee_id"
+        ],
+        "referred_table": "employee"
+      }
+    ],
+    "indexes": []
+  },
+  "et_route": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "name": {
+        "type": "VARCHAR(200)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "area": {
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "departure_time": {
+        "type": "TIME",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "return_time": {
+        "type": "TIME",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "work_days": {
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "shift_type_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "bus_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "driver_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "notes": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "shift_type_id"
+        ],
+        "referred_table": "et_shift_type"
+      },
+      {
+        "columns": [
+          "bus_id"
+        ],
+        "referred_table": "et_bus"
+      },
+      {
+        "columns": [
+          "driver_id"
+        ],
+        "referred_table": "et_driver"
+      }
+    ],
+    "indexes": []
+  },
+  "et_shift_type": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "name": {
+        "type": "VARCHAR(100)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "description": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "work_days": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": "6",
+        "primary_key": 0
+      },
+      "vacation_days": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": "1",
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      }
+    ],
+    "indexes": []
+  },
+  "et_trip": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "route_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "bus_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "driver_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "date": {
+        "type": "DATE",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "departure_time": {
+        "type": "TIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "return_time": {
+        "type": "TIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "departure_note": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "return_note": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "started_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "completed_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "route_id"
+        ],
+        "referred_table": "et_route"
+      },
+      {
+        "columns": [
+          "bus_id"
+        ],
+        "referred_table": "et_bus"
+      },
+      {
+        "columns": [
+          "driver_id"
+        ],
+        "referred_table": "et_driver"
+      }
+    ],
+    "indexes": []
+  },
+  "et_trip_route": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "trip_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "route_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "order": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "trip_id"
+        ],
+        "referred_table": "et_trip"
+      },
+      {
+        "columns": [
+          "route_id"
+        ],
+        "referred_table": "et_route"
+      }
+    ],
+    "indexes": []
+  },
+  "et_violation": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "employee_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "trip_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "violation_type": {
+        "type": "VARCHAR(50)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "description": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "resolved": {
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "resolved_by": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "resolved_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "notes": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "employee_id"
+        ],
+        "referred_table": "employee"
+      },
+      {
+        "columns": [
+          "trip_id"
+        ],
+        "referred_table": "et_trip"
+      },
+      {
+        "columns": [
+          "resolved_by"
+        ],
+        "referred_table": "user"
+      }
+    ],
+    "indexes": []
+  },
+  "evaluation": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "employee_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "total_score": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "notes": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "evaluator_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "employee_id"
+        ],
+        "referred_table": "employee"
+      },
+      {
+        "columns": [
+          "evaluator_id"
+        ],
+        "referred_table": "user"
+      }
+    ],
+    "indexes": []
+  },
+  "evaluation_criteria": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "name": {
+        "type": "VARCHAR(100)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "max_score": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "weight": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "description": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "order_num": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      }
+    ],
+    "indexes": []
+  },
+  "evaluation_score": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "evaluation_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "criteria_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "score": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "notes": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "evaluation_id"
+        ],
+        "referred_table": "evaluation"
+      },
+      {
+        "columns": [
+          "criteria_id"
+        ],
+        "referred_table": "evaluation_criteria"
+      }
+    ],
+    "indexes": []
+  },
+  "exam": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "subject_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "student_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "score": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "max_score": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "exam_type": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "subject_id"
+        ],
+        "referred_table": "subject"
+      },
+      {
+        "columns": [
+          "student_id"
+        ],
+        "referred_table": "student"
+      }
+    ],
+    "indexes": []
+  },
+  "fee": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "student_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "amount": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "paid": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "due_date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "notes": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "student_id"
+        ],
+        "referred_table": "student"
+      }
+    ],
+    "indexes": []
+  },
+  "fuel_record": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "vehicle_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "quantity": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "cost": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "notes": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "vehicle_id"
+        ],
+        "referred_table": "vehicle"
+      }
+    ],
+    "indexes": []
+  },
+  "gl_journal": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "description": {
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "reference": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_by": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "total_debit": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "total_credit": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "created_by"
+        ],
+        "referred_table": "user"
+      }
+    ],
+    "indexes": []
+  },
+  "gl_journal_line": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "journal_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "account_code": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "account_name": {
+        "type": "VARCHAR(100)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "description": {
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "debit": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "credit": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "journal_id"
+        ],
+        "referred_table": "gl_journal"
+      }
+    ],
+    "indexes": []
+  },
+  "invoice": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "supplier_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "invoice_number": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "amount": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "paid": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "notes": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_by": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "supplier_id"
+        ],
+        "referred_table": "supplier"
+      },
+      {
+        "columns": [
+          "created_by"
+        ],
+        "referred_table": "user"
+      }
+    ],
+    "indexes": []
+  },
+  "journal_entry": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "description": {
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "entry_type": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "reference": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_by": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "created_by"
+        ],
+        "referred_table": "user"
+      }
+    ],
+    "indexes": []
+  },
+  "journal_line": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "entry_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "account_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "account": {
+        "type": "VARCHAR(100)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "description": {
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "debit": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "credit": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "entry_id"
+        ],
+        "referred_table": "journal_entry"
+      },
+      {
+        "columns": [
+          "account_id"
+        ],
+        "referred_table": "account"
+      }
+    ],
+    "indexes": []
+  },
+  "lab_test": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "patient_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "test_name": {
+        "type": "VARCHAR(120)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "result": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "patient_id"
+        ],
+        "referred_table": "patient"
+      }
+    ],
+    "indexes": []
+  },
+  "ledger_entry": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "entry_date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "entry_number": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "description": {
+        "type": "VARCHAR(500)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "reference_type": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "reference_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "total_debit": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "total_credit": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "posted_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "posted_by": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "posted_by"
+        ],
+        "referred_table": "user"
+      }
+    ],
+    "indexes": []
+  },
+  "ledger_line": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "entry_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "account_code": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "account_name": {
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "debit": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "credit": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "notes": {
+        "type": "VARCHAR(500)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "entry_id"
+        ],
+        "referred_table": "ledger_entry"
+      }
+    ],
+    "indexes": []
+  },
+  "machine": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "name": {
+        "type": "VARCHAR(120)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "type": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "last_maintenance": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "notes": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      }
+    ],
+    "indexes": []
+  },
+  "material_item": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "purchase_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "material_name": {
+        "type": "VARCHAR(120)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "quantity": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "unit": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "price": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "total": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "purchase_id"
+        ],
+        "referred_table": "material_purchase"
+      }
+    ],
+    "indexes": []
+  },
+  "material_purchase": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "supplier_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "project_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "total": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "paid": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "payment_method": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "notes": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "invoice_number": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_by": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "supplier_id"
+        ],
+        "referred_table": "supplier"
+      },
+      {
+        "columns": [
+          "project_id"
+        ],
+        "referred_table": "project"
+      },
+      {
+        "columns": [
+          "created_by"
+        ],
+        "referred_table": "user"
+      }
+    ],
+    "indexes": []
+  },
+  "medicine": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "name": {
+        "type": "VARCHAR(120)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "category": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "price": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "quantity": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "expiry_date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      }
+    ],
+    "indexes": []
+  },
+  "menu_item": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "name": {
+        "type": "VARCHAR(120)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "category": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "price": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "cost": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "description": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      }
+    ],
+    "indexes": []
+  },
+  "order_item": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "order_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "menu_item_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "item_name": {
+        "type": "VARCHAR(120)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "quantity": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "price": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "total": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "order_id"
+        ],
+        "referred_table": "table_order"
+      },
+      {
+        "columns": [
+          "menu_item_id"
+        ],
+        "referred_table": "menu_item"
+      }
+    ],
+    "indexes": []
+  },
+  "patient": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "name": {
+        "type": "VARCHAR(120)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "phone": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "email": {
+        "type": "VARCHAR(120)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "birth_date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "gender": {
+        "type": "VARCHAR(10)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "address": {
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "emergency_contact": {
+        "type": "VARCHAR(120)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "blood_type": {
+        "type": "VARCHAR(5)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "notes": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      }
+    ],
+    "indexes": []
+  },
+  "payment": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "subscription_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "amount": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "payment_method": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "transaction_id": {
+        "type": "VARCHAR(100)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "notes": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "paid_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "subscription_id"
+        ],
+        "referred_table": "subscription"
+      }
+    ],
+    "indexes": []
+  },
+  "plan": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "name": {
+        "type": "VARCHAR(100)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "code": {
+        "type": "VARCHAR(50)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "monthly_price": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "yearly_price": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "max_users": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "description": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "features": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "is_active": {
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "is_default": {
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [],
+    "indexes": []
+  },
+  "product": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "name": {
+        "type": "VARCHAR(120)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "category": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "type": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "unit": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "purchase_price": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "sale_price": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "quantity": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "min_quantity": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "description": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      }
+    ],
+    "indexes": []
+  },
+  "production_order": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "product_name": {
+        "type": "VARCHAR(120)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "quantity": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "start_date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "end_date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "notes": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      }
+    ],
+    "indexes": []
+  },
+  "project": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "name": {
+        "type": "VARCHAR(120)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "client_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "contract_number": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "contract_value": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "start_date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "end_date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "description": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "location": {
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "client_id"
+        ],
+        "referred_table": "client"
+      }
+    ],
+    "indexes": []
+  },
+  "purchase": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "supplier_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "total": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "paid": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "payment_method": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "notes": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "invoice_number": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_by": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "supplier_id"
+        ],
+        "referred_table": "supplier"
+      },
+      {
+        "columns": [
+          "created_by"
+        ],
+        "referred_table": "user"
+      }
+    ],
+    "indexes": []
+  },
+  "purchase_item": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "purchase_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "product_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "product_name": {
+        "type": "VARCHAR(120)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "quantity": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "price": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "total": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "purchase_id"
+        ],
+        "referred_table": "purchase"
+      },
+      {
+        "columns": [
+          "product_id"
+        ],
+        "referred_table": "product"
+      }
+    ],
+    "indexes": []
+  },
+  "quality_check": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "production_order_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "passed": {
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "notes": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "production_order_id"
+        ],
+        "referred_table": "production_order"
+      }
+    ],
+    "indexes": []
+  },
+  "salary": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "employee_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "month": {
+        "type": "VARCHAR(7)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "basic_salary": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "additions_total": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "deductions_total": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "advances_deduction": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "net_salary": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "is_paid": {
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "paid_date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "employee_id"
+        ],
+        "referred_table": "employee"
+      }
+    ],
+    "indexes": []
+  },
+  "sales_invoice": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "client_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "total": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "paid": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "payment_method": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "notes": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "invoice_number": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_by": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "client_id"
+        ],
+        "referred_table": "client"
+      },
+      {
+        "columns": [
+          "created_by"
+        ],
+        "referred_table": "user"
+      }
+    ],
+    "indexes": []
+  },
+  "sales_invoice_item": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "invoice_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "product_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "product_name": {
+        "type": "VARCHAR(120)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "quantity": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "price": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "total": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "invoice_id"
+        ],
+        "referred_table": "sales_invoice"
+      },
+      {
+        "columns": [
+          "product_id"
+        ],
+        "referred_table": "product"
+      }
+    ],
+    "indexes": []
+  },
+  "service": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "name": {
+        "type": "VARCHAR(120)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "category": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "price": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "description": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      }
+    ],
+    "indexes": []
+  },
+  "service_contract": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "client_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "contract_number": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "start_date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "end_date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "amount": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "terms": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "client_id"
+        ],
+        "referred_table": "client"
+      }
+    ],
+    "indexes": []
+  },
+  "service_order": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "client_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "service_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "amount": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "paid": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "notes": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_by": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "client_id"
+        ],
+        "referred_table": "client"
+      },
+      {
+        "columns": [
+          "service_id"
+        ],
+        "referred_table": "service"
+      },
+      {
+        "columns": [
+          "created_by"
+        ],
+        "referred_table": "user"
+      }
+    ],
+    "indexes": []
+  },
+  "student": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "name": {
+        "type": "VARCHAR(120)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "student_id": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "grade": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "class_name": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "phone": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "parent_name": {
+        "type": "VARCHAR(120)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "parent_phone": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      }
+    ],
+    "indexes": []
+  },
+  "subject": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "name": {
+        "type": "VARCHAR(100)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "grade": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "teacher_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "teacher_id"
+        ],
+        "referred_table": "employee"
+      }
+    ],
+    "indexes": []
+  },
+  "subscription": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "plan_code": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "start_date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "end_date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "monthly_price": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "max_users": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "is_trial": {
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      }
+    ],
+    "indexes": []
+  },
+  "supervisor_report": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "site_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "supervisor_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "report": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "issues": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "site_id"
+        ],
+        "referred_table": "work_site"
+      },
+      {
+        "columns": [
+          "supervisor_id"
+        ],
+        "referred_table": "employee"
+      }
+    ],
+    "indexes": []
+  },
+  "supplier": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "name": {
+        "type": "VARCHAR(120)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "company_name": {
+        "type": "VARCHAR(120)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "phone": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "email": {
+        "type": "VARCHAR(120)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "address": {
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "tax_number": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "balance": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "notes": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      }
+    ],
+    "indexes": []
+  },
+  "table_order": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "table_number": {
+        "type": "VARCHAR(10)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "total": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "paid": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "notes": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      }
+    ],
+    "indexes": []
+  },
+  "team": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "name": {
+        "type": "VARCHAR(100)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "supervisor_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "site_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "supervisor_id"
+        ],
+        "referred_table": "employee"
+      },
+      {
+        "columns": [
+          "site_id"
+        ],
+        "referred_table": "work_site"
+      }
+    ],
+    "indexes": []
+  },
+  "team_member": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "team_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "employee_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "team_id"
+        ],
+        "referred_table": "team"
+      },
+      {
+        "columns": [
+          "employee_id"
+        ],
+        "referred_table": "employee"
+      }
+    ],
+    "indexes": []
+  },
+  "trip": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "vehicle_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "driver_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "client_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "from_location": {
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "to_location": {
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "cost": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "revenue": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "notes": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "vehicle_id"
+        ],
+        "referred_table": "vehicle"
+      },
+      {
+        "columns": [
+          "driver_id"
+        ],
+        "referred_table": "employee"
+      },
+      {
+        "columns": [
+          "client_id"
+        ],
+        "referred_table": "client"
+      }
+    ],
+    "indexes": []
+  },
+  "user": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "username": {
+        "type": "VARCHAR(80)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "password_hash": {
+        "type": "VARCHAR(256)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "full_name": {
+        "type": "VARCHAR(120)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "email": {
+        "type": "VARCHAR(120)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "phone": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "role": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "permissions": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "is_active": {
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      }
+    ],
+    "indexes": []
+  },
+  "vehicle": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "plate_number": {
+        "type": "VARCHAR(20)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "type": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "model": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "year": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "capacity": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "notes": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      }
+    ],
+    "indexes": []
+  },
+  "vehicle_maintenance": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "vehicle_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "type": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "cost": {
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "description": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "vehicle_id"
+        ],
+        "referred_table": "vehicle"
+      }
+    ],
+    "indexes": []
+  },
+  "visit": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "site_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "visitor_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "date": {
+        "type": "DATE",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "notes": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "rating": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "site_id"
+        ],
+        "referred_table": "work_site"
+      },
+      {
+        "columns": [
+          "visitor_id"
+        ],
+        "referred_table": "employee"
+      }
+    ],
+    "indexes": []
+  },
+  "work_site": {
+    "columns": {
+      "id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 1
+      },
+      "company_id": {
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "name": {
+        "type": "VARCHAR(120)",
+        "nullable": false,
+        "default": null,
+        "primary_key": 0
+      },
+      "client_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "address": {
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "supervisor_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "worker_count": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "work_hours": {
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "contract_id": {
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "status": {
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "notes": {
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      },
+      "created_at": {
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": 0
+      }
+    },
+    "foreign_keys": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "referred_table": "company"
+      },
+      {
+        "columns": [
+          "client_id"
+        ],
+        "referred_table": "client"
+      },
+      {
+        "columns": [
+          "supervisor_id"
+        ],
+        "referred_table": "employee"
+      },
+      {
+        "columns": [
+          "contract_id"
+        ],
+        "referred_table": "contract"
+      }
+    ],
+    "indexes": []
+  }
+}

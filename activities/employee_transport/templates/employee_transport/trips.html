@@ -34,6 +34,7 @@
             <span class="badge bg-{{ 'secondary' if t.status == 'scheduled' else 'primary' if t.status == 'in_progress' else 'success' }}" style="font-size:12px">{{ t.status }}</span>
         </div>
         <div class="card-body p-0">
+            <div class="table-responsive">
             <table class="table table-sm mb-0">
                 <thead>
                     <tr class="small text-muted">
@@ -58,6 +59,7 @@
                     {% endfor %}
                 </tbody>
             </table>
+            </div>
         </div>
         <div class="card-footer py-2">
             <div class="row g-2 align-items-end">

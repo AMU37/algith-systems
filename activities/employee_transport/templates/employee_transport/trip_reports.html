@@ -120,8 +120,8 @@
                 <span class="badge bg-light text-dark border">الزمن: {{ duration // 60 }}س {{ duration % 60 }}د</span>
                 {% endif %}
             </div>
-            <div style="max-height:500px;overflow-y:auto">
-            <table class="table table-sm table-bordered mb-0" style="font-size:11px" id="tripTable{{ t.id }}">
+            <div style="max-height:500px;overflow-y:auto;overflow-x:auto">
+            <table class="table table-sm table-bordered mb-0" style="font-size:11px;min-width:900px" id="tripTable{{ t.id }}">
                 <thead class="table-light">
                     <tr>
                         <th data-col="id">#</th>
