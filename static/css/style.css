@@ -818,12 +818,11 @@ tbody tr:hover {
     }
 
     .top-nav {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
+        overflow: visible;
     }
 
     .nav-items {
-        flex-wrap: nowrap;
+        flex-wrap: wrap;
         position: relative;
         top: auto;
         left: auto;
@@ -837,10 +836,6 @@ tbody tr:hover {
         max-height: none;
         overflow: visible;
         z-index: auto;
-    }
-
-    .top-nav.mobile-open .nav-items {
-        display: flex;
     }
 
     .nav-dropdown-menu {
